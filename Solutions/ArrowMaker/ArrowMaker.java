@@ -2,14 +2,38 @@ import java.util.Scanner;
 
 public class ArrowMaker{
 	public static void main(String[] args){
+		DefaultArrow[] defaultArrows = DefaultArrow.class.getEnumConstants();
+		
+		for(int i = 0; i < defaultArrows.length; i++){
+			System.out.println((i + 1) + ". " + toFirstCharacterUppercase(defaultArrows[i].name()) + " Arrow");
+		}
+		
+		int customOptionNumber = defaultArrows.length + 1;
+		System.out.println(customOptionNumber + ". Custom Arrow");
+		
+		int selection = getNumberInput("Please enter the number of the options you want:", 1, customOptionNumber);
+		
+		Arrow arrow;
+		
+		if(selection == customOptionNumber){
+			arrow = createCustomArrow();
+			System.out.print("Your arrow costs ");
+		}
+		else{
+			DefaultArrow selectedArrow = defaultArrows[selection - 1];
+			arrow = Arrow.createDefaultArrow(selectedArrow);
+			System.out.print(toFirstCharacterUppercase(selectedArrow.name()) + " Arrow costs ");
+		}
+		
+		System.out.println(calculateCost(arrow) + "g");
+	}
+	
+	private static Arrow createCustomArrow(){
 		ArrowHead arrowHead = getEnumValueInput(ArrowHead.class, "Please select an arrow head:");
-		int shaftLength = getNumberInput("Please choose a shaft length (in centimeters):");
+		int shaftLength = getNumberInput("Please choose a shaft length (in centimeters):", 0, null);
 		Fletching fletching = getEnumValueInput(Fletching.class, "Please select a fletching:");
 		
-		Arrow arrow = new Arrow(arrowHead, shaftLength, fletching);
-		double cost = calculateCost(arrow);
-		
-		System.out.println("Your arrow costs " + cost + "g");
+		return new Arrow(arrowHead, shaftLength, fletching);
 	}
 	
 	private static <T extends Enum<T>> T getEnumValueInput(Class<T> enumClass, String message){
@@ -41,7 +65,13 @@ public class ArrowMaker{
 		}
 	}
 	
-	private static int getNumberInput(String message){
+	private static int getNumberInput(String message, Integer min, Integer max){
+		if(min != null && max != null){
+			if(min > max){
+				throw new IllegalArgumentException("must must be smaller than or equal to max");
+			}
+		}
+		
 		Scanner scanner = new Scanner(System.in);
 		
 		while(true){
@@ -50,7 +80,16 @@ public class ArrowMaker{
 			
 			try{
 				int number = Integer.parseInt(numberInput);
-				return number;
+				
+				if(min != null && number < min){
+					System.out.println("invalid input, number cannot be smaller than '" + min + "'");
+				}
+				else if(max != null && number > max){
+					System.out.println("invalid input, number cannot be greater than '" + max + "'");
+				}
+				else{
+					return number;
+				}
 			}
 			catch(NumberFormatException e){
 				System.out.println("invalid input, length must be an integer");
