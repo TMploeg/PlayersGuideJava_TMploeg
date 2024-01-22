@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>players_guide_002</title><style></style></head><body id="preview">
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>players_guide_005</title><style></style></head><body id="preview">
 <h2 class="code-line" data-line-start="0" data-line-end="1"><a id="Vocabulary_of_links_for_easy_reference_if_you_forgot_where_to_find_the_information_you_can_just_start_with_Day_1_without_reading_any_of_these_0"></a>Vocabulary of links (for easy reference if you forgot where to find the information; you can just start with Day 1 without reading any of these)</h2>
 <ul>
 <li class="has-line-data" data-line-start="1" data-line-end="2">abstract classes <a href="https://www.w3schools.com/java/java_abstract.asp">link</a></li>
@@ -992,14 +992,31 @@ toString method.</li>
 <p class="has-line-data" data-line-start="1034" data-line-end="1037">You spot something shiny, half-buried in the mud. You pull it out and realize that it seems to be some<br>
 mechanical automaton with the words “Property of Dynamak” etched into it. As you knock off the caked-on mud, you realize that it seems like this old automaton might even be programmable if you can give it<br>
 the proper commands. The automaton seems to be structured like this:</p>
-<pre><code class="has-line-data" data-line-start="1038" data-line-end="1055">class Robot {
+<pre><code class="has-line-data" data-line-start="1038" data-line-end="1072">class Robot {
     private int x;
-    
+
     private int y;
-    
+
     private boolean isPowered;
 
-    private RobotCommand[] commands = new RobotCommand[3];
+    public void moveX(int step) {
+        if (isPowered) x += step;
+    }
+
+    public void moveY(int step) {
+        if (isPowered) y += step;
+    }
+
+    private final RobotCommand[] commands = new RobotCommand[3];
+
+    public Robot(List&lt;RobotCommand&gt; inputCommands) {
+        if (inputCommands.size() != 3) throw new IllegalArgumentException(&quot;Error: Need three commands.&quot;);
+        inputCommands.toArray(commands);
+    }
+
+    public void setPowered(boolean powered) {
+        isPowered = powered;
+    }
 
     public void run() {
         for (RobotCommand command : commands) {
@@ -1009,25 +1026,25 @@ the proper commands. The automaton seems to be structured like this:</p>
     }
 }
 </code></pre>
-<p class="has-line-data" data-line-start="1055" data-line-end="1059">You don’t see a definition of that RobotCommand class. Still, you think you might be able to recreate it<br>
+<p class="has-line-data" data-line-start="1072" data-line-end="1076">You don’t see a definition of that RobotCommand class. Still, you think you might be able to recreate it<br>
 (a class with only an abstract <code>run</code> command) and then make derived classes that extend RobotCommand<br>
 that move it in each of the four directions and power it on and off. (You wish you could manufacture a<br>
 whole army of these!)</p>
-<p class="has-line-data" data-line-start="1060" data-line-end="1061"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1077" data-line-end="1078"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1062" data-line-end="1063">Copy the code above into a new project.</li>
-<li class="has-line-data" data-line-start="1063" data-line-end="1065">Create a RobotCommand class with a public and abstract void run(Robot robot) method. (The<br>
+<li class="has-line-data" data-line-start="1079" data-line-end="1080">Copy the code above into a new project.</li>
+<li class="has-line-data" data-line-start="1080" data-line-end="1082">Create a RobotCommand class with a public and abstract void run(Robot robot) method. (The<br>
 code above should compile after this step.)</li>
-<li class="has-line-data" data-line-start="1065" data-line-end="1067">Make OnCommand and OffCommand classes that inherit from RobotCommand and turn the robot<br>
+<li class="has-line-data" data-line-start="1082" data-line-end="1084">Make OnCommand and OffCommand classes that inherit from RobotCommand and turn the robot<br>
 on or off by overriding the <code>run</code> method.</li>
-<li class="has-line-data" data-line-start="1067" data-line-end="1070">Make a NorthCommand, SouthCommand, WestCommand, and EastCommand that move the robot 1<br>
+<li class="has-line-data" data-line-start="1084" data-line-end="1087">Make a NorthCommand, SouthCommand, WestCommand, and EastCommand that move the robot 1<br>
 unit in the +y direction, 1 unit in the -y direction, 1 unit in the -x direction, and 1 unit in the +x<br>
 direction, respectively. Also, ensure that these commands only work if the robot’s isPowered is true.</li>
-<li class="has-line-data" data-line-start="1070" data-line-end="1073">Make your main method able to collect three commands from the console window. Generate new<br>
+<li class="has-line-data" data-line-start="1087" data-line-end="1090">Make your main method able to collect three commands from the console window. Generate new<br>
 RobotCommand objects based on the text entered. After filling the robot’s command set with these<br>
 new RobotCommand objects, use the robot’s <code>run</code> method to execute them. For example:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1074" data-line-end="1082">on
+<pre><code class="has-line-data" data-line-start="1091" data-line-end="1099">on
 north
 west
 
@@ -1036,97 +1053,97 @@ west
 [-1 1 True]
 </code></pre>
 <ul>
-<li class="has-line-data" data-line-start="1082" data-line-end="1085">Note: You might find this strategy for making commands that update other objects useful in some<br>
+<li class="has-line-data" data-line-start="1099" data-line-end="1102">Note: You might find this strategy for making commands that update other objects useful in some<br>
 of the larger challenges in the coming levels.</li>
 </ul>
-<p class="has-line-data" data-line-start="1085" data-line-end="1086"><strong>To study if you find this difficult yet:</strong></p>
+<p class="has-line-data" data-line-start="1102" data-line-end="1103"><strong>To study if you find this difficult yet:</strong></p>
 <ul>
-<li class="has-line-data" data-line-start="1086" data-line-end="1088"><a href="https://www.w3schools.com/java/java_abstract.asp">W3 schools abstract class</a></li>
+<li class="has-line-data" data-line-start="1103" data-line-end="1105"><a href="https://www.w3schools.com/java/java_abstract.asp">W3 schools abstract class</a></li>
 </ul>
-<h2 class="code-line" data-line-start="1088" data-line-end="1089"><a id="Challenge_40_Robotic_Interface_1088"></a>Challenge 40: Robotic Interface</h2>
-<p class="has-line-data" data-line-start="1089" data-line-end="1093">With your knowledge of interfaces, you realize you can refine the old robot you found in the mud to use<br>
+<h2 class="code-line" data-line-start="1105" data-line-end="1106"><a id="Challenge_40_Robotic_Interface_1105"></a>Challenge 40: Robotic Interface</h2>
+<p class="has-line-data" data-line-start="1106" data-line-end="1110">With your knowledge of interfaces, you realize you can refine the old robot you found in the mud to use<br>
 interfaces instead of the original design. Instead of an abstract RobotCommand base class, it could<br>
 become an RobotCommand interface!<br>
 Building on your solution to the Old Robot challenge, perform the changes below:</p>
-<p class="has-line-data" data-line-start="1094" data-line-end="1095"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1111" data-line-end="1112"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1096" data-line-end="1097">Change your abstract RobotCommand class into an RobotCommand interface.</li>
-<li class="has-line-data" data-line-start="1097" data-line-end="1098">Remove the unnecessary public and abstract keywords from the run method.</li>
-<li class="has-line-data" data-line-start="1098" data-line-end="1099">Change the Robot class to use the interface</li>
-<li class="has-line-data" data-line-start="1099" data-line-end="1101">Make all of your commands implement this new interface instead of extending the RobotCommand<br>
+<li class="has-line-data" data-line-start="1113" data-line-end="1114">Change your abstract RobotCommand class into an RobotCommand interface.</li>
+<li class="has-line-data" data-line-start="1114" data-line-end="1115">Remove the unnecessary public and abstract keywords from the run method.</li>
+<li class="has-line-data" data-line-start="1115" data-line-end="1116">Change the Robot class to use the interface</li>
+<li class="has-line-data" data-line-start="1116" data-line-end="1118">Make all of your commands implement this new interface instead of extending the RobotCommand<br>
 class that no longer exists. You will also want to remove the @Override keywords in these classes.</li>
-<li class="has-line-data" data-line-start="1101" data-line-end="1102">Ensure your program still compiles and runs.</li>
-<li class="has-line-data" data-line-start="1102" data-line-end="1105">Answer this question: Do you feel this is an improvement over using an abstract base class? Why<br>
+<li class="has-line-data" data-line-start="1118" data-line-end="1119">Ensure your program still compiles and runs.</li>
+<li class="has-line-data" data-line-start="1119" data-line-end="1122">Answer this question: Do you feel this is an improvement over using an abstract base class? Why<br>
 or why not?</li>
 </ul>
-<p class="has-line-data" data-line-start="1105" data-line-end="1106"><strong>To study if you find this difficult yet:</strong></p>
+<p class="has-line-data" data-line-start="1122" data-line-end="1123"><strong>To study if you find this difficult yet:</strong></p>
 <ul>
-<li class="has-line-data" data-line-start="1106" data-line-end="1108"><a href="https://www.w3schools.com/java/java_interface.asp">W3 schools interface</a></li>
+<li class="has-line-data" data-line-start="1123" data-line-end="1125"><a href="https://www.w3schools.com/java/java_interface.asp">W3 schools interface</a></li>
 </ul>
-<h2 class="code-line" data-line-start="1108" data-line-end="1109"><a id="Challenge_41_Room_Coordinates_1108"></a>Challenge 41: Room Coordinates</h2>
-<p class="has-line-data" data-line-start="1109" data-line-end="1114">The time to enter the Fountain of Objects draws closer. While you don’t know what to expect, you have<br>
+<h2 class="code-line" data-line-start="1125" data-line-end="1126"><a id="Challenge_41_Room_Coordinates_1125"></a>Challenge 41: Room Coordinates</h2>
+<p class="has-line-data" data-line-start="1126" data-line-end="1131">The time to enter the Fountain of Objects draws closer. While you don’t know what to expect, you have<br>
 found some scrolls that describe the area in ancient times. It seems to be structured as a set of rooms<br>
 in a grid-like arrangement.<br>
 Locations of the room may be represented as a row and column, and you take it upon yourself to try to<br>
 capture this concept with a new record definition.</p>
-<p class="has-line-data" data-line-start="1115" data-line-end="1116"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1132" data-line-end="1133"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1117" data-line-end="1118">Create a Coordinate record that can represent a room coordinate with a row and column.</li>
-<li class="has-line-data" data-line-start="1118" data-line-end="1119">Ensure Coordinate is immutable.</li>
-<li class="has-line-data" data-line-start="1119" data-line-end="1121">Make a method to determine if one coordinate is adjacent to another (differing only by a single row<br>
+<li class="has-line-data" data-line-start="1134" data-line-end="1135">Create a Coordinate record that can represent a room coordinate with a row and column.</li>
+<li class="has-line-data" data-line-start="1135" data-line-end="1136">Ensure Coordinate is immutable.</li>
+<li class="has-line-data" data-line-start="1136" data-line-end="1138">Make a method to determine if one coordinate is adjacent to another (differing only by a single row<br>
 or column).</li>
-<li class="has-line-data" data-line-start="1121" data-line-end="1124">Write a main method that creates a few coordinates and determines if they are adjacent to each<br>
+<li class="has-line-data" data-line-start="1138" data-line-end="1141">Write a main method that creates a few coordinates and determines if they are adjacent to each<br>
 other to prove that it is working correctly.</li>
 </ul>
-<p class="has-line-data" data-line-start="1124" data-line-end="1125"><strong>To study if you find this difficult yet:</strong></p>
+<p class="has-line-data" data-line-start="1141" data-line-end="1142"><strong>To study if you find this difficult yet:</strong></p>
 <ul>
-<li class="has-line-data" data-line-start="1125" data-line-end="1127"><a href="https://www.w3schools.io/java/java16-record-type/?utm_content=cmp-true">W3 schools record</a></li>
+<li class="has-line-data" data-line-start="1142" data-line-end="1144"><a href="https://www.w3schools.io/java/java16-record-type/?utm_content=cmp-true">W3 schools record</a></li>
 </ul>
-<h2 class="code-line" data-line-start="1127" data-line-end="1128"><a id="Challenge_42_War_Preparations_1127"></a>Challenge 42: War Preparations</h2>
-<p class="has-line-data" data-line-start="1128" data-line-end="1134">As you pass through the city of Rocaard, two blacksmiths, Cygnus and Lyra, approach you. “We know<br>
+<h2 class="code-line" data-line-start="1144" data-line-end="1145"><a id="Challenge_42_War_Preparations_1144"></a>Challenge 42: War Preparations</h2>
+<p class="has-line-data" data-line-start="1145" data-line-end="1151">As you pass through the city of Rocaard, two blacksmiths, Cygnus and Lyra, approach you. “We know<br>
 where this is headed. A confrontation with the Uncoded One’s forces,” Lyra says. Cygnus continues,<br>
 “You’re going to need an army at your side—one prepared to do battle. We forge enchanted swords and<br>
 will do everything we can to support this cause. We need the Power of Programming to flow unfettered<br>
 too. We want to help, but we can’t equip an entire army without the help of a program to aid in crafting<br>
 swords.” They describe the program they need, and you dive in to help.</p>
-<p class="has-line-data" data-line-start="1135" data-line-end="1136"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1152" data-line-end="1153"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1137" data-line-end="1139">Swords can be made out of any of the following materials: wood, bronze, iron, steel, and the rare<br>
+<li class="has-line-data" data-line-start="1154" data-line-end="1156">Swords can be made out of any of the following materials: wood, bronze, iron, steel, and the rare<br>
 binarium. Create an enumeration to represent the material type.</li>
-<li class="has-line-data" data-line-start="1139" data-line-end="1142">Gemstones can be attached to a sword, which gives them strange powers through Cygnus and Lyra’s<br>
+<li class="has-line-data" data-line-start="1156" data-line-end="1159">Gemstones can be attached to a sword, which gives them strange powers through Cygnus and Lyra’s<br>
 touch. Gemstone types include emerald, amber, sapphire, diamond, and the rare bitstone. Or no<br>
 gemstone at all. Create an enumeration to represent a gemstone type.</li>
-<li class="has-line-data" data-line-start="1142" data-line-end="1143">Create a Sword record with a material, gemstone, length, and crossguard width.</li>
-<li class="has-line-data" data-line-start="1143" data-line-end="1145">In your main program, create a basic Sword instance made out of iron and with no gemstone. Then<br>
+<li class="has-line-data" data-line-start="1159" data-line-end="1160">Create a Sword record with a material, gemstone, length, and crossguard width.</li>
+<li class="has-line-data" data-line-start="1160" data-line-end="1162">In your main program, create a basic Sword instance made out of iron and with no gemstone. Then<br>
 create two variations on the basic sword, defining methods in Sword that produce a modified copy, like <code>Sword withMaterial(Material material)</code>.</li>
-<li class="has-line-data" data-line-start="1145" data-line-end="1146">Give sword a toString method that produces output like “a steel sword of 85 centimetres long, a crossguard width of 19 cm, and an embedded ruby” or “a plain binarium sword of 55 centimetres long and a crossguard width of 15 cm”</li>
-<li class="has-line-data" data-line-start="1146" data-line-end="1148">Display all three sword instances with code like System.out.println(original);.</li>
+<li class="has-line-data" data-line-start="1162" data-line-end="1163">Give sword a toString method that produces output like “a steel sword of 85 centimetres long, a crossguard width of 19 cm, and an embedded ruby” or “a plain binarium sword of 55 centimetres long and a crossguard width of 15 cm”</li>
+<li class="has-line-data" data-line-start="1163" data-line-end="1165">Display all three sword instances with code like System.out.println(original);.</li>
 </ul>
-<h2 class="code-line" data-line-start="1148" data-line-end="1149"><a id="Challenge_43__Colored_Items_1148"></a>Challenge 43: : Colored Items</h2>
-<p class="has-line-data" data-line-start="1149" data-line-end="1150">You have a sword, a bow, and an axe in front of you, defined like this:</p>
-<pre><code class="has-line-data" data-line-start="1151" data-line-end="1155">public class Sword { }
+<h2 class="code-line" data-line-start="1165" data-line-end="1166"><a id="Challenge_43__Colored_Items_1165"></a>Challenge 43: : Colored Items</h2>
+<p class="has-line-data" data-line-start="1166" data-line-end="1167">You have a sword, a bow, and an axe in front of you, defined like this:</p>
+<pre><code class="has-line-data" data-line-start="1168" data-line-end="1172">public class Sword { }
 public class Bow { }
 public class Axe { }
 </code></pre>
-<p class="has-line-data" data-line-start="1155" data-line-end="1158">You want to associate a color with these items (or any item type). You could make ColoredSword<br>
+<p class="has-line-data" data-line-start="1172" data-line-end="1175">You want to associate a color with these items (or any item type). You could make ColoredSword<br>
 derived from Sword that adds a Color property, but doing this for all three item types will be<br>
 painstaking. Instead, you define a new generic ColoredItem class that does this for any item.</p>
-<p class="has-line-data" data-line-start="1159" data-line-end="1160"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1176" data-line-end="1177"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1161" data-line-end="1162">Put the three class definitions above into a new package.</li>
-<li class="has-line-data" data-line-start="1162" data-line-end="1164">Define a generic class to represent a colored item. It must have properties for the item itself (generic<br>
+<li class="has-line-data" data-line-start="1178" data-line-end="1179">Put the three class definitions above into a new package.</li>
+<li class="has-line-data" data-line-start="1179" data-line-end="1181">Define a generic class to represent a colored item. It must have properties for the item itself (generic<br>
 in type) and a ConsoleColor associated with it.</li>
-<li class="has-line-data" data-line-start="1164" data-line-end="1166">Add a void display() method to your colored item type that changes the console’s foreground<br>
+<li class="has-line-data" data-line-start="1181" data-line-end="1183">Add a void display() method to your colored item type that changes the console’s foreground<br>
 color to the item’s color and displays the item in that color.</li>
-<li class="has-line-data" data-line-start="1166" data-line-end="1169">In your main method, create a new colored item containing a blue sword, a red bow, and a green axe.<br>
+<li class="has-line-data" data-line-start="1183" data-line-end="1186">In your main method, create a new colored item containing a blue sword, a red bow, and a green axe.<br>
 Display all three items to see each item displayed in its color.</li>
 </ul>
-<p class="has-line-data" data-line-start="1169" data-line-end="1170"><strong>To study if you find this difficult yet:</strong></p>
+<p class="has-line-data" data-line-start="1186" data-line-end="1187"><strong>To study if you find this difficult yet:</strong></p>
 <ul>
-<li class="has-line-data" data-line-start="1170" data-line-end="1171"><a href="https://www.w3schools.blog/generics-class-java">W3 schools generic classes</a></li>
+<li class="has-line-data" data-line-start="1187" data-line-end="1188"><a href="https://www.w3schools.blog/generics-class-java">W3 schools generic classes</a></li>
 </ul>
-<h2 class="code-line" data-line-start="1173" data-line-end="1174"><a id="Narrative_5_Arrival_at_the_Caverns_1173"></a>Narrative 5: Arrival at the Caverns</h2>
-<p class="has-line-data" data-line-start="1174" data-line-end="1186">You have made your way to the Cavern of Objects, high atop jagged mountains. Within these caverns<br>
+<h2 class="code-line" data-line-start="1190" data-line-end="1191"><a id="Narrative_5_Arrival_at_the_Caverns_1190"></a>Narrative 5: Arrival at the Caverns</h2>
+<p class="has-line-data" data-line-start="1191" data-line-end="1203">You have made your way to the Cavern of Objects, high atop jagged mountains. Within these caverns<br>
 lies the Fountain of Objects, the one-time source of the River of Objects that gave life to this entire<br>
 island. By returning the Heart of Object-Oriented Programming—the gem you received from Simula<br>
 after arriving on this island—to the Fountain of Objects, you can repair and restore the fountain to its<br>
@@ -1138,8 +1155,8 @@ The cavern is full of dangers. Bottomless pits and monsters lurk in the caverns,
 Uncoded One to prevent you from restoring the Fountain of Objects and the land to its former glory.<br>
 By returning the Heart of Object-Oriented Programming to the Fountain of Objects, you can save the<br>
 Island of Object-Oriented Programming!</p>
-<h2 class="code-line" data-line-start="1187" data-line-end="1188"><a id="Challenge_44_The_Fountain_of_Objects_1187"></a>Challenge 44: The Fountain of Objects</h2>
-<p class="has-line-data" data-line-start="1189" data-line-end="1200">The Fountain of Objects game is a 2D grid-based world full of rooms. Most rooms are empty, but a few<br>
+<h2 class="code-line" data-line-start="1204" data-line-end="1205"><a id="Challenge_44_The_Fountain_of_Objects_1204"></a>Challenge 44: The Fountain of Objects</h2>
+<p class="has-line-data" data-line-start="1206" data-line-end="1217">The Fountain of Objects game is a 2D grid-based world full of rooms. Most rooms are empty, but a few<br>
 are unique rooms. One room is the cavern entrance. Another is the fountain room, containing the<br>
 Fountain of Objects.<br>
 The player moves through the cavern system one room at a time to find the Fountain of Objects. They<br>
@@ -1150,36 +1167,36 @@ must navigate the caverns in the dark, relying on their sense of smell and heari
 room they are in and what dangers lurk in nearby rooms.<br>
 This challenge serves as the basis for the other challenges in this level. It must be completed before the<br>
 others can be started. The requirements of this game are listed below.</p>
-<p class="has-line-data" data-line-start="1201" data-line-end="1202"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1218" data-line-end="1219"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1203" data-line-end="1205">The world consists of a grid of rooms, where each room can be referenced by its row and column. Initially, the grid consists of 4 x 4 is 16 rooms.<br>
+<li class="has-line-data" data-line-start="1220" data-line-end="1222">The world consists of a grid of rooms, where each room can be referenced by its row and column. Initially, the grid consists of 4 x 4 is 16 rooms.<br>
 North is up, east is right, south is down, and west is left:</li>
-<li class="has-line-data" data-line-start="1205" data-line-end="1209">The game’s flow works like this: The player is told what they can sense in the dark (see, hear, smell).<br>
+<li class="has-line-data" data-line-start="1222" data-line-end="1226">The game’s flow works like this: The player is told what they can sense in the dark (see, hear, smell).<br>
 Then the player gets a chance to perform some action by typing it in. Their chosen action is resolved<br>
 (the player moves, state of things in the game changes, checking for a win or a loss, etc.). Then the<br>
 loop repeats.</li>
-<li class="has-line-data" data-line-start="1209" data-line-end="1210">Most rooms are empty rooms, and there is nothing to sense.</li>
-<li class="has-line-data" data-line-start="1210" data-line-end="1213">The player is in one of the rooms and can move between them by typing commands like the<br>
+<li class="has-line-data" data-line-start="1226" data-line-end="1227">Most rooms are empty rooms, and there is nothing to sense.</li>
+<li class="has-line-data" data-line-start="1227" data-line-end="1230">The player is in one of the rooms and can move between them by typing commands like the<br>
 following: “move north”, “move south”, “move east”, and “move west”. The player should not be able<br>
 to move past the end of the map.</li>
-<li class="has-line-data" data-line-start="1213" data-line-end="1216">The room at (Row=0, Column=0) is the cavern entrance (and exit). The player should start here.The<br>
+<li class="has-line-data" data-line-start="1230" data-line-end="1233">The room at (Row=0, Column=0) is the cavern entrance (and exit). The player should start here.The<br>
 player can sense light coming from outside the cavern when in this room. (“You see light in this room<br>
 coming from outside the cavern. This is the entrance.”)</li>
-<li class="has-line-data" data-line-start="1216" data-line-end="1223">The room at (Row=0, Column=2) is the fountain room, containing the Fountain of Objects itself. The<br>
+<li class="has-line-data" data-line-start="1233" data-line-end="1240">The room at (Row=0, Column=2) is the fountain room, containing the Fountain of Objects itself. The<br>
 Fountain can be either enabled or disabled. The player can hear the fountain but hears different<br>
 things depending on if it is on or not. (“You hear water dripping in this room. The Fountain of Objects<br>
 is here!” or “You hear the rushing waters from the Fountain of Objects. It has been reactivated!”) The<br>
 fountain is off initially. In the fountain room, the player can type “enable fountain” to enable it. If the<br>
 player is not in the fountain room and runs this, there should be no effect, and the player should be<br>
 told so.</li>
-<li class="has-line-data" data-line-start="1223" data-line-end="1225">The player wins by moving to the fountain room, enabling the Fountain of Objects, and moving back<br>
+<li class="has-line-data" data-line-start="1240" data-line-end="1242">The player wins by moving to the fountain room, enabling the Fountain of Objects, and moving back<br>
 to the cavern entrance. If the player is in the entrance and the fountain is on, the player wins.</li>
-<li class="has-line-data" data-line-start="1225" data-line-end="1228">Use different colors to display the different types of text in the console window. For example,<br>
+<li class="has-line-data" data-line-start="1242" data-line-end="1245">Use different colors to display the different types of text in the console window. For example,<br>
 narrative items (intro, ending, etc.) may be magenta, descriptive text in white, input from the user<br>
 in cyan, text describing entrance light in yellow, messages about the fountain in blue.</li>
-<li class="has-line-data" data-line-start="1228" data-line-end="1229">An example of what the program might look like is shown below:</li>
+<li class="has-line-data" data-line-start="1245" data-line-end="1246">An example of what the program might look like is shown below:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1230" data-line-end="1252" class="language-----------------------------------------------------------------------------------">You are in the room at (Row=0, Column=0).
+<pre><code class="has-line-data" data-line-start="1247" data-line-end="1269" class="language-----------------------------------------------------------------------------------">You are in the room at (Row=0, Column=0).
 You see light coming from the cavern entrance.
 What do you want to do? move east
 ----------------------------------------------------------------------------------
@@ -1202,39 +1219,39 @@ The Fountain of Objects has been reactivated, and you have escaped with your lif
 You win!
 </code></pre>
 <ul>
-<li class="has-line-data" data-line-start="1252" data-line-end="1254">Hint: You may find two-dimensional arrays helpful in representing a 2D grid-based game<br>
+<li class="has-line-data" data-line-start="1269" data-line-end="1271">Hint: You may find two-dimensional arrays helpful in representing a 2D grid-based game<br>
 world.</li>
-<li class="has-line-data" data-line-start="1254" data-line-end="1258">Hint: Remember your training! You do not need to solve this entire problem all at once, and you do<br>
+<li class="has-line-data" data-line-start="1271" data-line-end="1275">Hint: Remember your training! You do not need to solve this entire problem all at once, and you do<br>
 not have to get it right in your first attempt. Pick an item or two to start and solve just those items.<br>
 Rework until you are happy with it, then add the next item or two.</li>
 </ul>
-<h2 class="code-line" data-line-start="1258" data-line-end="1259"><a id="Challenge_45_Small_Medium_or_Large_1258"></a>Challenge 45: Small, Medium, or Large</h2>
-<p class="has-line-data" data-line-start="1259" data-line-end="1261">The larger the Cavern of Objects is, the more difficult the game becomes. The basic game only requires<br>
+<h2 class="code-line" data-line-start="1275" data-line-end="1276"><a id="Challenge_45_Small_Medium_or_Large_1275"></a>Challenge 45: Small, Medium, or Large</h2>
+<p class="has-line-data" data-line-start="1276" data-line-end="1278">The larger the Cavern of Objects is, the more difficult the game becomes. The basic game only requires<br>
 a small 4×4 world, but we will add a medium 6×6 world and a large 8×8 world for this challenge.</p>
-<p class="has-line-data" data-line-start="1262" data-line-end="1263"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1279" data-line-end="1280"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1264" data-line-end="1267">Before the game begins, ask the player whether they want to play a small, medium, or large game.<br>
+<li class="has-line-data" data-line-start="1281" data-line-end="1284">Before the game begins, ask the player whether they want to play a small, medium, or large game.<br>
 Create a 4×4 world if they choose a small world, a 6×6 world if they choose a medium world, and an<br>
 8×8 world if they choose a large world.</li>
-<li class="has-line-data" data-line-start="1267" data-line-end="1268">Pick an appropriate location for both the Fountain Room and the Entrance room.</li>
-<li class="has-line-data" data-line-start="1268" data-line-end="1270">Note: When combined with the Amaroks, Maelstroms, or Pits challenges, you will need to adapt the<br>
+<li class="has-line-data" data-line-start="1284" data-line-end="1285">Pick an appropriate location for both the Fountain Room and the Entrance room.</li>
+<li class="has-line-data" data-line-start="1285" data-line-end="1287">Note: When combined with the Amaroks, Maelstroms, or Pits challenges, you will need to adapt the<br>
 game by adding amaroks, maelstroms, and pits to all three sizes.</li>
 </ul>
-<h2 class="code-line" data-line-start="1272" data-line-end="1273"><a id="Challenge_46_Pits_1272"></a>Challenge 46: Pits</h2>
-<p class="has-line-data" data-line-start="1273" data-line-end="1276">The Cavern of Objects is a dangerous place. Some rooms open up to bottomless pits. Entering a pit<br>
+<h2 class="code-line" data-line-start="1289" data-line-end="1290"><a id="Challenge_46_Pits_1289"></a>Challenge 46: Pits</h2>
+<p class="has-line-data" data-line-start="1290" data-line-end="1293">The Cavern of Objects is a dangerous place. Some rooms open up to bottomless pits. Entering a pit<br>
 means death. The player can sense a pit is in an adjacent room because a draft of air pushes through the<br>
 pits into adjacent rooms. Add pit rooms to the game. End the game if the player stumbles into one.</p>
-<p class="has-line-data" data-line-start="1277" data-line-end="1278"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1294" data-line-end="1295"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1279" data-line-end="1280">Add a pit room to your 4×4 cavern anywhere that isn’t the fountain or entrance room.</li>
-<li class="has-line-data" data-line-start="1280" data-line-end="1282">Players can sense the draft blowing out of pits in adjacent rooms (all eight directions): “You feel a<br>
+<li class="has-line-data" data-line-start="1296" data-line-end="1297">Add a pit room to your 4×4 cavern anywhere that isn’t the fountain or entrance room.</li>
+<li class="has-line-data" data-line-start="1297" data-line-end="1299">Players can sense the draft blowing out of pits in adjacent rooms (all eight directions): “You feel a<br>
 draft. There is a pit in a nearby room.”</li>
-<li class="has-line-data" data-line-start="1282" data-line-end="1283">If a player ends their turn in a room with a pit, they lose the game.</li>
-<li class="has-line-data" data-line-start="1283" data-line-end="1286">Note: When combined with the Small, Medium, or Large challenge, add one pit to the 4×4 world,two<br>
+<li class="has-line-data" data-line-start="1299" data-line-end="1300">If a player ends their turn in a room with a pit, they lose the game.</li>
+<li class="has-line-data" data-line-start="1300" data-line-end="1303">Note: When combined with the Small, Medium, or Large challenge, add one pit to the 4×4 world,two<br>
 pits to the 6×6 world, and four pits to the 8×8 world, in locations of your choice.</li>
 </ul>
-<h2 class="code-line" data-line-start="1286" data-line-end="1287"><a id="Challenge_47_Maelstroms_1286"></a>Challenge 47: Maelstroms</h2>
-<p class="has-line-data" data-line-start="1287" data-line-end="1296">The Uncoded One knows the significance of the Fountain of Objects and has placed minions in the<br>
+<h2 class="code-line" data-line-start="1303" data-line-end="1304"><a id="Challenge_47_Maelstroms_1303"></a>Challenge 47: Maelstroms</h2>
+<p class="has-line-data" data-line-start="1304" data-line-end="1313">The Uncoded One knows the significance of the Fountain of Objects and has placed minions in the<br>
 caverns to defend it. One of these is the maelstrom—a sentient, malevolent wind. Encountering a<br>
 maelstrom does not result in instant death, but entering a room containing a maelstrom causes the<br>
 player to be swept away to another room. The maelstrom also moves to a new location. If the player is<br>
@@ -1243,75 +1260,75 @@ room.<br>
 A player can hear the growling and groaning of a maelstrom from a neighboring room (including<br>
 diagonals), which gives them a clue to be careful.<br>
 Modify the basic Fountain of Objects game in the ways below to add maelstroms to the game.</p>
-<p class="has-line-data" data-line-start="1297" data-line-end="1298"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1314" data-line-end="1315"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1299" data-line-end="1300">Add a maelstrom to the small 4×4 game in a location of your choice.</li>
-<li class="has-line-data" data-line-start="1300" data-line-end="1302">The player can sense maelstroms by hearing them in adjacent rooms. (“You hear the growling and<br>
+<li class="has-line-data" data-line-start="1316" data-line-end="1317">Add a maelstrom to the small 4×4 game in a location of your choice.</li>
+<li class="has-line-data" data-line-start="1317" data-line-end="1319">The player can sense maelstroms by hearing them in adjacent rooms. (“You hear the growling and<br>
 groaning of a maelstrom nearby.”)</li>
-<li class="has-line-data" data-line-start="1302" data-line-end="1306">If a player enters a room with a maelstrom, the player moves one space north and two spaces east,<br>
+<li class="has-line-data" data-line-start="1319" data-line-end="1323">If a player enters a room with a maelstrom, the player moves one space north and two spaces east,<br>
 while the maelstrom moves one space south and two spaces west. When the player is moved like<br>
 this, tell them so. If this would move the player or maelstrom beyond the map’s edge, ensure they<br>
 stay on the map. (Clamp them to the map, wrap around to the other side, or any other strategy.)</li>
-<li class="has-line-data" data-line-start="1306" data-line-end="1309">Note: When combined with the Small, Medium, or Large challenge, place one maelstrom into the<br>
+<li class="has-line-data" data-line-start="1323" data-line-end="1326">Note: When combined with the Small, Medium, or Large challenge, place one maelstrom into the<br>
 medium-sized game and two into the large-sized game.</li>
 </ul>
-<h2 class="code-line" data-line-start="1309" data-line-end="1310"><a id="Challenge_48_Amaroks_1309"></a>Challenge 48: Amaroks</h2>
-<p class="has-line-data" data-line-start="1310" data-line-end="1315">The Uncoded One has also placed amaroks in the caverns to protect the fountain from people like you.<br>
+<h2 class="code-line" data-line-start="1326" data-line-end="1327"><a id="Challenge_48_Amaroks_1326"></a>Challenge 48: Amaroks</h2>
+<p class="has-line-data" data-line-start="1327" data-line-end="1332">The Uncoded One has also placed amaroks in the caverns to protect the fountain from people like you.<br>
 Amaroks are giant, rotting, wolf-like creatures that stalk the caverns.When players enter a room with an<br>
 amarok, they are instantly killed, and the game is over. Players can smell an amarok in any adjacent room<br>
 (all eight directions), which tells them that an amarok is nearby.<br>
 Modify the basic Fountain of Objects game as described below.</p>
-<p class="has-line-data" data-line-start="1316" data-line-end="1317"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1333" data-line-end="1334"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1318" data-line-end="1320">Amarok locations are up to you. Pick a room to place an amarok aside from the entrance or fountain<br>
+<li class="has-line-data" data-line-start="1335" data-line-end="1337">Amarok locations are up to you. Pick a room to place an amarok aside from the entrance or fountain<br>
 room in the small 4×4 world.</li>
-<li class="has-line-data" data-line-start="1320" data-line-end="1323">When a player is in one of the eight spaces adjacent to an amarok, a message should be displayed<br>
+<li class="has-line-data" data-line-start="1337" data-line-end="1340">When a player is in one of the eight spaces adjacent to an amarok, a message should be displayed<br>
 when sensing surroundings that indicate that the player can smell the amarok nearby. For example,<br>
 “You can smell the rotten stench of an amarok in a nearby room.”</li>
-<li class="has-line-data" data-line-start="1323" data-line-end="1324">When a player enters a room with an amarok, the player dies and loses the game.</li>
-<li class="has-line-data" data-line-start="1324" data-line-end="1327">Note: When combined with the Small, Medium, or Large challenge, place two amaroks in the medium<br>
+<li class="has-line-data" data-line-start="1340" data-line-end="1341">When a player enters a room with an amarok, the player dies and loses the game.</li>
+<li class="has-line-data" data-line-start="1341" data-line-end="1344">Note: When combined with the Small, Medium, or Large challenge, place two amaroks in the medium<br>
 level and three in the large level in locations of your choosing.</li>
 </ul>
-<h2 class="code-line" data-line-start="1327" data-line-end="1328"><a id="Challenge_49_Getting_Armed_1327"></a>Challenge 49: Getting Armed</h2>
-<p class="has-line-data" data-line-start="1328" data-line-end="1331">Note: Requires doing the Maelstroms or Amaroks challenge first.<br>
+<h2 class="code-line" data-line-start="1344" data-line-end="1345"><a id="Challenge_49_Getting_Armed_1344"></a>Challenge 49: Getting Armed</h2>
+<p class="has-line-data" data-line-start="1345" data-line-end="1348">Note: Requires doing the Maelstroms or Amaroks challenge first.<br>
 The player brings a bow and several arrows with them into the Caverns.The player can shoot arrows into<br>
 the rooms around them, and if they hit a monster, they kill it, and it should no longer impact the game.</p>
-<p class="has-line-data" data-line-start="1332" data-line-end="1333"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1349" data-line-end="1350"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1334" data-line-end="1338">Add the following commands that allow a player to shoot in any of the four directions: shoot north,<br>
+<li class="has-line-data" data-line-start="1351" data-line-end="1355">Add the following commands that allow a player to shoot in any of the four directions: shoot north,<br>
 shoot east, shoot south, and shoot west.When the player shoots in one of the four directions, an arrow<br>
 is fired into the room in that direction. If a monster is in that room, it is killed and should not affect<br>
 the game anymore. They can no longer sense it, and it should not affect the player.</li>
-<li class="has-line-data" data-line-start="1338" data-line-end="1341">The player only has five arrows and cannot shoot when they are out of arrows. Display the number<br>
+<li class="has-line-data" data-line-start="1355" data-line-end="1358">The player only has five arrows and cannot shoot when they are out of arrows. Display the number<br>
 of arrows the player has when displaying the game’s status before asking for their action.</li>
 </ul>
-<h2 class="code-line" data-line-start="1341" data-line-end="1342"><a id="Challenge_50_Getting_Help_1341"></a>Challenge 50: Getting Help</h2>
-<p class="has-line-data" data-line-start="1342" data-line-end="1345">The player should not be left guessing about how to play the game. This challenge requires adding two<br>
+<h2 class="code-line" data-line-start="1358" data-line-end="1359"><a id="Challenge_50_Getting_Help_1358"></a>Challenge 50: Getting Help</h2>
+<p class="has-line-data" data-line-start="1359" data-line-end="1362">The player should not be left guessing about how to play the game. This challenge requires adding two<br>
 key elements that make playing the Fountain of Objects easier: introductory text that explains the game<br>
 and a help command that lists all available commands and what they each do.</p>
-<p class="has-line-data" data-line-start="1346" data-line-end="1347"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1363" data-line-end="1364"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1348" data-line-end="1354">When the game starts, display text that describes the game shown below:<br>
+<li class="has-line-data" data-line-start="1365" data-line-end="1371">When the game starts, display text that describes the game shown below:<br>
 You enter the Cavern of Objects, a maze of rooms filled with dangerous pits in search<br>
 of the Fountain of Objects.<br>
 Light is visible only in the entrance, and no other light is seen anywhere in the caverns.<br>
 You must navigate the Caverns with your other senses.<br>
 Find the Fountain of Objects, activate it, and return to the entrance.</li>
-<li class="has-line-data" data-line-start="1354" data-line-end="1356">If you chose to do the Pits challenge, add the following to the description: “Look out for pits. You<br>
+<li class="has-line-data" data-line-start="1371" data-line-end="1373">If you chose to do the Pits challenge, add the following to the description: “Look out for pits. You<br>
 will feel a breeze if a pit is in an adjacent room. If you enter a room with a pit, you will die.”</li>
-<li class="has-line-data" data-line-start="1356" data-line-end="1359">If you chose to do the Maelstroms challenge, add the following to the description: “Maelstroms are<br>
+<li class="has-line-data" data-line-start="1373" data-line-end="1376">If you chose to do the Maelstroms challenge, add the following to the description: “Maelstroms are<br>
 violent forces of sentient wind. Entering a room with one could transport you to any other location<br>
 in the caverns. You will be able to hear their growling and groaning in nearby rooms.”</li>
-<li class="has-line-data" data-line-start="1359" data-line-end="1361">If you chose to do the Amaroks challenge, add the following to the description: “Amaroks roam the<br>
+<li class="has-line-data" data-line-start="1376" data-line-end="1378">If you chose to do the Amaroks challenge, add the following to the description: “Amaroks roam the<br>
 caverns. Encountering one is certain death, but you can smell their rotten stench in nearby rooms.”</li>
-<li class="has-line-data" data-line-start="1361" data-line-end="1364">If you chose to do the Getting Armed challenge, add the following to the description: “You carry with<br>
+<li class="has-line-data" data-line-start="1378" data-line-end="1381">If you chose to do the Getting Armed challenge, add the following to the description: “You carry with<br>
 you a bow and a quiver of arrows. You can use them to shoot monsters in the caverns but be warned:<br>
 you have a limited supply.”</li>
-<li class="has-line-data" data-line-start="1364" data-line-end="1367">When the player types the command help, display all available commands and a short description<br>
+<li class="has-line-data" data-line-start="1381" data-line-end="1384">When the player types the command help, display all available commands and a short description<br>
 of what each does. The complete list of commands will depend on what challenges you complete.</li>
 </ul>
-<h2 class="code-line" data-line-start="1367" data-line-end="1368"><a id="Narrative_6_The_Fountain_Remade_1367"></a>Narrative 6: The Fountain Remade</h2>
-<p class="has-line-data" data-line-start="1368" data-line-end="1382">You scramble through the dark Cavern of Objects, crawling and feeling your way to the Fountain of<br>
+<h2 class="code-line" data-line-start="1384" data-line-end="1385"><a id="Narrative_6_The_Fountain_Remade_1384"></a>Narrative 6: The Fountain Remade</h2>
+<p class="has-line-data" data-line-start="1385" data-line-end="1399">You scramble through the dark Cavern of Objects, crawling and feeling your way to the Fountain of<br>
 Objects. The dripping sound that you hear is a giveaway that you have found it. You pull Simula’s green<br>
 gem—the Heart of Object-Oriented Programming—out of your pack and hold it in the palm of your<br>
 hand, contemplating the journey you have taken to get here.You slide your hand along the Fountain until<br>
@@ -1325,42 +1342,42 @@ With the River of Objects flowing again, the land will become bountiful with obj
 interface, and struct imaginable. The island has been saved. You turn your attention towards the<br>
 scattered islands on the horizon and your final destination beyond: a confrontation with The Uncoded<br>
 One.</p>
-<h2 class="code-line" data-line-start="1383" data-line-end="1384"><a id="Narrative_7_The_Harvest_of_Objects_1383"></a>Narrative 7: The Harvest of Objects</h2>
-<p class="has-line-data" data-line-start="1384" data-line-end="1388">A few days have passed since the Fountain of Objects was restored, but the land has already become<br>
+<h2 class="code-line" data-line-start="1400" data-line-end="1401"><a id="Narrative_7_The_Harvest_of_Objects_1400"></a>Narrative 7: The Harvest of Objects</h2>
+<p class="has-line-data" data-line-start="1401" data-line-end="1405">A few days have passed since the Fountain of Objects was restored, but the land has already become<br>
 more vibrant and lush. New objects and classes, unseen for thousands of clock cycles, have been found<br>
 again. The classes described in this level represent a collection of some of the most versatile and<br>
 interesting ones you have seen, and you gather some up for the rest of your journey.</p>
-<h2 class="code-line" data-line-start="1389" data-line-end="1390"><a id="Challenge_51_The_Robot_Pilot_1389"></a>Challenge 51: The Robot Pilot</h2>
-<p class="has-line-data" data-line-start="1390" data-line-end="1393">When we first made the Hunting the Manticore game in Level 14, we required two human players: one to<br>
+<h2 class="code-line" data-line-start="1406" data-line-end="1407"><a id="Challenge_51_The_Robot_Pilot_1406"></a>Challenge 51: The Robot Pilot</h2>
+<p class="has-line-data" data-line-start="1407" data-line-end="1410">When we first made the Hunting the Manticore game in Level 14, we required two human players: one to<br>
 set up the Manticore’s range from the city and the other to destroy it. With Random, we can turn this<br>
 into a single-player game by randomly picking the range for the Manticore.</p>
-<p class="has-line-data" data-line-start="1394" data-line-end="1395"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1411" data-line-end="1412"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1396" data-line-end="1398">Modify your Hunting the Manticore game to be a single-player game by having the computer pick a<br>
+<li class="has-line-data" data-line-start="1413" data-line-end="1415">Modify your Hunting the Manticore game to be a single-player game by having the computer pick a<br>
 random range between 0 and 100 (you can use the <code>Random</code> class for that).</li>
-<li class="has-line-data" data-line-start="1398" data-line-end="1402">Answer this question: How might you use inheritance, polymorphism, or interfaces to allow the<br>
+<li class="has-line-data" data-line-start="1415" data-line-end="1419">Answer this question: How might you use inheritance, polymorphism, or interfaces to allow the<br>
 game to be either a single player (the computer randomly chooses the starting location and<br>
 direction) or two players (the second human determines the starting location and direction)?</li>
 </ul>
-<h2 class="code-line" data-line-start="1402" data-line-end="1403"><a id="Challenge_52_Time_in_the_Cavern_1402"></a>Challenge 52: Time in the Cavern</h2>
-<p class="has-line-data" data-line-start="1403" data-line-end="1406">With LocalDateTime and Duration, you can track how much time a player spends in the Cavern of Objects<br>
+<h2 class="code-line" data-line-start="1419" data-line-end="1420"><a id="Challenge_52_Time_in_the_Cavern_1419"></a>Challenge 52: Time in the Cavern</h2>
+<p class="has-line-data" data-line-start="1420" data-line-end="1423">With LocalDateTime and Duration, you can track how much time a player spends in the Cavern of Objects<br>
 to beat the game. With these tools, modify your Fountain of Objects game to display how much time a<br>
 player spent exploring the caverns.</p>
-<p class="has-line-data" data-line-start="1407" data-line-end="1408"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1424" data-line-end="1425"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1409" data-line-end="1410">When a new game begins, capture the current time using LocalDateTime.</li>
-<li class="has-line-data" data-line-start="1410" data-line-end="1411">When a game finishes (win or loss), capture the current time.</li>
-<li class="has-line-data" data-line-start="1411" data-line-end="1413">Use Duration to compute how much time elapsed and display that to the player.</li>
+<li class="has-line-data" data-line-start="1426" data-line-end="1427">When a new game begins, capture the current time using LocalDateTime.</li>
+<li class="has-line-data" data-line-start="1427" data-line-end="1428">When a game finishes (win or loss), capture the current time.</li>
+<li class="has-line-data" data-line-start="1428" data-line-end="1430">Use Duration to compute how much time elapsed and display that to the player.</li>
 </ul>
-<h2 class="code-line" data-line-start="1413" data-line-end="1414"><a id="Challenge_53_Lists_of_Commands_1413"></a>Challenge 53: Lists of Commands</h2>
-<p class="has-line-data" data-line-start="1414" data-line-end="1417">In Level 27, we encountered a robot with an array to hold commands to run. But we could make the robot<br>
+<h2 class="code-line" data-line-start="1430" data-line-end="1431"><a id="Challenge_53_Lists_of_Commands_1430"></a>Challenge 53: Lists of Commands</h2>
+<p class="has-line-data" data-line-start="1431" data-line-end="1434">In Level 27, we encountered a robot with an array to hold commands to run. But we could make the robot<br>
 have as many commands as we want by turning the array into a list. Revisit that challenge to make the<br>
 robot use a list instead of an array, and add commands to run until the user says to stop.</p>
-<p class="has-line-data" data-line-start="1418" data-line-end="1419"><strong>Objectives</strong>:</p>
-<p class="has-line-data" data-line-start="1420" data-line-end="1422">• Change the Robot class to use a <code>List&lt;RobotCommand&gt;</code> instead of an array for its Commands (you can use an <code>ArrayList</code> as the concrete class to base the List on).<br>
+<p class="has-line-data" data-line-start="1435" data-line-end="1436"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1437" data-line-end="1439">• Change the Robot class to use a <code>List&lt;RobotCommand&gt;</code> instead of an array for its Commands (you can use an <code>ArrayList</code> as the concrete class to base the List on).<br>
 • Instead of looping three times, go until the user types stop.Then run all of the commands created.</p>
-<h2 class="code-line" data-line-start="1423" data-line-end="1424"><a id="Narrative_8_Gathering_Medallions_1423"></a>Narrative 8: Gathering Medallions</h2>
-<p class="has-line-data" data-line-start="1424" data-line-end="1437">You stand on the east coast of the vast island of Object-Oriented Programming. A strong breeze blows<br>
+<h2 class="code-line" data-line-start="1440" data-line-end="1441"><a id="Narrative_8_Gathering_Medallions_1440"></a>Narrative 8: Gathering Medallions</h2>
+<p class="has-line-data" data-line-start="1441" data-line-end="1454">You stand on the east coast of the vast island of Object-Oriented Programming. A strong breeze blows<br>
 salty air across your face as the sun rises above the watery horizon. You study your maps. Ahead of you<br>
 lies the scattered Islands of Advanced Features, and beyond that, the Domain of the Uncoded One—<br>
 your final destination.<br>
@@ -1373,24 +1390,24 @@ Yet time is short; every clock cycle you delay gives the Uncoded One more time t
 may even give it the time needed to uncode and unravel the world itself.<br>
 You grab a pencil and begin making tentative plans on your map about the final leg of your journey<br>
 through the Islands of Advanced Features.</p>
-<h2 class="code-line" data-line-start="1438" data-line-end="1439"><a id="Challenge_54_The_Feud_1438"></a>Challenge 54: The Feud</h2>
-<p class="has-line-data" data-line-start="1439" data-line-end="1443">On the Island of Packages, two families of ranchers are caretakers of the Medallion of Packages.<br>
+<h2 class="code-line" data-line-start="1455" data-line-end="1456"><a id="Challenge_54_The_Feud_1455"></a>Challenge 54: The Feud</h2>
+<p class="has-line-data" data-line-start="1456" data-line-end="1460">On the Island of Packages, two families of ranchers are caretakers of the Medallion of Packages.<br>
 They are in a feud. They are the iFields and the McDroids. The iFields ranch sheep and pigs and the<br>
 McDroids ranch pigs and cows. Since both have pigs, they keep having conflicts. The two families will<br>
 give you the Medallion of Packages if you can resolve the dispute and help them track their animals.</p>
-<p class="has-line-data" data-line-start="1444" data-line-end="1445"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1461" data-line-end="1462"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1446" data-line-end="1447">Create a Sheep class in the ifield package (fully qualified name of ifield.Sheep).</li>
-<li class="has-line-data" data-line-start="1447" data-line-end="1448">Create a Pig class in the ifield package (fully qualified name of ifield.Pig).</li>
-<li class="has-line-data" data-line-start="1448" data-line-end="1449">Create a Cow class in the mcdroid package (fully qualified name of mcdroid.Cow).</li>
-<li class="has-line-data" data-line-start="1449" data-line-end="1450">Create a Pig class in the mcdroid package (fully qualified name of mcdroid.Pig).</li>
-<li class="has-line-data" data-line-start="1450" data-line-end="1455">For your main method, add import statement for both the ifield and mcdroid packages. Make new<br>
+<li class="has-line-data" data-line-start="1463" data-line-end="1464">Create a Sheep class in the ifield package (fully qualified name of ifield.Sheep).</li>
+<li class="has-line-data" data-line-start="1464" data-line-end="1465">Create a Pig class in the ifield package (fully qualified name of ifield.Pig).</li>
+<li class="has-line-data" data-line-start="1465" data-line-end="1466">Create a Cow class in the mcdroid package (fully qualified name of mcdroid.Cow).</li>
+<li class="has-line-data" data-line-start="1466" data-line-end="1467">Create a Pig class in the mcdroid package (fully qualified name of mcdroid.Pig).</li>
+<li class="has-line-data" data-line-start="1467" data-line-end="1472">For your main method, add import statement for both the ifield and mcdroid packages. Make new<br>
 instances of all four classes. There are no conflicts with Sheep and Cow, so make sure you can create<br>
 new instances of those with new Sheep() and new Cow(). Resolve the conflicting Pig classes with<br>
 either an alias or fully qualified names.</li>
 </ul>
-<h2 class="code-line" data-line-start="1455" data-line-end="1456"><a id="Challenge_55_Dueling_Traditions_1455"></a>Challenge 55: Dueling Traditions</h2>
-<p class="has-line-data" data-line-start="1456" data-line-end="1465">The inhabitants of Programain, guardians of the Medallion of Organization, seem to be hiding from you,<br>
+<h2 class="code-line" data-line-start="1472" data-line-end="1473"><a id="Challenge_55_Dueling_Traditions_1472"></a>Challenge 55: Dueling Traditions</h2>
+<p class="has-line-data" data-line-start="1473" data-line-end="1482">The inhabitants of Programain, guardians of the Medallion of Organization, seem to be hiding from you,<br>
 peering at you through shuttered windows, leaving you alone on the dusty streets. The only other people<br>
 on the road stand in front of you—a gray-haired wrinkle-faced woman and two toughs who stand just<br>
 behind her. “We heard a Programmer might be headed our way. But you’re no True Programmer. In the<br>
@@ -1399,33 +1416,33 @@ multiple files. You probably don’t even know what those things are. Bah.” Sh
 demands you leave, but you know you can win her and the townspeople over—and acquire the Medallion<br>
 of Organization—if you can show you know how to use the tools she named. Do the following with one<br>
 of the larger programs you have created in another challenge.</p>
-<p class="has-line-data" data-line-start="1466" data-line-end="1467"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1483" data-line-end="1484"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1468" data-line-end="1469">Use a package for all the code of the chosen challenge (if you haven’t already done so)</li>
-<li class="has-line-data" data-line-start="1469" data-line-end="1470">Place each type in its own file. (Small types like enumerations or records can be an exception.)</li>
-<li class="has-line-data" data-line-start="1470" data-line-end="1473">Answer this question: Having used both a single file and multi-file program, (and possibly no package versus an explicitly declared package) which<br>
+<li class="has-line-data" data-line-start="1485" data-line-end="1486">Use a package for all the code of the chosen challenge (if you haven’t already done so)</li>
+<li class="has-line-data" data-line-start="1486" data-line-end="1487">Place each type in its own file. (Small types like enumerations or records can be an exception.)</li>
+<li class="has-line-data" data-line-start="1487" data-line-end="1490">Answer this question: Having used both a single file and multi-file program, (and possibly no package versus an explicitly declared package) which<br>
 do you prefer and why?</li>
 </ul>
-<h2 class="code-line" data-line-start="1473" data-line-end="1474"><a id="Challenge_56_Safer_Number_Crunching_1473"></a>Challenge 56: Safer Number Crunching</h2>
-<p class="has-line-data" data-line-start="1474" data-line-end="1481">“Master Programmer! We need your help! We are but humble number crunchers. We read numbers in,<br>
+<h2 class="code-line" data-line-start="1490" data-line-end="1491"><a id="Challenge_56_Safer_Number_Crunching_1490"></a>Challenge 56: Safer Number Crunching</h2>
+<p class="has-line-data" data-line-start="1491" data-line-end="1498">“Master Programmer! We need your help! We are but humble number crunchers. We read numbers in,<br>
 work with them for a bit, then display the results. But not everybody enters good numbers. Sometimes,<br>
 we type in wrong things by accident. And sometimes, somebody does it on purpose. Trolls, looking to<br>
 cause trouble, I tell ya!<br>
 “We’ve heard about those methods that return so-called ‘Optionals’ that cannot fail or break. We know you’re here<br>
 looking for Medallions and allies. If you can help us with this, the Medallion of Optional is yours,<br>
 and we will join you at the final battle.”</p>
-<p class="has-line-data" data-line-start="1482" data-line-end="1483"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1499" data-line-end="1500"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1484" data-line-end="1485">Create a program that asks the user for an int value. Using Integer.parseInt(), and a try-catch block create a method that returns an <code>Optional&lt;Integer&gt;</code></li>
-<li class="has-line-data" data-line-start="1485" data-line-end="1486">Let the program call that method and loop until the user enters a valid value.</li>
-<li class="has-line-data" data-line-start="1486" data-line-end="1488">Extend the program to do the same for both double and boolean. Note: a boolean is a bit tricky, as it will almost always return false, also for inputs like <code>null</code> or “very very true!”. Make it only return false when it is really “False” or such (ignoring case).</li>
+<li class="has-line-data" data-line-start="1501" data-line-end="1502">Create a program that asks the user for an int value. Using Integer.parseInt(), and a try-catch block create a method that returns an <code>Optional&lt;Integer&gt;</code></li>
+<li class="has-line-data" data-line-start="1502" data-line-end="1503">Let the program call that method and loop until the user enters a valid value.</li>
+<li class="has-line-data" data-line-start="1503" data-line-end="1505">Extend the program to do the same for both double and boolean. Note: a boolean is a bit tricky, as it will almost always return false, also for inputs like <code>null</code> or “very very true!”. Make it only return false when it is really “False” or such (ignoring case).</li>
 </ul>
-<h2 class="code-line" data-line-start="1488" data-line-end="1489"><a id="Challenge_57_Better_Random_1488"></a>Challenge 57: Better Random</h2>
-<p class="has-line-data" data-line-start="1489" data-line-end="1492">The villagers of Randetherin often use the Random class but struggle with its limited capabilities. They<br>
+<h2 class="code-line" data-line-start="1505" data-line-end="1506"><a id="Challenge_57_Better_Random_1505"></a>Challenge 57: Better Random</h2>
+<p class="has-line-data" data-line-start="1506" data-line-end="1509">The villagers of Randetherin often use the Random class but struggle with its limited capabilities. They<br>
 have asked for your help to make Random better. They offer you the Medallion of Powerful Methods in<br>
 exchange. Their complaints are as follows:</p>
 <ul>
-<li class="has-line-data" data-line-start="1493" data-line-end="1501">Random.nextDouble() only returns values between 0 and 1, and they often need to be able to<br>
+<li class="has-line-data" data-line-start="1510" data-line-end="1518">Random.nextDouble() only returns values between 0 and 1, and they often need to be able to<br>
 produce random double values between 0 and another number, such as 0 to 10.<br>
 • They need to randomly choose from one of several strings, such as “up”, “down”, “left”, and<br>
 “right”, with each having an equal probability of being chosen.<br>
@@ -1433,22 +1450,22 @@ produce random double values between 0 and another number, such as 0 to 10.<br>
 heads and 50% tails) but occasionally want unequal probabilities. For example, a 75% chance of true<br>
 and a 25% chance of false.</li>
 </ul>
-<p class="has-line-data" data-line-start="1501" data-line-end="1502"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1518" data-line-end="1519"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1503" data-line-end="1504">Create a new class to that contains methods that extends those of Random. Call it <code>RandomUtils</code>, for example.</li>
-<li class="has-line-data" data-line-start="1504" data-line-end="1506">Add a static nextDouble method that gives a maximum value for a<br>
+<li class="has-line-data" data-line-start="1520" data-line-end="1521">Create a new class to that contains methods that extends those of Random. Call it <code>RandomUtils</code>, for example.</li>
+<li class="has-line-data" data-line-start="1521" data-line-end="1523">Add a static nextDouble method that gives a maximum value for a<br>
 randomly generated double.</li>
-<li class="has-line-data" data-line-start="1506" data-line-end="1508">Add a static nextString method that allows you to pass in any number of string<br>
+<li class="has-line-data" data-line-start="1523" data-line-end="1525">Add a static nextString method that allows you to pass in any number of string<br>
 values (using varargs) and randomly pick one of them.</li>
-<li class="has-line-data" data-line-start="1508" data-line-end="1509">Add a static coinFlip method that randomly picks a boolean value.</li>
-<li class="has-line-data" data-line-start="1509" data-line-end="1511">Made an overload of the coinFlip method that has a parameter<br>
+<li class="has-line-data" data-line-start="1525" data-line-end="1526">Add a static coinFlip method that randomly picks a boolean value.</li>
+<li class="has-line-data" data-line-start="1526" data-line-end="1528">Made an overload of the coinFlip method that has a parameter<br>
 that indicates the frequency of heads coming up, which should default to 0.5, or 50% of the time.</li>
-<li class="has-line-data" data-line-start="1511" data-line-end="1515">Bonus: try to make one coinFlip method refer to the other coinFlip method to reduce code duplication.<br>
+<li class="has-line-data" data-line-start="1528" data-line-end="1532">Bonus: try to make one coinFlip method refer to the other coinFlip method to reduce code duplication.<br>
 • Answer this question: In your opinion, would it be better to make a derived AdvancedRandom<br>
 class that adds these methods or use static methods in the current kind of utility class, and why?</li>
 </ul>
-<h2 class="code-line" data-line-start="1515" data-line-end="1516"><a id="Day_49_Exeptis_Game_1515"></a>Day 49 Exepti’s Game</h2>
-<p class="has-line-data" data-line-start="1516" data-line-end="1526">On the Island of Exceptions, you find the village of Excepti, which has seen little happiness and joy since<br>
+<h2 class="code-line" data-line-start="1532" data-line-end="1533"><a id="Challenge_58_Exceptis_Game_1532"></a>Challenge 58: Excepti’s Game</h2>
+<p class="has-line-data" data-line-start="1533" data-line-end="1543">On the Island of Exceptions, you find the village of Excepti, which has seen little happiness and joy since<br>
 the arrival of The Uncoded One. The Exceptians used to have a game that they played called Cookie<br>
 Exception. The village leader, Noit Pecxe, promises the warriors of Excepti will join you against the<br>
 Uncoded One if you can recreate their ancient tradition in a program. Noit offers you the Medallion of<br>
@@ -1458,48 +1475,48 @@ cookies are mixed and put in a dark room with two players who can’t see the co
 a turn picking a cookie randomly and shoving it in their mouth without seeing whether it is a delicious<br>
 chocolate chip cookie or an awful oatmeal raisin cookie. If they pick wrong and eat the oatmeal raisin<br>
 cookie, they lose. If their opponent eats the oatmeal raisin cookie, then they win.</p>
-<p class="has-line-data" data-line-start="1527" data-line-end="1528"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1544" data-line-end="1545"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1529" data-line-end="1531">The game will pick a random number between 0 and 9 (inclusive) to represent the oatmeal raisin<br>
+<li class="has-line-data" data-line-start="1546" data-line-end="1548">The game will pick a random number between 0 and 9 (inclusive) to represent the oatmeal raisin<br>
 cookie.</li>
-<li class="has-line-data" data-line-start="1531" data-line-end="1532">The game will allow players to take turns picking numbers between 0 and 9.</li>
-<li class="has-line-data" data-line-start="1532" data-line-end="1535">If a player repeats a number that has been already used, the program should make them select<br>
+<li class="has-line-data" data-line-start="1548" data-line-end="1549">The game will allow players to take turns picking numbers between 0 and 9.</li>
+<li class="has-line-data" data-line-start="1549" data-line-end="1552">If a player repeats a number that has been already used, the program should make them select<br>
 another. Hint: If you use a <code>List&lt;Integer&gt;</code> (or <code>Set&lt;Integer&gt;</code>) to store previously chosen numbers, you can use its<br>
 contains method to see if a number has been used before.</li>
-<li class="has-line-data" data-line-start="1535" data-line-end="1537">If the number matches the one the game picked initially, an exception should be thrown, terminating<br>
+<li class="has-line-data" data-line-start="1552" data-line-end="1554">If the number matches the one the game picked initially, an exception should be thrown, terminating<br>
 the program. Run the program at least once like this to see it crash.</li>
-<li class="has-line-data" data-line-start="1537" data-line-end="1538">Put in a try/catch block to handle the exception and display the results.</li>
-<li class="has-line-data" data-line-start="1538" data-line-end="1540">Answer this question: Did you make a custom exception type or use an existing one, and why did<br>
+<li class="has-line-data" data-line-start="1554" data-line-end="1555">Put in a try/catch block to handle the exception and display the results.</li>
+<li class="has-line-data" data-line-start="1555" data-line-end="1557">Answer this question: Did you make a custom exception type or use an existing one, and why did<br>
 you choose what you did?</li>
-<li class="has-line-data" data-line-start="1540" data-line-end="1544">Answer this question: You could write this program without exceptions, but the requirements<br>
+<li class="has-line-data" data-line-start="1557" data-line-end="1561">Answer this question: You could write this program without exceptions, but the requirements<br>
 demanded an exception for learning purposes. If you didn’t have that requirement, would you have<br>
 used an exception? Why or why not?</li>
 </ul>
-<h2 class="code-line" data-line-start="1544" data-line-end="1545"><a id="Challenge_59_The_Sieve_1544"></a>Challenge 59: The Sieve</h2>
-<p class="has-line-data" data-line-start="1545" data-line-end="1549">The Island of Predicata is home to the Numeromechanical Sieve, a machine that takes numbers and judges<br>
+<h2 class="code-line" data-line-start="1561" data-line-end="1562"><a id="Challenge_59_The_Sieve_1561"></a>Challenge 59: The Sieve</h2>
+<p class="has-line-data" data-line-start="1562" data-line-end="1566">The Island of Predicata is home to the Numeromechanical Sieve, a machine that takes numbers and judges<br>
 them as good or bad numbers. In ancient times, the sieve could be supplied with a single method to use<br>
 as a filter by the island’s rulers, making the sieve adaptable as leadership changed over time. The<br>
 Predicatans will give you the Medallion of Predicates if you can reforge their Numeromechanical Sieve.</p>
-<p class="has-line-data" data-line-start="1550" data-line-end="1551"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1567" data-line-end="1568"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1552" data-line-end="1554">Create a Sieve class with a public boolean isGood(int number) method. This class needs a<br>
+<li class="has-line-data" data-line-start="1569" data-line-end="1571">Create a Sieve class with a public boolean isGood(int number) method. This class needs a<br>
 constructor with a Predicate parameter that can be invoked later within the isGood method.</li>
-<li class="has-line-data" data-line-start="1554" data-line-end="1556">Define methods with an int parameter and a boolean return type for the following: (1) returns true<br>
+<li class="has-line-data" data-line-start="1571" data-line-end="1573">Define methods with an int parameter and a boolean return type for the following: (1) returns true<br>
 for even numbers, (2) returns true for positive numbers, and (3) returns true for multiples of 10.</li>
-<li class="has-line-data" data-line-start="1556" data-line-end="1559">Create a program that asks the user to pick one of those three filters, constructs a new Sieve<br>
+<li class="has-line-data" data-line-start="1573" data-line-end="1576">Create a program that asks the user to pick one of those three filters, constructs a new Sieve<br>
 instance by passing in one of those methods as a parameter, and then ask the user to enter numbers<br>
 repeatedly, displaying whether the number is good or bad depending on the filter in use.</li>
-<li class="has-line-data" data-line-start="1559" data-line-end="1562">Answer this question: Describe how you could have also solved this problem with inheritance and<br>
+<li class="has-line-data" data-line-start="1576" data-line-end="1579">Answer this question: Describe how you could have also solved this problem with inheritance and<br>
 polymorphism. Which solution seems more straightforward to you, and why?</li>
 </ul>
-<h2 class="code-line" data-line-start="1562" data-line-end="1563"><a id="Challenge_60_Charberry_Trees_1562"></a>Challenge 60: Charberry Trees</h2>
-<p class="has-line-data" data-line-start="1563" data-line-end="1569">The Island of Observia survives by harvesting and eating the fruit of the native charberry trees. Harvesting<br>
+<h2 class="code-line" data-line-start="1579" data-line-end="1580"><a id="Challenge_60_Charberry_Trees_1579"></a>Challenge 60: Charberry Trees</h2>
+<p class="has-line-data" data-line-start="1580" data-line-end="1586">The Island of Observia survives by harvesting and eating the fruit of the native charberry trees. Harvesting<br>
 charberry fruit requires three people and an afternoon, but two is enough to feed a family for a week.<br>
 Charberry trees fruit randomly, requiring somebody to frequently check in on the plants to notice one<br>
 has fruited. Observia will give you the Medallion of Observers if you can help them with two things: (1)<br>
 automatically notify people as soon as a tree ripens and (2) automatically harvest the fruit. Their tree<br>
 looks like this:</p>
-<pre><code class="has-line-data" data-line-start="1571" data-line-end="1591">class Observia {
+<pre><code class="has-line-data" data-line-start="1588" data-line-end="1608">class Observia {
 
     public static void main(String[] args ) {
         CharberryTree tree = new CharberryTree();
@@ -1519,101 +1536,101 @@ class CharberryTree {
    }
 }
 </code></pre>
-<p class="has-line-data" data-line-start="1592" data-line-end="1593"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1609" data-line-end="1610"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1594" data-line-end="1595">Make a new project that includes the above code.</li>
-<li class="has-line-data" data-line-start="1595" data-line-end="1596">Make a Notifier class with a <code>handle</code> method that displays something like “A charberry fruit has ripened!” to the console window.</li>
-<li class="has-line-data" data-line-start="1596" data-line-end="1597">Make a Harvester class that knows about the tree. When it is called, it sets the tree’s “ripe” field back to false</li>
-<li class="has-line-data" data-line-start="1597" data-line-end="1598">make the CharberryTree class implement the Listener (also known as Observer) pattern. (If you don’t know it, Google “observer pattern java”)</li>
-<li class="has-line-data" data-line-start="1598" data-line-end="1599">Hint: for ease of programming, it may help to have the <code>handle</code> method in the Notifier class also take an argument of type CharberryTree</li>
-<li class="has-line-data" data-line-start="1599" data-line-end="1601">Update your main method to create a tree, notifier, and harvester, and get them to work together<br>
+<li class="has-line-data" data-line-start="1611" data-line-end="1612">Make a new project that includes the above code.</li>
+<li class="has-line-data" data-line-start="1612" data-line-end="1613">Make a Notifier class with a <code>handle</code> method that displays something like “A charberry fruit has ripened!” to the console window.</li>
+<li class="has-line-data" data-line-start="1613" data-line-end="1614">Make a Harvester class that knows about the tree. When it is called, it sets the tree’s “ripe” field back to false</li>
+<li class="has-line-data" data-line-start="1614" data-line-end="1615">make the CharberryTree class implement the Listener (also known as Observer) pattern. (If you don’t know it, Google “observer pattern java”)</li>
+<li class="has-line-data" data-line-start="1615" data-line-end="1616">Hint: for ease of programming, it may help to have the <code>handle</code> method in the Notifier class also take an argument of type CharberryTree</li>
+<li class="has-line-data" data-line-start="1616" data-line-end="1618">Update your main method to create a tree, notifier, and harvester, and get them to work together<br>
 to grow, notify, and harvest forever.</li>
 </ul>
-<h2 class="code-line" data-line-start="1603" data-line-end="1604"><a id="Challenge_61_The_Lambda_Sieve_1603"></a>Challenge 61: The Lambda Sieve</h2>
-<p class="has-line-data" data-line-start="1604" data-line-end="1608">The city of Lambdan, also on the Island of Predicata, believes that the great Numeromechanical Sieve,<br>
+<h2 class="code-line" data-line-start="1620" data-line-end="1621"><a id="Challenge_61_The_Lambda_Sieve_1620"></a>Challenge 61: The Lambda Sieve</h2>
+<p class="has-line-data" data-line-start="1621" data-line-end="1625">The city of Lambdan, also on the Island of Predicata, believes that the great Numeromechanical Sieve,<br>
 which you worked on in Level 36, could be made better by using lambda expressions instead of regular,<br>
 named methods. If you can help them convince island leadership to make this change, they will give you<br>
 the Lambda Medallion and pledge the Lambdani Fleet’s assistance in the coming final battle.</p>
-<p class="has-line-data" data-line-start="1609" data-line-end="1610"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1626" data-line-end="1627"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1611" data-line-end="1613">Modify your The Sieve program from Level 36 to use lambda expressions for the constructor instead<br>
+<li class="has-line-data" data-line-start="1628" data-line-end="1630">Modify your The Sieve program from Level 36 to use lambda expressions for the constructor instead<br>
 of named methods for each of the three filters.</li>
-<li class="has-line-data" data-line-start="1613" data-line-end="1614">Answer this question: Does this change make the program shorter or longer?</li>
-<li class="has-line-data" data-line-start="1614" data-line-end="1616">Answer this question: Does this change make the program easier to read or harder?</li>
+<li class="has-line-data" data-line-start="1630" data-line-end="1631">Answer this question: Does this change make the program shorter or longer?</li>
+<li class="has-line-data" data-line-start="1631" data-line-end="1633">Answer this question: Does this change make the program easier to read or harder?</li>
 </ul>
-<h2 class="code-line" data-line-start="1616" data-line-end="1617"><a id="Challenge_62_The_Long_Game_1616"></a>Challenge 62: The Long Game</h2>
-<p class="has-line-data" data-line-start="1617" data-line-end="1622">The island of Io has a long-running tradition that was destroyed when the Uncoded One arrived. The<br>
+<h2 class="code-line" data-line-start="1633" data-line-end="1634"><a id="Challenge_62_The_Long_Game_1633"></a>Challenge 62: The Long Game</h2>
+<p class="has-line-data" data-line-start="1634" data-line-end="1639">The island of Io has a long-running tradition that was destroyed when the Uncoded One arrived. The<br>
 inhabitants of Io would compete over a long period of time to see who could press the most keys on the<br>
 keyboard. But the Uncoded One’s arrival destroyed the island’s ability to use the Medallion of Files, and<br>
 the historic competitions spanning days, weeks, and months have become impossible. As a True<br>
 Programmer, you can use the Medallion of Files to bring back these long-running games to the island.</p>
-<p class="has-line-data" data-line-start="1623" data-line-end="1624"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1640" data-line-end="1641"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1625" data-line-end="1626">When the program starts, ask the user to enter their name.</li>
-<li class="has-line-data" data-line-start="1626" data-line-end="1627">By default, the player starts with a score of 0.</li>
-<li class="has-line-data" data-line-start="1627" data-line-end="1628">Add 1 point to their score for every character they type. Hint: it appears the Ioans of yore did not accept anything less than a Holy Whole Line that was ended with an Enter key press, so the characters will only be counted after the Enter key has been pressed. The enter key does not count towards the score itself, however, as one should not overuse sacred keys…</li>
-<li class="has-line-data" data-line-start="1628" data-line-end="1629">Display the player’s updated score after each press of the Enter key.</li>
-<li class="has-line-data" data-line-start="1629" data-line-end="1630">End the game when the player enters the holy word IO (and then of course Enter)</li>
-<li class="has-line-data" data-line-start="1630" data-line-end="1633">When the game ends, save the user’s score in a file. Hint: Consider saving this to a file named<br>
+<li class="has-line-data" data-line-start="1642" data-line-end="1643">When the program starts, ask the user to enter their name.</li>
+<li class="has-line-data" data-line-start="1643" data-line-end="1644">By default, the player starts with a score of 0.</li>
+<li class="has-line-data" data-line-start="1644" data-line-end="1645">Add 1 point to their score for every character they type. Hint: it appears the Ioans of yore did not accept anything less than a Holy Whole Line that was ended with an Enter key press, so the characters will only be counted after the Enter key has been pressed. The enter key does not count towards the score itself, however, as one should not overuse sacred keys…</li>
+<li class="has-line-data" data-line-start="1645" data-line-end="1646">Display the player’s updated score after each press of the Enter key.</li>
+<li class="has-line-data" data-line-start="1646" data-line-end="1647">End the game when the player enters the holy word IO (and then of course Enter)</li>
+<li class="has-line-data" data-line-start="1647" data-line-end="1650">When the game ends, save the user’s score in a file. Hint: Consider saving this to a file named<br>
 [username].txt. For this challenge, you can assume the user doesn’t enter a name that would produce<br>
 an illegal file name (such as *).</li>
-<li class="has-line-data" data-line-start="1633" data-line-end="1636">When a user enters a name at the start, if they already have a previously saved score, start with that<br>
+<li class="has-line-data" data-line-start="1650" data-line-end="1653">When a user enters a name at the start, if they already have a previously saved score, start with that<br>
 score instead.</li>
 </ul>
-<h2 class="code-line" data-line-start="1636" data-line-end="1637"><a id="Challenge_63_The_Potion_Masters_of_Statem_1636"></a>Challenge 63: The Potion Masters of Statem</h2>
-<p class="has-line-data" data-line-start="1637" data-line-end="1640">The island of Statem is home to skilled potion masters in need of some help. Potions are mixed by adding<br>
+<h2 class="code-line" data-line-start="1653" data-line-end="1654"><a id="Challenge_63_The_Potion_Masters_of_Statem_1653"></a>Challenge 63: The Potion Masters of Statem</h2>
+<p class="has-line-data" data-line-start="1654" data-line-end="1657">The island of Statem is home to skilled potion masters in need of some help. Potions are mixed by adding<br>
 one ingredient at a time until they produce a valuable potion type. The potion masters will give you the<br>
 Statem Medallion if you help them make a program to build potions according to the rules below:</p>
 <ul>
-<li class="has-line-data" data-line-start="1641" data-line-end="1642">All potions start as water.</li>
-<li class="has-line-data" data-line-start="1642" data-line-end="1643">Adding stardust to water turns it into an elixir.</li>
-<li class="has-line-data" data-line-start="1643" data-line-end="1644">Adding snake venom to an elixir turns it into a poison potion.</li>
-<li class="has-line-data" data-line-start="1644" data-line-end="1645">Adding dragon breath to an elixir turns it into a flying potion.</li>
-<li class="has-line-data" data-line-start="1645" data-line-end="1646">Adding shadow glass to an elixir turns it into an invisibility potion.</li>
-<li class="has-line-data" data-line-start="1646" data-line-end="1647">Adding an eyeshine gem to an elixir turns it into a night sight potion.</li>
-<li class="has-line-data" data-line-start="1647" data-line-end="1648">Adding shadow glass to a night sight potion turns it into a cloudy brew.</li>
-<li class="has-line-data" data-line-start="1648" data-line-end="1649">Adding an eyeshine gem to an invisibility potion turns it into a cloudy brew.</li>
-<li class="has-line-data" data-line-start="1649" data-line-end="1650">Adding stardust to a cloudy brew turns it into a wraith potion.</li>
-<li class="has-line-data" data-line-start="1650" data-line-end="1652">Anything else results in a ruined potion.</li>
+<li class="has-line-data" data-line-start="1658" data-line-end="1659">All potions start as water.</li>
+<li class="has-line-data" data-line-start="1659" data-line-end="1660">Adding stardust to water turns it into an elixir.</li>
+<li class="has-line-data" data-line-start="1660" data-line-end="1661">Adding snake venom to an elixir turns it into a poison potion.</li>
+<li class="has-line-data" data-line-start="1661" data-line-end="1662">Adding dragon breath to an elixir turns it into a flying potion.</li>
+<li class="has-line-data" data-line-start="1662" data-line-end="1663">Adding shadow glass to an elixir turns it into an invisibility potion.</li>
+<li class="has-line-data" data-line-start="1663" data-line-end="1664">Adding an eyeshine gem to an elixir turns it into a night sight potion.</li>
+<li class="has-line-data" data-line-start="1664" data-line-end="1665">Adding shadow glass to a night sight potion turns it into a cloudy brew.</li>
+<li class="has-line-data" data-line-start="1665" data-line-end="1666">Adding an eyeshine gem to an invisibility potion turns it into a cloudy brew.</li>
+<li class="has-line-data" data-line-start="1666" data-line-end="1667">Adding stardust to a cloudy brew turns it into a wraith potion.</li>
+<li class="has-line-data" data-line-start="1667" data-line-end="1669">Anything else results in a ruined potion.</li>
 </ul>
-<p class="has-line-data" data-line-start="1652" data-line-end="1653"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1669" data-line-end="1670"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1654" data-line-end="1655">Create enumerations for the potion and ingredient types.</li>
-<li class="has-line-data" data-line-start="1655" data-line-end="1656">Tell the user what type of potion they currently have and what ingredient choices are available.</li>
-<li class="has-line-data" data-line-start="1656" data-line-end="1657">Allow them to enter an ingredient choice.</li>
-<li class="has-line-data" data-line-start="1657" data-line-end="1658">Change the current potion type according to the rules above.</li>
-<li class="has-line-data" data-line-start="1658" data-line-end="1660">Allow them to choose whether to complete the potion or continue before adding an ingredient. If<br>
+<li class="has-line-data" data-line-start="1671" data-line-end="1672">Create enumerations for the potion and ingredient types.</li>
+<li class="has-line-data" data-line-start="1672" data-line-end="1673">Tell the user what type of potion they currently have and what ingredient choices are available.</li>
+<li class="has-line-data" data-line-start="1673" data-line-end="1674">Allow them to enter an ingredient choice.</li>
+<li class="has-line-data" data-line-start="1674" data-line-end="1675">Change the current potion type according to the rules above.</li>
+<li class="has-line-data" data-line-start="1675" data-line-end="1677">Allow them to choose whether to complete the potion or continue before adding an ingredient. If<br>
 the user decides to complete the potion, end the program.</li>
-<li class="has-line-data" data-line-start="1660" data-line-end="1661">When the user creates a ruined potion, tell them and start over with water.</li>
-<li class="has-line-data" data-line-start="1661" data-line-end="1663">Bonus: some people in the outside world would compare the potions to a ‘finite state machine’. Read a bit about it, and think of the other options you would have to implement it.</li>
+<li class="has-line-data" data-line-start="1677" data-line-end="1678">When the user creates a ruined potion, tell them and start over with water.</li>
+<li class="has-line-data" data-line-start="1678" data-line-end="1680">Bonus: some people in the outside world would compare the potions to a ‘finite state machine’. Read a bit about it, and think of the other options you would have to implement it.</li>
 </ul>
-<h2 class="code-line" data-line-start="1663" data-line-end="1664"><a id="Challenge_64_The_Two_Lenses_1663"></a>Challenge 64: The Two Lenses</h2>
-<p class="has-line-data" data-line-start="1664" data-line-end="1669">The Guardian of the Medallion of Lambdas, Lennik, has long awaited when he can return the Medallion<br>
+<h2 class="code-line" data-line-start="1680" data-line-end="1681"><a id="Challenge_64_The_Two_Lenses_1680"></a>Challenge 64: The Two Lenses</h2>
+<p class="has-line-data" data-line-start="1681" data-line-end="1686">The Guardian of the Medallion of Lambdas, Lennik, has long awaited when he can return the Medallion<br>
 to a worthy programmer. But he only wants to give it to somebody who truly understands the value of<br>
 lambdas. He requires you to build a solution to a simple problem two times over. Lennik gives you the<br>
 following array of positive numbers: [1, 9, 2, 8, 3, 7, 4, 6, 5]. He asks you to make a new collection from this<br>
 data where:</p>
 <ul>
-<li class="has-line-data" data-line-start="1670" data-line-end="1671">All the odd numbers are filtered out, and only the even should be considered.</li>
-<li class="has-line-data" data-line-start="1671" data-line-end="1672">The numbers are in order.</li>
-<li class="has-line-data" data-line-start="1672" data-line-end="1674">The numbers are doubled.</li>
+<li class="has-line-data" data-line-start="1687" data-line-end="1688">All the odd numbers are filtered out, and only the even should be considered.</li>
+<li class="has-line-data" data-line-start="1688" data-line-end="1689">The numbers are in order.</li>
+<li class="has-line-data" data-line-start="1689" data-line-end="1691">The numbers are doubled.</li>
 </ul>
-<p class="has-line-data" data-line-start="1674" data-line-end="1676">For example, with the array above, the odd/even filter should result in 2, 8, 4, 6. The ordering step should<br>
+<p class="has-line-data" data-line-start="1691" data-line-end="1693">For example, with the array above, the odd/even filter should result in 2, 8, 4, 6. The ordering step should<br>
 result in 2, 4, 6, 8. The doubling step should result in 4, 8, 12, 16 as the final answer.</p>
-<p class="has-line-data" data-line-start="1677" data-line-end="1678"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1694" data-line-end="1695"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1679" data-line-end="1682">Write a method that will take an int[] as input and produces a <code>List&lt;Integer&gt;</code> that meets all three of the conditions above using only procedural code—<br>
+<li class="has-line-data" data-line-start="1696" data-line-end="1699">Write a method that will take an int[] as input and produces a <code>List&lt;Integer&gt;</code> that meets all three of the conditions above using only procedural code—<br>
 if statements, switches, and loops. Hint: the static Arrays.sort or Collections.sort method might be a useful tool<br>
 here.</li>
-<li class="has-line-data" data-line-start="1682" data-line-end="1684">Write a method that will take an int[] as input and produces a <code>List&lt;Integer&gt;</code> that meets<br>
+<li class="has-line-data" data-line-start="1699" data-line-end="1701">Write a method that will take an int[] as input and produces a <code>List&lt;Integer&gt;</code> that meets<br>
 the three above conditions using a lambda expression.</li>
-<li class="has-line-data" data-line-start="1684" data-line-end="1685">Run both methods and display the results to ensure they all produce good answers.</li>
-<li class="has-line-data" data-line-start="1685" data-line-end="1687">Answer this question: Compare the size and understandability of these approaches. Does any<br>
+<li class="has-line-data" data-line-start="1701" data-line-end="1702">Run both methods and display the results to ensure they all produce good answers.</li>
+<li class="has-line-data" data-line-start="1702" data-line-end="1704">Answer this question: Compare the size and understandability of these approaches. Does any<br>
 stand out as being particularly good or particularly bad?</li>
-<li class="has-line-data" data-line-start="1687" data-line-end="1689">Answer this question: Of the two approaches, which is your personal favorite, and why?</li>
+<li class="has-line-data" data-line-start="1704" data-line-end="1706">Answer this question: Of the two approaches, which is your personal favorite, and why?</li>
 </ul>
-<h2 class="code-line" data-line-start="1689" data-line-end="1690"><a id="Challenge_65_The_Repeating_Stream_1689"></a>Challenge 65: The Repeating Stream</h2>
-<p class="has-line-data" data-line-start="1690" data-line-end="1698">In Threadia, there is a stream that generates numbers once a second. The numbers are randomly<br>
+<h2 class="code-line" data-line-start="1706" data-line-end="1707"><a id="Challenge_65_The_Repeating_Stream_1706"></a>Challenge 65: The Repeating Stream</h2>
+<p class="has-line-data" data-line-start="1707" data-line-end="1715">In Threadia, there is a stream that generates numbers once a second. The numbers are randomly<br>
 generated, between 0 and 9. Occasionally, the stream generates the same number more than once in a<br>
 row. A repeat number like this is significant—an omen of good things to come. Unfortunately, since the<br>
 Uncoded One’s arrival, Threadians haven’t been able to monitor the stream while it produces numbers.<br>
@@ -1621,120 +1638,120 @@ Either the stream generates numbers while nobody watches, or they watch while th
 no numbers. The Threadians offer you the Medallion of Threads willingly and ask you to use it to make<br>
 both possible at the same time. Build a program to generate numbers while simultaneously allowing a<br>
 user to flag repeats.</p>
-<p class="has-line-data" data-line-start="1699" data-line-end="1700"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1716" data-line-end="1717"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1701" data-line-end="1704">Make a RecentNumbers class that holds at least the two most recent numbers.<br>
+<li class="has-line-data" data-line-start="1718" data-line-end="1721">Make a RecentNumbers class that holds at least the two most recent numbers.<br>
 • Make a method that loops forever, generating random numbers from 0 to 9 once a second. Hint:<br>
 Thread.sleep can help you wait.</li>
-<li class="has-line-data" data-line-start="1704" data-line-end="1706">Write the numbers to the console window, put the generated numbers in a RecentNumbers object,<br>
+<li class="has-line-data" data-line-start="1721" data-line-end="1723">Write the numbers to the console window, put the generated numbers in a RecentNumbers object,<br>
 and update it as new numbers are generated.</li>
-<li class="has-line-data" data-line-start="1706" data-line-end="1707">Make a thread that runs the above method.</li>
-<li class="has-line-data" data-line-start="1707" data-line-end="1710">In a second loop, wait for the user to push the Enter key (on the main thread or another new thread). When<br>
+<li class="has-line-data" data-line-start="1723" data-line-end="1724">Make a thread that runs the above method.</li>
+<li class="has-line-data" data-line-start="1724" data-line-end="1727">In a second loop, wait for the user to push the Enter key (on the main thread or another new thread). When<br>
 the user presses the Enter key, check if the last two numbers are the same. If they are, tell the user that they<br>
 correctly identified the repeat. If they are not, indicate that they got it wrong.</li>
-<li class="has-line-data" data-line-start="1710" data-line-end="1712">Use a lock to ensure that only one thread accesses the shared data at a time.</li>
+<li class="has-line-data" data-line-start="1727" data-line-end="1729">Use a lock to ensure that only one thread accesses the shared data at a time.</li>
 </ul>
-<h2 class="code-line" data-line-start="1712" data-line-end="1713"><a id="Challenge_66_Asynchronous_Random_Words_the_Start_1712"></a>Challenge 66: Asynchronous Random Words the Start</h2>
-<p class="has-line-data" data-line-start="1713" data-line-end="1720">On the Island of Callus, you meet Awat, who tells you that being a True Programmer can’t be all that<br>
+<h2 class="code-line" data-line-start="1729" data-line-end="1730"><a id="Challenge_66_Asynchronous_Random_Words_the_Start_1729"></a>Challenge 66: Asynchronous Random Words the Start</h2>
+<p class="has-line-data" data-line-start="1730" data-line-end="1737">On the Island of Callus, you meet Awat, who tells you that being a True Programmer can’t be all that<br>
 hard. His ancestors have been the stewards of the Asynchronous Medallion, yet Awat uses it as a food<br>
 dish for his cat. “A thousand monoids with a thousand random generators will also eventually produce<br>
 ‘hello world’!” he claims. Indeed, they could, but you know it would take a while. With tasks, you can allow<br>
 a human to pick a word and randomly generate the word asynchronously. Doing this will show Awat how<br>
 long it will take to randomly generate the words “hello” and “world,” convincing him that a Programmer’s<br>
 skills mean something.</p>
-<p class="has-line-data" data-line-start="1721" data-line-end="1722"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1738" data-line-end="1739"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1723" data-line-end="1728">Make a class that implements <code>Callable&lt;Integer&gt;</code>, add a constructor that takes a string. Its call method should take the string’s length and<br>
+<li class="has-line-data" data-line-start="1740" data-line-end="1745">Make a class that implements <code>Callable&lt;Integer&gt;</code>, add a constructor that takes a string. Its call method should take the string’s length and<br>
 generate an equal number of random characters. It is okay to assume all words only use lowercase<br>
 letters. One way to randomly generate a lowercase letter is (char)(‘a’ + random.nextInt(26)).<br>
 This method should loop until it randomly generates the target word, counting the required<br>
 attempts. The return value is the number of attempts.</li>
-<li class="has-line-data" data-line-start="1728" data-line-end="1729">Schedule it using an ExecutorService, the service should return a ‘Future&lt;Integer&gt;’. Show the result when it is obtained.</li>
-<li class="has-line-data" data-line-start="1729" data-line-end="1732">Have your main method ask the user for a word. Run the Callable object and<br>
+<li class="has-line-data" data-line-start="1745" data-line-end="1746">Schedule it using an ExecutorService, the service should return a ‘Future&lt;Integer&gt;’. Show the result when it is obtained.</li>
+<li class="has-line-data" data-line-start="1746" data-line-end="1749">Have your main method ask the user for a word. Run the Callable object and<br>
 await its result and display it. Note: Be careful about long words! For me, a five-letter word took<br>
 several seconds, and my math indicates that a 10-letter word may take nearly two years.</li>
-<li class="has-line-data" data-line-start="1732" data-line-end="1734">Use System.currentTimeMillis() before and after the async task runs to measure the wall clock time it took. Display the time elapsed.</li>
+<li class="has-line-data" data-line-start="1749" data-line-end="1751">Use System.currentTimeMillis() before and after the async task runs to measure the wall clock time it took. Display the time elapsed.</li>
 </ul>
-<h2 class="code-line" data-line-start="1734" data-line-end="1735"><a id="Challenge_67_Many_Random_Words_1734"></a>Challenge 67: Many Random Words</h2>
-<p class="has-line-data" data-line-start="1735" data-line-end="1737">Awat is impressed with what you did in the last challenge but thinks it could be better. “Why not generate<br>
+<h2 class="code-line" data-line-start="1751" data-line-end="1752"><a id="Challenge_67_Many_Random_Words_1751"></a>Challenge 67: Many Random Words</h2>
+<p class="has-line-data" data-line-start="1752" data-line-end="1754">Awat is impressed with what you did in the last challenge but thinks it could be better. “Why not generate<br>
 ‘hello’ and ‘world’ in parallel?” he asks.“You do that, and I’ll let you take this medallion off of me.”</p>
-<p class="has-line-data" data-line-start="1738" data-line-end="1739"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1755" data-line-end="1756"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1740" data-line-end="1745">Modify your program from the previous challenge to allow the main thread to keep waiting for the<br>
+<li class="has-line-data" data-line-start="1757" data-line-end="1762">Modify your program from the previous challenge to allow the main thread to keep waiting for the<br>
 user to enter more words. For every new word entered, create and run a task to compute the attempt<br>
 count and the time elapsed and display the result, but then let that run asynchronously while you<br>
 wait for the next word.You can generate many words in parallel this way.</li>
 </ul>
-<h2 class="code-line" data-line-start="1745" data-line-end="1746"><a id="Challenge_68_Altar_of_Publication_1745"></a>Challenge 68: Altar of Publication</h2>
-<p class="has-line-data" data-line-start="1746" data-line-end="1747">To acquire the Medallion of Publishing, you must place a published program on the Altar of Publication.</p>
-<p class="has-line-data" data-line-start="1748" data-line-end="1749"><strong>Objectives</strong>:</p>
+<h2 class="code-line" data-line-start="1762" data-line-end="1763"><a id="Challenge_68_Altar_of_Publication_1762"></a>Challenge 68: Altar of Publication</h2>
+<p class="has-line-data" data-line-start="1763" data-line-end="1764">To acquire the Medallion of Publishing, you must place a published program on the Altar of Publication.</p>
+<p class="has-line-data" data-line-start="1765" data-line-end="1766"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1750" data-line-end="1752">Select a program of yours for publication. This can be anything from Hello World to the most<br>
+<li class="has-line-data" data-line-start="1767" data-line-end="1769">Select a program of yours for publication. This can be anything from Hello World to the most<br>
 complex program you have made.</li>
-<li class="has-line-data" data-line-start="1752" data-line-end="1753">Check out how to make an “executable jar” using IntelliJ IDEA (or the standard Java compiler)</li>
-<li class="has-line-data" data-line-start="1753" data-line-end="1754">Create the executable jar, and test using the command line that it runs.</li>
-<li class="has-line-data" data-line-start="1754" data-line-end="1755">Move the program to the target computer.</li>
-<li class="has-line-data" data-line-start="1755" data-line-end="1756">Run the program successfully.</li>
-<li class="has-line-data" data-line-start="1756" data-line-end="1758">Note: You will learn much by actually moving this to another computer. If you only have one, send<br>
+<li class="has-line-data" data-line-start="1769" data-line-end="1770">Check out how to make an “executable jar” using IntelliJ IDEA (or the standard Java compiler)</li>
+<li class="has-line-data" data-line-start="1770" data-line-end="1771">Create the executable jar, and test using the command line that it runs.</li>
+<li class="has-line-data" data-line-start="1771" data-line-end="1772">Move the program to the target computer.</li>
+<li class="has-line-data" data-line-start="1772" data-line-end="1773">Run the program successfully.</li>
+<li class="has-line-data" data-line-start="1773" data-line-end="1775">Note: You will learn much by actually moving this to another computer. If you only have one, send<br>
 it to a friend by email or the Internet. But if all of this fails, you can call the challenge done anyway.</li>
-<li class="has-line-data" data-line-start="1758" data-line-end="1760">Bonus: if your project has its source code on GitHub, try make a Release on GitHub.</li>
+<li class="has-line-data" data-line-start="1775" data-line-end="1777">Bonus: if your project has its source code on GitHub, try make a Release on GitHub.</li>
 </ul>
-<h2 class="code-line" data-line-start="1760" data-line-end="1761"><a id="Narrative_9_The_Uncoded_One_1760"></a>Narrative 9: The Uncoded One</h2>
-<p class="has-line-data" data-line-start="1761" data-line-end="1766">The final battle has arrived. On a volcanic island, enshrouded in a cloud of ash, you have reached the lair<br>
+<h2 class="code-line" data-line-start="1777" data-line-end="1778"><a id="Narrative_9_The_Uncoded_One_1777"></a>Narrative 9: The Uncoded One</h2>
+<p class="has-line-data" data-line-start="1778" data-line-end="1783">The final battle has arrived. On a volcanic island, enshrouded in a cloud of ash, you have reached the lair<br>
 of the Uncoded One. You have prepared for this fight, and you will return Programming to the lands.<br>
 Your allies have gathered to engage the Uncoded One’s minions on the volcano’s slopes while you (and<br>
 maybe a companion or two) strike into the heart of the Uncoded One’s lair to battle and destroy it. Only<br>
 a True Programmer will be able to survive the encounter, defeat the Uncoded One, and escape!</p>
-<h2 class="code-line" data-line-start="1767" data-line-end="1768"><a id="Challenge_69_Building_Character_1767"></a>Challenge 69: Building Character</h2>
-<p class="has-line-data" data-line-start="1768" data-line-end="1771">This challenge is deceptively complex: it will require building out enough of the game’s foundation to<br>
+<h2 class="code-line" data-line-start="1784" data-line-end="1785"><a id="Challenge_69_Building_Character_1784"></a>Challenge 69: Building Character</h2>
+<p class="has-line-data" data-line-start="1785" data-line-end="1788">This challenge is deceptively complex: it will require building out enough of the game’s foundation to<br>
 get two characters taking turns in a loop. (Sure, they’ll be doing nothing, but that’s still a big step<br>
 forward!)</p>
-<p class="has-line-data" data-line-start="1772" data-line-end="1773"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1789" data-line-end="1790"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1774" data-line-end="1776">The game needs to be able to represent characters with a name and able to take a turn. (We’ll change<br>
+<li class="has-line-data" data-line-start="1791" data-line-end="1793">The game needs to be able to represent characters with a name and able to take a turn. (We’ll change<br>
 this a little in the challenge Characters, Actions, and Players.)</li>
-<li class="has-line-data" data-line-start="1776" data-line-end="1777">The game should be able to have skeleton characters with the name SKELETON.</li>
-<li class="has-line-data" data-line-start="1777" data-line-end="1778">The game should be able to represent a party with a collection of characters.</li>
-<li class="has-line-data" data-line-start="1778" data-line-end="1780">The game should be able to run a battle composed of two parties—heroes and monsters. A battle<br>
+<li class="has-line-data" data-line-start="1793" data-line-end="1794">The game should be able to have skeleton characters with the name SKELETON.</li>
+<li class="has-line-data" data-line-start="1794" data-line-end="1795">The game should be able to represent a party with a collection of characters.</li>
+<li class="has-line-data" data-line-start="1795" data-line-end="1797">The game should be able to run a battle composed of two parties—heroes and monsters. A battle<br>
 needs to run a series of rounds where each character in each party (heroes first) can take a turn.</li>
-<li class="has-line-data" data-line-start="1780" data-line-end="1782">Before a character takes their turn, the game should report to the user whose turn it is. For example,<br>
+<li class="has-line-data" data-line-start="1797" data-line-end="1799">Before a character takes their turn, the game should report to the user whose turn it is. For example,<br>
 “It is SKELETON’s turn….”</li>
-<li class="has-line-data" data-line-start="1782" data-line-end="1785">The only action the game needs to support at this point is the action of doing nothing (skipping a<br>
+<li class="has-line-data" data-line-start="1799" data-line-end="1802">The only action the game needs to support at this point is the action of doing nothing (skipping a<br>
 turn). This action is done by displaying text about doing nothing, resting, or skipping a turn in the<br>
 console window. For example, “SKELETON did NOTHING.”</li>
-<li class="has-line-data" data-line-start="1785" data-line-end="1787">The game must run a battle with a single skeleton in both the hero and the monster party. At this<br>
+<li class="has-line-data" data-line-start="1802" data-line-end="1804">The game must run a battle with a single skeleton in both the hero and the monster party. At this<br>
 point, the two skeletons should do nothing repeatedly. The game might look like the following:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1788" data-line-end="1794">It is SKELETON's turn...
+<pre><code class="has-line-data" data-line-start="1805" data-line-end="1811">It is SKELETON's turn...
 SKELETON did NOTHING.
 It is SKELETON's turn...
 SKELETON did NOTHING.
 ...
 </code></pre>
 <ul>
-<li class="has-line-data" data-line-start="1794" data-line-end="1795">Optional: Put a blank line between each character’s turn to differentiate one turn from another.</li>
-<li class="has-line-data" data-line-start="1795" data-line-end="1798">Optional: At this point, the game will run automatically. Consider adding a Thread.sleep(500);<br>
+<li class="has-line-data" data-line-start="1811" data-line-end="1812">Optional: Put a blank line between each character’s turn to differentiate one turn from another.</li>
+<li class="has-line-data" data-line-start="1812" data-line-end="1815">Optional: At this point, the game will run automatically. Consider adding a Thread.sleep(500);<br>
 to slow the game down enough to allow the user to see what is happening over time.</li>
 </ul>
-<h2 class="code-line" data-line-start="1798" data-line-end="1799"><a id="Challenge_70_The_True_Programmer_1798"></a>Challenge 70: The True Programmer</h2>
-<p class="has-line-data" data-line-start="1799" data-line-end="1802">Our skeletons need a hero to fight. We’ll do that by adding in the focal character of the game, the player<br>
+<h2 class="code-line" data-line-start="1815" data-line-end="1816"><a id="Challenge_70_The_True_Programmer_1815"></a>Challenge 70: The True Programmer</h2>
+<p class="has-line-data" data-line-start="1816" data-line-end="1819">Our skeletons need a hero to fight. We’ll do that by adding in the focal character of the game, the player<br>
 character, which represents the player directly, called the True Programmer by in-game role. The player<br>
 will choose the True Programmer’s name.</p>
-<p class="has-line-data" data-line-start="1803" data-line-end="1804"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1820" data-line-end="1821"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1805" data-line-end="1806">The game must represent a True Programmer character with a name supplied by the user.</li>
-<li class="has-line-data" data-line-start="1806" data-line-end="1807">Before getting started, ask the user for a name for this character.</li>
-<li class="has-line-data" data-line-start="1807" data-line-end="1809">The game should run a battle with the True Programmer in the hero party vs. a skeleton in the<br>
+<li class="has-line-data" data-line-start="1822" data-line-end="1823">The game must represent a True Programmer character with a name supplied by the user.</li>
+<li class="has-line-data" data-line-start="1823" data-line-end="1824">Before getting started, ask the user for a name for this character.</li>
+<li class="has-line-data" data-line-start="1824" data-line-end="1826">The game should run a battle with the True Programmer in the hero party vs. a skeleton in the<br>
 monster party. The game might look like the following this challenge:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1810" data-line-end="1816">It is TOG's turn...
+<pre><code class="has-line-data" data-line-start="1827" data-line-end="1833">It is TOG's turn...
 TOG did NOTHING.
 It is SKELETON's turn...
 SKELETON did NOTHING.
 ...
 </code></pre>
-<h2 class="code-line" data-line-start="1817" data-line-end="1818"><a id="Challenge_71_Actions_and_Players_1817"></a>Challenge 71: Actions and Players</h2>
-<p class="has-line-data" data-line-start="1818" data-line-end="1829">The previous two challenges have had the characters taking turns directly. But instead of characters<br>
+<h2 class="code-line" data-line-start="1834" data-line-end="1835"><a id="Challenge_71_Actions_and_Players_1834"></a>Challenge 71: Actions and Players</h2>
+<p class="has-line-data" data-line-start="1835" data-line-end="1846">The previous two challenges have had the characters taking turns directly. But instead of characters<br>
 deciding actions, the player controlling the character’s team should pick the action for each character.<br>
 Eventually, there will be several action types to choose from (do nothing, attack, use item, etc.). There<br>
 will also be multiple player types (computer/AI and human input from the console window). A player is<br>
@@ -1745,76 +1762,76 @@ player.<br>
 This challenge does not demand that you add new externally visible capabilities but make any needed<br>
 changes to allow the game to work as described above, with players choosing actions instead of<br>
 characters. If you are confident your design already supports this, claim the XP now and move on.</p>
-<p class="has-line-data" data-line-start="1830" data-line-end="1831"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1847" data-line-end="1848"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1832" data-line-end="1833">The game needs to be able to represent action types. Each action should be able to run when asked.</li>
-<li class="has-line-data" data-line-start="1833" data-line-end="1835">The game needs to include a do-nothing action, which displays the same text as in previous<br>
+<li class="has-line-data" data-line-start="1849" data-line-end="1850">The game needs to be able to represent action types. Each action should be able to run when asked.</li>
+<li class="has-line-data" data-line-start="1850" data-line-end="1852">The game needs to include a do-nothing action, which displays the same text as in previous<br>
 challenges (for example, “SKELETON did NOTHING.”)</li>
-<li class="has-line-data" data-line-start="1835" data-line-end="1837">The game needs to be able to represent different player types. A player needs the ability to pick an<br>
+<li class="has-line-data" data-line-start="1852" data-line-end="1854">The game needs to be able to represent different player types. A player needs the ability to pick an<br>
 action for a character they control, given the battle’s current state.</li>
-<li class="has-line-data" data-line-start="1837" data-line-end="1840">The game needs a sole player type: a computer player (a simple AI of sorts). For now, the computer<br>
+<li class="has-line-data" data-line-start="1854" data-line-end="1857">The game needs a sole player type: a computer player (a simple AI of sorts). For now, the computer<br>
 player will simply pick the one available option: do nothing (and optionally wait a bit first with<br>
 Thread.sleep).</li>
-<li class="has-line-data" data-line-start="1840" data-line-end="1843">The game must know which player controls each party to ask the correct player to pick each<br>
+<li class="has-line-data" data-line-start="1857" data-line-end="1860">The game must know which player controls each party to ask the correct player to pick each<br>
 character’s action. Set up the game to ask the player to select an action for each of their characters<br>
 and then run the chosen action.</li>
-<li class="has-line-data" data-line-start="1843" data-line-end="1844">Put a simple computer player in charge of each party.</li>
-<li class="has-line-data" data-line-start="1844" data-line-end="1847">Note: To somebody watching, the end result of this challenge may look identical to before this<br>
+<li class="has-line-data" data-line-start="1860" data-line-end="1861">Put a simple computer player in charge of each party.</li>
+<li class="has-line-data" data-line-start="1861" data-line-end="1864">Note: To somebody watching, the end result of this challenge may look identical to before this<br>
 challenge.</li>
 </ul>
-<h2 class="code-line" data-line-start="1847" data-line-end="1848"><a id="Challenge_72_Attacks_1847"></a>Challenge 72: Attacks</h2>
-<p class="has-line-data" data-line-start="1848" data-line-end="1850">In this challenge, we will extend our game by giving characters attacks and allowing players to pick an<br>
+<h2 class="code-line" data-line-start="1864" data-line-end="1865"><a id="Challenge_72_Attacks_1864"></a>Challenge 72: Attacks</h2>
+<p class="has-line-data" data-line-start="1865" data-line-end="1867">In this challenge, we will extend our game by giving characters attacks and allowing players to pick an<br>
 attack instead of doing nothing. We won’t address tracking or dealing out damage yet.</p>
-<p class="has-line-data" data-line-start="1851" data-line-end="1852"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1868" data-line-end="1869"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1853" data-line-end="1855">The game needs to be able to represent specific types of attacks. Attacks all have a name (and will<br>
+<li class="has-line-data" data-line-start="1870" data-line-end="1872">The game needs to be able to represent specific types of attacks. Attacks all have a name (and will<br>
 have other capabilities later).</li>
-<li class="has-line-data" data-line-start="1855" data-line-end="1858">Each character has a standard attack, but this varies from character to character. The True<br>
+<li class="has-line-data" data-line-start="1872" data-line-end="1875">Each character has a standard attack, but this varies from character to character. The True<br>
 Programmer’s (the player character’s) attack is called punch. The Skeleton’s attack is called bone<br>
 crunch.</li>
-<li class="has-line-data" data-line-start="1858" data-line-end="1862">The program must be capable of representing an attack action, our second action type. An attack<br>
+<li class="has-line-data" data-line-start="1875" data-line-end="1879">The program must be capable of representing an attack action, our second action type. An attack<br>
 action must represent which attack is being used and the target of the attack. When this action runs,<br>
 it should state the attacker, the attack, and the target. For example: “TOG used PUNCH on<br>
 SKELETON.”</li>
-<li class="has-line-data" data-line-start="1862" data-line-end="1865">Our computer player should pick an attack action instead of a do-nothing action. The attack action<br>
+<li class="has-line-data" data-line-start="1879" data-line-end="1882">Our computer player should pick an attack action instead of a do-nothing action. The attack action<br>
 can be simple for now: always use the character’s standard attack and always target the other party’s<br>
 first character. (If you want to choose a random target or some other logic, you can.)</li>
-<li class="has-line-data" data-line-start="1865" data-line-end="1866">The game should now run more like this:</li>
+<li class="has-line-data" data-line-start="1882" data-line-end="1883">The game should now run more like this:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1867" data-line-end="1873">It is TOG's turn...
+<pre><code class="has-line-data" data-line-start="1884" data-line-end="1890">It is TOG's turn...
 TOG used PUNCH on SKELETON.
 It is SKELETON's turn...
 SKELETON used BONE CRUNCH on TOG.
 ...
 </code></pre>
 <ul>
-<li class="has-line-data" data-line-start="1873" data-line-end="1879">Hint: The player will need access to the list of characters that are potential targets. In my case, I<br>
+<li class="has-line-data" data-line-start="1890" data-line-end="1896">Hint: The player will need access to the list of characters that are potential targets. In my case, I<br>
 passed my Battle object (which represents the whole battle and had access to both parties and all<br>
 their characters) to the player. I then added methods to Battle where I could give it a character,<br>
 and it would return the character’s party (getPartyFor(GameCharacter)) or the opposing party<br>
 (getEnemyPartyFor(GameCharacter)).</li>
 </ul>
-<h2 class="code-line" data-line-start="1879" data-line-end="1880"><a id="Challenge_73_Damage_and_HP_1879"></a>Challenge 73: Damage and HP</h2>
-<p class="has-line-data" data-line-start="1880" data-line-end="1883">Now that our characters are attacking each other, it is time to let those attacks matter. In this challenge,<br>
+<h2 class="code-line" data-line-start="1896" data-line-end="1897"><a id="Challenge_73_Damage_and_HP_1896"></a>Challenge 73: Damage and HP</h2>
+<p class="has-line-data" data-line-start="1897" data-line-end="1900">Now that our characters are attacking each other, it is time to let those attacks matter. In this challenge,<br>
 we will enhance the game to give characters hit points (HP). Attacking should reduce the HP of the target<br>
 down to 0 but not past it. Reaching 0 HP means death, which we will deal with in the next challenge.</p>
-<p class="has-line-data" data-line-start="1884" data-line-end="1885"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1901" data-line-end="1902"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1886" data-line-end="1888">Characters should be able to track both their initial/maximum HP and their current HP. The True<br>
+<li class="has-line-data" data-line-start="1903" data-line-end="1905">Characters should be able to track both their initial/maximum HP and their current HP. The True<br>
 Programmer should have 25 HP, while skeletons should have 5.</li>
-<li class="has-line-data" data-line-start="1888" data-line-end="1891">Attacks should be able to produce attack data for a specific use of the attack. For now, this is simply<br>
+<li class="has-line-data" data-line-start="1905" data-line-end="1908">Attacks should be able to produce attack data for a specific use of the attack. For now, this is simply<br>
 the amount of damage that they will deal this time, though keep in mind that other challenges will<br>
 add more data to this, including things like the frequency of hitting or missing and damage types.</li>
-<li class="has-line-data" data-line-start="1891" data-line-end="1894">The punch attack should deliver 1 point of damage every time, while the bone crunch attack should<br>
+<li class="has-line-data" data-line-start="1908" data-line-end="1911">The punch attack should deliver 1 point of damage every time, while the bone crunch attack should<br>
 randomly deal 0 or 1. Hint: Remember that Random can be used to generate random numbers.<br>
 random.Next(2) will generate a 0 or 1 with equal probability.</li>
-<li class="has-line-data" data-line-start="1894" data-line-end="1896">The attack action should ask the attack to determine how much damage it caused this time and<br>
+<li class="has-line-data" data-line-start="1911" data-line-end="1913">The attack action should ask the attack to determine how much damage it caused this time and<br>
 then reduce the target’s HP by that amount. A character’s HP should not be lowered below 0.</li>
-<li class="has-line-data" data-line-start="1896" data-line-end="1898">The attack action should report how much damage the attack did and what the target’s HP is now<br>
+<li class="has-line-data" data-line-start="1913" data-line-end="1915">The attack action should report how much damage the attack did and what the target’s HP is now<br>
 at. For example, “PUNCH dealt 1 damage to SKELETON.” “SKELETON is now at 4/5 HP.”</li>
-<li class="has-line-data" data-line-start="1898" data-line-end="1899">When the game runs after this challenge, the output might look something like this:</li>
+<li class="has-line-data" data-line-start="1915" data-line-end="1916">When the game runs after this challenge, the output might look something like this:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1900" data-line-end="1910">It is TOG's turn...
+<pre><code class="has-line-data" data-line-start="1917" data-line-end="1927">It is TOG's turn...
 TOG used PUNCH on SKELETON.
 PUNCH dealt 1 damage to SKELETON.
 SKELETON is now at 4/5 HP.
@@ -1824,63 +1841,63 @@ BONE CRUNCH dealt 0 damage to TOG.
 TOG is now at 25/25 HP.
 ...
 </code></pre>
-<h2 class="code-line" data-line-start="1911" data-line-end="1912"><a id="Challenge_74_Death_1911"></a>Challenge 74: Death</h2>
-<p class="has-line-data" data-line-start="1912" data-line-end="1914">When a character’s HP reaches 0, it has been defeated and should be removed from its party. If a party<br>
+<h2 class="code-line" data-line-start="1928" data-line-end="1929"><a id="Challenge_74_Death_1928"></a>Challenge 74: Death</h2>
+<p class="has-line-data" data-line-start="1929" data-line-end="1931">When a character’s HP reaches 0, it has been defeated and should be removed from its party. If a party<br>
 has no characters left, the battle is over.</p>
-<p class="has-line-data" data-line-start="1915" data-line-end="1916"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1932" data-line-end="1933"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1917" data-line-end="1918">After an attack deals damage, if the target’s HP has reached 0, remove them from the game.</li>
-<li class="has-line-data" data-line-start="1918" data-line-end="1920">When you remove a character from the game, display text to illustrate this. For example, “SKELETON<br>
+<li class="has-line-data" data-line-start="1934" data-line-end="1935">After an attack deals damage, if the target’s HP has reached 0, remove them from the game.</li>
+<li class="has-line-data" data-line-start="1935" data-line-end="1937">When you remove a character from the game, display text to illustrate this. For example, “SKELETON<br>
 has been defeated!”</li>
-<li class="has-line-data" data-line-start="1920" data-line-end="1922">Between rounds (or between character turns), the game should see if a party has no more living<br>
+<li class="has-line-data" data-line-start="1937" data-line-end="1939">Between rounds (or between character turns), the game should see if a party has no more living<br>
 characters. If so, the battle (and the game) should end.</li>
-<li class="has-line-data" data-line-start="1922" data-line-end="1927">After the battle is over, if the heroes won (there are still surviving characters in the hero party),then<br>
+<li class="has-line-data" data-line-start="1939" data-line-end="1944">After the battle is over, if the heroes won (there are still surviving characters in the hero party),then<br>
 display a message stating that the heroes won, and the Uncoded One was defeated. If the monsters<br>
 won, then display a message saying that the heroes lost and the Uncoded One’s forces have<br>
 prevailed.</li>
 </ul>
-<h2 class="code-line" data-line-start="1927" data-line-end="1928"><a id="Challenge_75_Battle_Series_1927"></a>Challenge 75: Battle Series</h2>
-<p class="has-line-data" data-line-start="1928" data-line-end="1930">The game runs as a series of battles, not just one. The heroes do not win until every battle has been won,<br>
+<h2 class="code-line" data-line-start="1944" data-line-end="1945"><a id="Challenge_75_Battle_Series_1944"></a>Challenge 75: Battle Series</h2>
+<p class="has-line-data" data-line-start="1945" data-line-end="1947">The game runs as a series of battles, not just one. The heroes do not win until every battle has been won,<br>
 while the monsters win if they can stop the heroes in any battle.</p>
-<p class="has-line-data" data-line-start="1931" data-line-end="1932"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="1948" data-line-end="1949"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1933" data-line-end="1935">There is one party of heroes but multiple parties of monsters. For now, build two monster parties:<br>
+<li class="has-line-data" data-line-start="1950" data-line-end="1952">There is one party of heroes but multiple parties of monsters. For now, build two monster parties:<br>
 the first should have one skeleton. The second has two skeletons.</li>
-<li class="has-line-data" data-line-start="1935" data-line-end="1939">Start a battle with the heroes and the first party of monsters. When the heroes win, advance to the<br>
+<li class="has-line-data" data-line-start="1952" data-line-end="1956">Start a battle with the heroes and the first party of monsters. When the heroes win, advance to the<br>
 next party of monsters. If the heroes lose a battle, end the game. If the monsters lose a battle, move<br>
 to the next battle unless it is the last.</li>
 </ul>
-<h2 class="code-line" data-line-start="1939" data-line-end="1940"><a id="Challenge_76_The_Uncoded_One_1939"></a>Challenge 76: The Uncoded One</h2>
-<p class="has-line-data" data-line-start="1940" data-line-end="1941">It is time to put the final boss into the game: The Uncoded One itself. We will add this in as a third battle.</p>
-<p class="has-line-data" data-line-start="1942" data-line-end="1943"><strong>Objectives</strong>:</p>
+<h2 class="code-line" data-line-start="1956" data-line-end="1957"><a id="Challenge_76_The_Uncoded_One_1956"></a>Challenge 76: The Uncoded One</h2>
+<p class="has-line-data" data-line-start="1957" data-line-end="1958">It is time to put the final boss into the game: The Uncoded One itself. We will add this in as a third battle.</p>
+<p class="has-line-data" data-line-start="1959" data-line-end="1960"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1944" data-line-end="1948">Define a new type of monster: The Uncoded One. It should have 15 HP and an unraveling attack that<br>
+<li class="has-line-data" data-line-start="1961" data-line-end="1965">Define a new type of monster: The Uncoded One. It should have 15 HP and an unraveling attack that<br>
 randomly deals between 0 and 2 damage when used. (The Uncoded One ought to have more HP<br>
 than the True Programmer, but much more than 15 HP means the Uncoded One wins every time.<br>
 We can adjust these numbers later.)</li>
-<li class="has-line-data" data-line-start="1948" data-line-end="1950">Add a third battle to the series that contains the Uncoded One.</li>
+<li class="has-line-data" data-line-start="1965" data-line-end="1967">Add a third battle to the series that contains the Uncoded One.</li>
 </ul>
-<h2 class="code-line" data-line-start="1950" data-line-end="1951"><a id="Challenge_77_The_Player_Decides_1950"></a>Challenge 77: The Player Decides</h2>
-<p class="has-line-data" data-line-start="1951" data-line-end="1952">We have one critical missing piece to add before our core game is done: letting a human play it.</p>
-<p class="has-line-data" data-line-start="1953" data-line-end="1954"><strong>Objectives</strong>:</p>
+<h2 class="code-line" data-line-start="1967" data-line-end="1968"><a id="Challenge_77_The_Player_Decides_1967"></a>Challenge 77: The Player Decides</h2>
+<p class="has-line-data" data-line-start="1968" data-line-end="1969">We have one critical missing piece to add before our core game is done: letting a human play it.</p>
+<p class="has-line-data" data-line-start="1970" data-line-end="1971"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1955" data-line-end="1960">The game should allow a human player to play it by retrieving their action choices through the<br>
+<li class="has-line-data" data-line-start="1972" data-line-end="1977">The game should allow a human player to play it by retrieving their action choices through the<br>
 console window. For a human-controlled character, the human can use that character’s standard<br>
 attack or do nothing. It is acceptable for all attacks selected by the human to target the first (or<br>
 random) target without allowing the player to pick one specifically. (You can let the player pick if<br>
 you want, but it is not required.) The following is one possible approach:</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1961" data-line-end="1966">It is TOG's turn...
+<pre><code class="has-line-data" data-line-start="1978" data-line-end="1983">It is TOG's turn...
 1 – Standard Attack (PUNCH)
 2 – Do Nothing
 What do you want to do? 2
 </code></pre>
 <ul>
-<li class="has-line-data" data-line-start="1966" data-line-end="1970">As the game is starting, allow the user to choose from the three following gameplay modes: player<br>
+<li class="has-line-data" data-line-start="1983" data-line-end="1987">As the game is starting, allow the user to choose from the three following gameplay modes: player<br>
 vs. computer (the human in charge of the heroes and the computer controlling the monsters),<br>
 computer vs. computer (a computer player running each team, as we have done so far), and human<br>
 vs. human, where a human picks actions for both sides.</li>
-<li class="has-line-data" data-line-start="1970" data-line-end="1980">Hint: There are many ways you could approach this. My solution was to build a MenuItem record<br>
+<li class="has-line-data" data-line-start="1987" data-line-end="1997">Hint: There are many ways you could approach this. My solution was to build a MenuItem record<br>
 that held information about options in the menu. It included the string description,<br>
 boolean isEnabled, and Action ActionToPerform. Action is my interface representing any of<br>
 the action types, with implementations like DoNothingAction and AttackAction. I have a<br>
@@ -1890,196 +1907,196 @@ with a number. After getting the number, I find the right MenuItem, extract the 
 it. That means I create many Action objects that don’t get used, but it is a system that is easy to<br>
 extend in future challenges.</li>
 </ul>
-<h2 class="code-line" data-line-start="1980" data-line-end="1981"><a id="Challenge_78_The_Games_Status_1980"></a>Challenge 78: The Game’s Status</h2>
-<p class="has-line-data" data-line-start="1981" data-line-end="1982">This challenge gives us a clearer representation of the status of the game.</p>
-<p class="has-line-data" data-line-start="1983" data-line-end="1984"><strong>Objectives</strong>:</p>
+<h2 class="code-line" data-line-start="1997" data-line-end="1998"><a id="Challenge_78_The_Games_Status_1997"></a>Challenge 78: The Game’s Status</h2>
+<p class="has-line-data" data-line-start="1998" data-line-end="1999">This challenge gives us a clearer representation of the status of the game.</p>
+<p class="has-line-data" data-line-start="2000" data-line-end="2001"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="1985" data-line-end="1987">Before a character gets their turn, display the overall status of the battle. This status must include<br>
+<li class="has-line-data" data-line-start="2002" data-line-end="2004">Before a character gets their turn, display the overall status of the battle. This status must include<br>
 all characters in both parties with their current and total HP.</li>
-<li class="has-line-data" data-line-start="1987" data-line-end="1989">You must also somehow distinguish the character whose turn it is from the others with color, a text<br>
+<li class="has-line-data" data-line-start="2004" data-line-end="2006">You must also somehow distinguish the character whose turn it is from the others with color, a text<br>
 marker, or something similar.</li>
-<li class="has-line-data" data-line-start="1989" data-line-end="1991">Note: You have flexibility in how you approach this challenge, but the following shows one possibility<br>
+<li class="has-line-data" data-line-start="2006" data-line-end="2008">Note: You have flexibility in how you approach this challenge, but the following shows one possibility<br>
 (with the current character colored yellow instead of white):</li>
 </ul>
-<pre><code class="has-line-data" data-line-start="1992" data-line-end="1999">============================================= BATTLE ============================================
+<pre><code class="has-line-data" data-line-start="2009" data-line-end="2016">============================================= BATTLE ============================================
 TOG ( 25/25 )
 ---------------------------------------------- VS -----------------------------------------------
  SKELETON ( 5/5 )
 SKELETON ( 5/5 )
 =================================================================================================
 </code></pre>
-<h2 class="code-line" data-line-start="2000" data-line-end="2001"><a id="Challenge_79_Items_2000"></a>Challenge 79: Items</h2>
-<p class="has-line-data" data-line-start="2001" data-line-end="2003">Each party has a shared inventory of items. Players can choose to use an item as an action. We will add a<br>
+<h2 class="code-line" data-line-start="2017" data-line-end="2018"><a id="Challenge_79_Items_2017"></a>Challenge 79: Items</h2>
+<p class="has-line-data" data-line-start="2018" data-line-end="2020">Each party has a shared inventory of items. Players can choose to use an item as an action. We will add a<br>
 health potion item that players can use as an action.</p>
-<p class="has-line-data" data-line-start="2004" data-line-end="2005"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2021" data-line-end="2022"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2006" data-line-end="2010">The game must support adding consumable items with the ability to use one as an action. Item types<br>
+<li class="has-line-data" data-line-start="2023" data-line-end="2027">The game must support adding consumable items with the ability to use one as an action. Item types<br>
 could be potentially very broad (keep that in mind when choosing your design), but all that is<br>
 required now is a health potion item type. Items are usable, and when used, the reaction depends<br>
 on the item type.</li>
-<li class="has-line-data" data-line-start="2010" data-line-end="2012">A health potion is the only item type we need to add here. It should increase the user’s HP by 10<br>
+<li class="has-line-data" data-line-start="2027" data-line-end="2029">A health potion is the only item type we need to add here. It should increase the user’s HP by 10<br>
 points when used. In doing so, the HP should not rise above the character’s maximum HP.</li>
-<li class="has-line-data" data-line-start="2012" data-line-end="2013">The entire party shares inventory. Ensure parties can hold a collection of items.</li>
-<li class="has-line-data" data-line-start="2013" data-line-end="2014">Start the hero party with three health potions. Give each monster party one health potion.</li>
-<li class="has-line-data" data-line-start="2014" data-line-end="2016">The game must support the inclusion of a use item action, along with the item to use. When this<br>
+<li class="has-line-data" data-line-start="2029" data-line-end="2030">The entire party shares inventory. Ensure parties can hold a collection of items.</li>
+<li class="has-line-data" data-line-start="2030" data-line-end="2031">Start the hero party with three health potions. Give each monster party one health potion.</li>
+<li class="has-line-data" data-line-start="2031" data-line-end="2033">The game must support the inclusion of a use item action, along with the item to use. When this<br>
 action runs, it should cause the item’s effect to occur and remove the item from the inventory.</li>
-<li class="has-line-data" data-line-start="2016" data-line-end="2018">The computer player should consider using a potion when (a) the team has a potion in their inventory<br>
+<li class="has-line-data" data-line-start="2033" data-line-end="2035">The computer player should consider using a potion when (a) the team has a potion in their inventory<br>
 and (b) the character’s health is under half. Under these conditions, use a potion 25% of the time.</li>
-<li class="has-line-data" data-line-start="2018" data-line-end="2019">The console player should have the option to use a potion if the party has one.</li>
-<li class="has-line-data" data-line-start="2019" data-line-end="2024">Note: Digging through the party inventory for potions is a little tricky. It is reasonable to assume<br>
+<li class="has-line-data" data-line-start="2035" data-line-end="2036">The console player should have the option to use a potion if the party has one.</li>
+<li class="has-line-data" data-line-start="2036" data-line-end="2041">Note: Digging through the party inventory for potions is a little tricky. It is reasonable to assume<br>
 (for now) that all items in the inventory are health potions. That will be a correct assumption until<br>
 you make other item types. This assumption simplifies the changes you need to make to the<br>
 different player types.</li>
 </ul>
-<h2 class="code-line" data-line-start="2024" data-line-end="2025"><a id="Challenge_80_Gear_2024"></a>Challenge 80: Gear</h2>
-<p class="has-line-data" data-line-start="2025" data-line-end="2028">Characters can equip gear that allows them to have a second special attack. A party can have gear in their<br>
+<h2 class="code-line" data-line-start="2041" data-line-end="2042"><a id="Challenge_80_Gear_2041"></a>Challenge 80: Gear</h2>
+<p class="has-line-data" data-line-start="2042" data-line-end="2045">Characters can equip gear that allows them to have a second special attack. A party can have gear in their<br>
 shared inventory, but unlike items, gear is not usable until a character equips it, and it takes a turn to<br>
 equip gear from inventory.</p>
-<p class="has-line-data" data-line-start="2029" data-line-end="2030"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2046" data-line-end="2047"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2031" data-line-end="2032">The game must support the concept of gear. All gear has a name and an attack they provide.</li>
-<li class="has-line-data" data-line-start="2032" data-line-end="2033">Each character can equip one piece of gear.</li>
-<li class="has-line-data" data-line-start="2033" data-line-end="2034">Each party also has a collection of unequipped gear.</li>
-<li class="has-line-data" data-line-start="2034" data-line-end="2036">Add the ability to perform an equip action, which knows what gear is being equipped. When this<br>
+<li class="has-line-data" data-line-start="2048" data-line-end="2049">The game must support the concept of gear. All gear has a name and an attack they provide.</li>
+<li class="has-line-data" data-line-start="2049" data-line-end="2050">Each character can equip one piece of gear.</li>
+<li class="has-line-data" data-line-start="2050" data-line-end="2051">Each party also has a collection of unequipped gear.</li>
+<li class="has-line-data" data-line-start="2051" data-line-end="2053">Add the ability to perform an equip action, which knows what gear is being equipped. When this<br>
 action runs, it should move the gear from the party’s inventory to the character.</li>
-<li class="has-line-data" data-line-start="2036" data-line-end="2038">If a character already has something equipped, the previously equipped gear should be unequipped<br>
+<li class="has-line-data" data-line-start="2053" data-line-end="2055">If a character already has something equipped, the previously equipped gear should be unequipped<br>
 and moved back to the party’s shared inventory.</li>
-<li class="has-line-data" data-line-start="2038" data-line-end="2040">The computer player should equip gear. If a character has nothing equipped but the party has<br>
+<li class="has-line-data" data-line-start="2055" data-line-end="2057">The computer player should equip gear. If a character has nothing equipped but the party has<br>
 equipable gear, the computer player should choose to equip the gear 50% of the time.</li>
-<li class="has-line-data" data-line-start="2040" data-line-end="2041">Note: If you also did the Items challenge, using potions should be a priority over equipping gear.</li>
-<li class="has-line-data" data-line-start="2041" data-line-end="2043">The console player should also have the option to equip gear. If there is more than one thing to<br>
+<li class="has-line-data" data-line-start="2057" data-line-end="2058">Note: If you also did the Items challenge, using potions should be a priority over equipping gear.</li>
+<li class="has-line-data" data-line-start="2058" data-line-end="2060">The console player should also have the option to equip gear. If there is more than one thing to<br>
 equip, allow the player to choose from all available options.</li>
-<li class="has-line-data" data-line-start="2043" data-line-end="2044">The computer player should prefer the attack provided by equipped gear when one is available. Gearbased attacks are typically stronger.</li>
-<li class="has-line-data" data-line-start="2044" data-line-end="2045">If gear is equipped, the human player should be able to pick either the standard attack or the gearbased attack.</li>
-<li class="has-line-data" data-line-start="2045" data-line-end="2047">The True Programmer character should start the game with a sword item equipped. The sword<br>
+<li class="has-line-data" data-line-start="2060" data-line-end="2061">The computer player should prefer the attack provided by equipped gear when one is available. Gearbased attacks are typically stronger.</li>
+<li class="has-line-data" data-line-start="2061" data-line-end="2062">If gear is equipped, the human player should be able to pick either the standard attack or the gearbased attack.</li>
+<li class="has-line-data" data-line-start="2062" data-line-end="2064">The True Programmer character should start the game with a sword item equipped. The sword<br>
 should have a slash attack that deals two damage.</li>
-<li class="has-line-data" data-line-start="2047" data-line-end="2048">Create a dagger with the attack stab that reliably deals 1 point of damage.</li>
-<li class="has-line-data" data-line-start="2048" data-line-end="2049">Start the first battle’s skeleton with a dagger equipped. This one was prepared for battle.</li>
-<li class="has-line-data" data-line-start="2049" data-line-end="2051">Put two daggers in the team inventory for the second battle. Both skeletons will be able to use a<br>
+<li class="has-line-data" data-line-start="2064" data-line-end="2065">Create a dagger with the attack stab that reliably deals 1 point of damage.</li>
+<li class="has-line-data" data-line-start="2065" data-line-end="2066">Start the first battle’s skeleton with a dagger equipped. This one was prepared for battle.</li>
+<li class="has-line-data" data-line-start="2066" data-line-end="2068">Put two daggers in the team inventory for the second battle. Both skeletons will be able to use a<br>
 dagger, but they will have to equip it first.These two were less prepared.</li>
-<li class="has-line-data" data-line-start="2051" data-line-end="2053">Optional: If you did The Game’s Status, consider showing what gear each character has equipped.</li>
+<li class="has-line-data" data-line-start="2068" data-line-end="2070">Optional: If you did The Game’s Status, consider showing what gear each character has equipped.</li>
 </ul>
-<h2 class="code-line" data-line-start="2053" data-line-end="2054"><a id="Challenge_81_Stolen_Inventory_2053"></a>Challenge 81: Stolen Inventory</h2>
-<p class="has-line-data" data-line-start="2054" data-line-end="2059">Requires that you have done either Items or Gear.<br>
+<h2 class="code-line" data-line-start="2070" data-line-end="2071"><a id="Challenge_81_Stolen_Inventory_2070"></a>Challenge 81: Stolen Inventory</h2>
+<p class="has-line-data" data-line-start="2071" data-line-end="2076">Requires that you have done either Items or Gear.<br>
 This feature will allow us to have a basic loot system. When a character dies, the opposing side should<br>
 immediately recover the dead character’s equipped gear. When the monster party is eliminated, the<br>
 monster party’s unequipped gear and items should be transferred to the hero party.<br>
 If you only did Items or Gear, some of the objectives below will not apply to you. Do the ones that apply.</p>
-<p class="has-line-data" data-line-start="2060" data-line-end="2061"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2077" data-line-end="2078"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2062" data-line-end="2066">If you did the Items challenge, when a party is eliminated, transfer all items from the losing party’s<br>
+<li class="has-line-data" data-line-start="2079" data-line-end="2083">If you did the Items challenge, when a party is eliminated, transfer all items from the losing party’s<br>
 inventory items to the winning party. Display a message that indicates which items have been<br>
 acquired. Note: It is okay only to do this when the hero party wins. When the monster party wins a<br>
 battle, the game ends.</li>
-<li class="has-line-data" data-line-start="2066" data-line-end="2069">If you did the Gear challenge, when a party is eliminated, transfer all unequipped gear from the losing<br>
+<li class="has-line-data" data-line-start="2083" data-line-end="2086">If you did the Gear challenge, when a party is eliminated, transfer all unequipped gear from the losing<br>
 party’s inventory to the winning party. Display a message that indicates when gear has been<br>
 acquired.</li>
-<li class="has-line-data" data-line-start="2069" data-line-end="2072">If you did the Gear challenge, when a character is eliminated, transfer any equipped gear to the<br>
+<li class="has-line-data" data-line-start="2086" data-line-end="2089">If you did the Gear challenge, when a character is eliminated, transfer any equipped gear to the<br>
 winning party’s inventory. Display a message that states gear that was acquired.</li>
 </ul>
-<h2 class="code-line" data-line-start="2072" data-line-end="2073"><a id="Challenge_82_Vin_Fletcher_2072"></a>Challenge 82: Vin Fletcher</h2>
-<p class="has-line-data" data-line-start="2073" data-line-end="2077">The True Programmer does not have to fight the Uncoded One alone! The hero party can have other<br>
+<h2 class="code-line" data-line-start="2089" data-line-end="2090"><a id="Challenge_82_Vin_Fletcher_2089"></a>Challenge 82: Vin Fletcher</h2>
+<p class="has-line-data" data-line-start="2090" data-line-end="2094">The True Programmer does not have to fight the Uncoded One alone! The hero party can have other<br>
 heroes (companions) that should each get their turn to fight. In this challenge, we will add our favorite<br>
 arrow maker, Vin Fletcher, to the game. This challenge will also add in the possibility for an attack to<br>
 sometimes miss.</p>
-<p class="has-line-data" data-line-start="2078" data-line-end="2079"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2095" data-line-end="2096"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2080" data-line-end="2082">When an attack generates attack data, it must also include a probability of success. 0 is guaranteed<br>
+<li class="has-line-data" data-line-start="2097" data-line-end="2099">When an attack generates attack data, it must also include a probability of success. 0 is guaranteed<br>
 failure, 1 is guaranteed success, 0.5 is 50/50, etc.</li>
-<li class="has-line-data" data-line-start="2082" data-line-end="2084">Modify your attack action to account for the possibility of missing. If an attack misses, don’t damage<br>
+<li class="has-line-data" data-line-start="2099" data-line-end="2101">Modify your attack action to account for the possibility of missing. If an attack misses, don’t damage<br>
 the target and instead report that the attack missed. For example, “VIN FLETCHER MISSED!”</li>
-<li class="has-line-data" data-line-start="2084" data-line-end="2089">Create a new character type to represent Vin Fletcher. He starts with 15 HP. If you did the Gear<br>
+<li class="has-line-data" data-line-start="2101" data-line-end="2106">Create a new character type to represent Vin Fletcher. He starts with 15 HP. If you did the Gear<br>
 challenge, Vin should have the same standard punch attack the True Programmer has and equip him<br>
 with a Vin’s Bow gear with an attack called quick shot that deals 3 damage but only succeeds 50% of<br>
 the time. If you did not do the Gear challenge, give Vin quick shot as his standard attack.</li>
 </ul>
-<h2 class="code-line" data-line-start="2089" data-line-end="2090"><a id="Challenge_83_Attack_Modifiers_2089"></a>Challenge 83: Attack Modifiers</h2>
-<p class="has-line-data" data-line-start="2090" data-line-end="2097">An attack modifier is a character attribute that adjusts attacks involving them. We will make only<br>
+<h2 class="code-line" data-line-start="2106" data-line-end="2107"><a id="Challenge_83_Attack_Modifiers_2106"></a>Challenge 83: Attack Modifiers</h2>
+<p class="has-line-data" data-line-start="2107" data-line-end="2114">An attack modifier is a character attribute that adjusts attacks involving them. We will make only<br>
 defensive attack modifiers for this challenge, which apply when a character is on the receiving end of an<br>
 attack. You can add offensive attack modifiers as a part of the Making It Yours challenge.Attack modifiers<br>
 are applied when an attack action is being resolved. An attack modifier takes the current attack data as<br>
 input and produces new, potentially altered attack data. For example, it could reduce the damage done<br>
 (a resistance to the attack) or increase it (a weakness to the attack). This challenge will add a new monster<br>
 type with resistance to all attacks, reducing incoming damage by 1.</p>
-<p class="has-line-data" data-line-start="2098" data-line-end="2099"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2115" data-line-end="2116"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2100" data-line-end="2103">The game must be able to represent attack modifiers. Attack modifiers take attack data as an input<br>
+<li class="has-line-data" data-line-start="2117" data-line-end="2120">The game must be able to represent attack modifiers. Attack modifiers take attack data as an input<br>
 and produce new attack data as a result, possibly tweaking the attack data in the process. Attack<br>
 modifiers also have names.</li>
-<li class="has-line-data" data-line-start="2103" data-line-end="2104">All characters should be able to have a defensive attack modifier.</li>
-<li class="has-line-data" data-line-start="2104" data-line-end="2107">When performing an attack, see if the target character has a defensive attack modifier before<br>
+<li class="has-line-data" data-line-start="2120" data-line-end="2121">All characters should be able to have a defensive attack modifier.</li>
+<li class="has-line-data" data-line-start="2121" data-line-end="2124">When performing an attack, see if the target character has a defensive attack modifier before<br>
 delivering damage to the target. If it does, allow the modifier to manipulate the attack data and use<br>
 the modified results instead.</li>
-<li class="has-line-data" data-line-start="2107" data-line-end="2109">When attack modifiers adjust damage, they should report that they changed the damage and by<br>
+<li class="has-line-data" data-line-start="2124" data-line-end="2126">When attack modifiers adjust damage, they should report that they changed the damage and by<br>
 how much. For example, “STONE ARMOR reduced the attack by 1 point.”</li>
-<li class="has-line-data" data-line-start="2109" data-line-end="2113">The game must support a new stone amarok character. Stone amaroks have 4 HP and a standard bite<br>
+<li class="has-line-data" data-line-start="2126" data-line-end="2130">The game must support a new stone amarok character. Stone amaroks have 4 HP and a standard bite<br>
 attack that deals 1 damage. They also have a defensive attack modifier called stone armor that<br>
 reduces all attacks by 1 damage. If your heroes still only have a 1-point punch attack, change<br>
 something so that the heroes can survive an encounter with stone amaroks.</li>
-<li class="has-line-data" data-line-start="2113" data-line-end="2115">Add a battle that includes two stone amaroks as monsters.</li>
+<li class="has-line-data" data-line-start="2130" data-line-end="2132">Add a battle that includes two stone amaroks as monsters.</li>
 </ul>
-<h2 class="code-line" data-line-start="2115" data-line-end="2116"><a id="Challenge_84_Damage_Types_2115"></a>Challenge 84: Damage Types</h2>
-<p class="has-line-data" data-line-start="2116" data-line-end="2122">Requires that you have done Attack Modifiers.<br>
+<h2 class="code-line" data-line-start="2132" data-line-end="2133"><a id="Challenge_84_Damage_Types_2132"></a>Challenge 84: Damage Types</h2>
+<p class="has-line-data" data-line-start="2133" data-line-end="2139">Requires that you have done Attack Modifiers.<br>
 Attacks should have a damage type that may affect how it works. For now, our damage types must<br>
 include at least normal and decoding, but you can add additional damage types (such as fire or ice) if you<br>
 want. The damage type primarily adds flavor to the game but also leads to additional game mechanics.<br>
 For example, we will give the True Programmer a defensive attack modifier called Object Sight, which<br>
 gives the character resistance to decoding damage.</p>
-<p class="has-line-data" data-line-start="2123" data-line-end="2124"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2140" data-line-end="2141"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2125" data-line-end="2128">Attack data should include a damage type. You are free to define any damage types that you think<br>
+<li class="has-line-data" data-line-start="2142" data-line-end="2145">Attack data should include a damage type. You are free to define any damage types that you think<br>
 make sense, but include the damage types of normal (or similar) and decoding. Hint:An enumeration<br>
 might be a good choice for this.</li>
-<li class="has-line-data" data-line-start="2128" data-line-end="2130">Have each attack use one of these types when producing damage data. Use whatever damage types<br>
+<li class="has-line-data" data-line-start="2145" data-line-end="2147">Have each attack use one of these types when producing damage data. Use whatever damage types<br>
 you wish, but make The Uncoded One’s unraveling attack be decoding damage.</li>
-<li class="has-line-data" data-line-start="2130" data-line-end="2132">Give the True Programmer character a defensive attack modifier called Object Sight that reduces<br>
+<li class="has-line-data" data-line-start="2147" data-line-end="2149">Give the True Programmer character a defensive attack modifier called Object Sight that reduces<br>
 decoding damage by 2.</li>
-<li class="has-line-data" data-line-start="2132" data-line-end="2135">Increase the unraveling attack to deal 0 to 4 damage randomly, instead of 0 to 2, ensuring that this<br>
+<li class="has-line-data" data-line-start="2149" data-line-end="2152">Increase the unraveling attack to deal 0 to 4 damage randomly, instead of 0 to 2, ensuring that this<br>
 attack is the single most powerful attack in the game (but one that the hero has resistance to).</li>
 </ul>
-<h2 class="code-line" data-line-start="2135" data-line-end="2136"><a id="Challenge_85_Making_it_Yours_2135"></a>Challenge 85: Making it Yours</h2>
-<p class="has-line-data" data-line-start="2136" data-line-end="2142">This is perhaps the most exciting challenge: the one where you get to do whatever you want to the game.<br>
+<h2 class="code-line" data-line-start="2152" data-line-end="2153"><a id="Challenge_85_Making_it_Yours_2152"></a>Challenge 85: Making it Yours</h2>
+<p class="has-line-data" data-line-start="2153" data-line-end="2159">This is perhaps the most exciting challenge: the one where you get to do whatever you want to the game.<br>
 This challenge is also repeatable. If you’d rather make four of your own enhancements instead of the<br>
 other challenges listed above, go for it.<br>
 Use your best judgment when awarding yourself XP, comparing what you’ve chosen with the other<br>
 challenges here.<br>
 The possibilities are limitless, but here are some ideas:</p>
 <ul>
-<li class="has-line-data" data-line-start="2142" data-line-end="2145">More heroes. You could add Mylara and Skorin, whose gear (or standard attack) is the Cannon of<br>
+<li class="has-line-data" data-line-start="2159" data-line-end="2162">More heroes. You could add Mylara and Skorin, whose gear (or standard attack) is the Cannon of<br>
 Consolas, which deals 1 damage most of the time, 2 damage every multiple of 3 or 5, and 5 damage<br>
 every multiple of 3 and 5. (This adds some continuity from the early part of the book!)</li>
-<li class="has-line-data" data-line-start="2145" data-line-end="2146">Add more item types. Maybe Simula’s soup is a full heal, restoring HP to its maximum.</li>
-<li class="has-line-data" data-line-start="2146" data-line-end="2147">Add offensive attack modifiers.</li>
-<li class="has-line-data" data-line-start="2147" data-line-end="2148">Let characters equip more than one piece of gear.</li>
-<li class="has-line-data" data-line-start="2148" data-line-end="2150">Let gear provide offensive and defensive attack modifiers. (A Binary Helm that reduces all damage<br>
+<li class="has-line-data" data-line-start="2162" data-line-end="2163">Add more item types. Maybe Simula’s soup is a full heal, restoring HP to its maximum.</li>
+<li class="has-line-data" data-line-start="2163" data-line-end="2164">Add offensive attack modifiers.</li>
+<li class="has-line-data" data-line-start="2164" data-line-end="2165">Let characters equip more than one piece of gear.</li>
+<li class="has-line-data" data-line-start="2165" data-line-end="2167">Let gear provide offensive and defensive attack modifiers. (A Binary Helm that reduces all damage<br>
 done by 1 when equipped, for example.)</li>
-<li class="has-line-data" data-line-start="2150" data-line-end="2151">Experience Points. As heroes defeat monsters, give them XP to track their accomplishments.</li>
-<li class="has-line-data" data-line-start="2151" data-line-end="2152">More monster types.</li>
-<li class="has-line-data" data-line-start="2152" data-line-end="2154">Add attack side effects, which allow an attack to run other logic when an attack happens. Maybe a<br>
+<li class="has-line-data" data-line-start="2167" data-line-end="2168">Experience Points. As heroes defeat monsters, give them XP to track their accomplishments.</li>
+<li class="has-line-data" data-line-start="2168" data-line-end="2169">More monster types.</li>
+<li class="has-line-data" data-line-start="2169" data-line-end="2171">Add attack side effects, which allow an attack to run other logic when an attack happens. Maybe a<br>
 Shadow Octopoid with a grapple attack that has a chance of stealing equipped gear.</li>
-<li class="has-line-data" data-line-start="2154" data-line-end="2155">Load levels from a file instead of hardcoding them in the game.</li>
-<li class="has-line-data" data-line-start="2155" data-line-end="2157">Display a small indicator in the status display that gives you a warning if a character is close to death.<br>
+<li class="has-line-data" data-line-start="2171" data-line-end="2172">Load levels from a file instead of hardcoding them in the game.</li>
+<li class="has-line-data" data-line-start="2172" data-line-end="2174">Display a small indicator in the status display that gives you a warning if a character is close to death.<br>
 Perhaps a yellow [!] if the character is under 25% and a red [!] if the character is under 10%.</li>
-<li class="has-line-data" data-line-start="2157" data-line-end="2160">Allow characters to taunt their enemies with messages like the Uncoded One saying &lt;&lt;THE<br>
+<li class="has-line-data" data-line-start="2174" data-line-end="2177">Allow characters to taunt their enemies with messages like the Uncoded One saying &lt;&lt;THE<br>
 UNRAVELLING OF ALL THINGS IS INEVITABLE&gt;&gt; and a skeleton saying, “We will repel your<br>
 spineless assault!”</li>
-<li class="has-line-data" data-line-start="2160" data-line-end="2162">Allow characters to have temporary effects applied to them. For example, a poison effect that deals<br>
+<li class="has-line-data" data-line-start="2177" data-line-end="2179">Allow characters to have temporary effects applied to them. For example, a poison effect that deals<br>
 1 damage per turn for three turns.</li>
-<li class="has-line-data" data-line-start="2162" data-line-end="2164">Strip out all Player’s Guide-specific elements and re-theme the game into your own creation.</li>
+<li class="has-line-data" data-line-start="2179" data-line-end="2181">Strip out all Player’s Guide-specific elements and re-theme the game into your own creation.</li>
 </ul>
-<h2 class="code-line" data-line-start="2164" data-line-end="2165"><a id="Challenge_86_Restoring_Balance_2164"></a>Challenge 86: Restoring Balance</h2>
-<p class="has-line-data" data-line-start="2165" data-line-end="2169">Depending on the challenges you completed, the game is likely not very balanced anymore. Either the<br>
+<h2 class="code-line" data-line-start="2181" data-line-end="2182"><a id="Challenge_86_Restoring_Balance_2181"></a>Challenge 86: Restoring Balance</h2>
+<p class="has-line-data" data-line-start="2182" data-line-end="2186">Depending on the challenges you completed, the game is likely not very balanced anymore. Either the<br>
 heroes or the monsters win all the time. Without changing logic and mechanics, adjust things like potion<br>
 counts, attack strengths and probabilities, the number of battles and monsters they contain to produce<br>
 a version of the game where if you play wisely, you are likely to win, but if you play poorly, you will lose.</p>
-<p class="has-line-data" data-line-start="2170" data-line-end="2171"><strong>Objectives</strong>:</p>
+<p class="has-line-data" data-line-start="2187" data-line-end="2188"><strong>Objectives</strong>:</p>
 <ul>
-<li class="has-line-data" data-line-start="2172" data-line-end="2174">Tweak aspects of the game (no need to write new logic, just change parameters and character counts,<br>
+<li class="has-line-data" data-line-start="2189" data-line-end="2191">Tweak aspects of the game (no need to write new logic, just change parameters and character counts,<br>
 etc.) until you have something challenging and fun.</li>
-<li class="has-line-data" data-line-start="2174" data-line-end="2176">Do what you can to ensure that The Uncoded One feels formidable.</li>
+<li class="has-line-data" data-line-start="2191" data-line-end="2193">Do what you can to ensure that The Uncoded One feels formidable.</li>
 </ul>
-<h2 class="code-line" data-line-start="2176" data-line-end="2177"><a id="Narrative_10_The_True_Programmer_2176"></a>Narrative 10: The True Programmer</h2>
-<p class="has-line-data" data-line-start="2177" data-line-end="2193">You slice your sword through the smoky form of the Uncoded One for the last time. It begins to<br>
+<h2 class="code-line" data-line-start="2193" data-line-end="2194"><a id="Narrative_10_The_True_Programmer_2193"></a>Narrative 10: The True Programmer</h2>
+<p class="has-line-data" data-line-start="2194" data-line-end="2210">You slice your sword through the smoky form of the Uncoded One for the last time. It begins to<br>
 disintegrate, binary streams flowing out of it until it bursts apart in a dazzling blue light. You have done<br>
 it. You have defeated the Uncoded One.<br>
 You step out of the cave’s entrance and back onto the slopes of the volcano as ash falls like snow from<br>
