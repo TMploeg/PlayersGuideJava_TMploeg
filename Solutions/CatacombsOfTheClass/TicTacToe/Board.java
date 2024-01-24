@@ -39,15 +39,15 @@ public class Board{
 		if(location == null){
 			throw new NullPointerException("location cannot be null");
 		}
-		System.out.println(getCell(location).getPlayer() == null);
+		
 		return isLocationInBoard(location) && getCell(location).getPlayer() == null;
 	}
 	
 	private boolean isLocationInBoard(Point location){
-		return location.x >= cells.length ||
+		return !(location.x >= cells.length ||
 			location.y >= cells[0].length ||
 			location.x < 0 ||
-			location.y < 0;
+			location.y < 0);
 	}
 	
 	public Cell getCell(Point location){
@@ -59,15 +59,32 @@ public class Board{
 	}
 	
 	public Player getWinnerIfAny(){
-		Cell[][] groups = getCellGroups();
+		Player winner = null;
+		
+		for(Cell[] winnerGroup : getWinnerCellGroups()){
+			Player current = winnerGroup[0].getPlayer();
+			
+			if(winner == null){
+				winner = current;
+			}
+			else if(current != winner){
+				throw new RuntimeException("multiple winners detected");
+			}
+		}
+		
+		return winner;
+		
+		/*Cell[][] groups = getCellGroups();
 		
 		Player winner = null;
-			
+		
 		for(Cell[] cellGroup : groups){
 			Player current = null;
 			
 			for(Cell cell : cellGroup){
-				if(current != null && current != cell.getPlayer()){
+				Player cellPlayer = cell.getPlayer();
+				
+				if(cellPlayer == null || (current != null && current != cellPlayer)){
 					current = null;
 					break;
 				}
@@ -85,6 +102,7 @@ public class Board{
 		}
 		
 		return winner;
+		*/
 	}
 	
 	public boolean isDraw(){
@@ -99,31 +117,68 @@ public class Board{
 		return true;
 	}
 	
-	private Cell[][] getCellGroups(){
-		Cell[][] rows = getRows();
-		Cell[][] collumns = cells;
-		Cell[][] diagonals = getDiagonals();
+	public Cell[][] getWinnerCellGroups(){
+		Cell[][] winnerRows = findWinnerGroupsFromGroupCollection(getRows());
+		Cell[][] winnerCollumns = findWinnerGroupsFromGroupCollection(cells);
+		Cell[][] winnerDiagonals = findWinnerGroupsFromGroupCollection(getDiagonals());
 		
-		Cell[][] groups = new Cell[rows.length + collumns.length + diagonals.length][size];
+		Cell[][] totalWinnerGroups = new Cell[winnerRows.length + winnerCollumns.length + winnerDiagonals.length][size];
 		
 		int index = 0;
 		
-		for(Cell[] row : rows){
-			groups[index] = row;
+		for(Cell[] row : winnerRows){
+			totalWinnerGroups[index] = row;
 			index++;
 		}
 		
-		for(Cell[] collumn : collumns){
-			groups[index] = collumn;
+		for(Cell[] collumn : winnerCollumns){
+			totalWinnerGroups[index] = collumn;
 			index++;
 		}
 		
-		for(Cell[] diagonal : diagonals){
-			groups[index] = diagonal;
+		for(Cell[] diagonal : winnerDiagonals){
+			totalWinnerGroups[index] = diagonal;
 			index++;
 		}
 		
-		return groups;
+		return totalWinnerGroups;
+	}
+	
+	private Cell[][] findWinnerGroupsFromGroupCollection(Cell[][] groupCollection){
+		int[] winnerIndexes = new int[groupCollection.length];
+		
+		int indexesIndex = 0;
+		
+		for(int groupIndex = 0; groupIndex < groupCollection.length; groupIndex++){
+			if(isWinnerGroup(groupCollection[groupIndex])){
+				winnerIndexes[indexesIndex] = groupIndex;
+				indexesIndex++;
+			}
+		}
+		
+		Cell[][] winnerGroups = new Cell[indexesIndex][size];
+		
+		for(int i = 0; i < indexesIndex; i++){
+			winnerGroups[i] = groupCollection[winnerIndexes[i]];
+		}
+		
+		return winnerGroups;
+	}
+	
+	private boolean isWinnerGroup(Cell[] cellGroup){
+		Player current = null;
+		
+		for(Cell cell : cellGroup){
+			Player cellPlayer = cell.getPlayer();
+			
+			if(cellPlayer == null || (current != null && current != cellPlayer)){
+				return false;
+			}
+			
+			current = cell.getPlayer();
+		}
+		
+		return true;
 	}
 	
 	private Cell[][] getRows(){

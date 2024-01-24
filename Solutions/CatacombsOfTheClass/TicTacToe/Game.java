@@ -17,19 +17,9 @@ public class Game{
 	}
 	
 	private void runRounds(){
+		Scanner scanner = new Scanner(System.in);
 		while(true){
-			Player roundWinner = playRound();
-			roundsPlayed++;
-			
-			System.out.print("Round " + roundsPlayed + " ");
-			if(roundWinner != null){
-				roundWinner.incrementWins();
-				
-				System.out.println("goes to " + roundWinner.getName() + "!");
-			}
-			else{
-				System.out.println("is a draw");
-			}
+			playRound();
 			
 			if(isDraw()){
 				System.out.println("The game is a draw.");
@@ -43,30 +33,47 @@ public class Game{
 					break;
 				}
 			}
+			
+			System.out.print("Press ENTER to start next round.");
+			scanner.nextLine();
 		}
 	}
 	
-	private Player playRound(){
+	private void playRound(){
 		Board board = new Board();
 		Player currentPlayer = player1;
+		int roundNr = roundsPlayed + 1;
+		
+		System.out.println("\nRound " + roundNr + " start!");
 		
 		while(true){
-			System.out.println(currentPlayer.getName() + "'s turn.");
+			System.out.println(currentPlayer.getName() + "(" + currentPlayer.getDisplayCharacter() + ")'s turn.");
 			displayBoard(board);
 			
 			Point location = askLocation(board);
+			
 			board.play(location, currentPlayer);
 			
 			currentPlayer = currentPlayer == player1 ? player2 : player1;
 			
 			Player winner = board.getWinnerIfAny();
 			
-			if(winner != null){
-				return winner;
-			}
-			
-			if(board.isDraw()){
-				return null;
+			if(winner != null || board.isDraw()){
+				System.out.print("Round " + roundNr + " ");
+				
+				if(winner != null){
+					System.out.println("goes to " + winner.getName());
+					winner.incrementWins();
+				}
+				else{
+					System.out.println("is a draw");
+				}
+				
+				displayBoard(board);
+				
+				roundsPlayed++;
+				
+				break;
 			}
 		}
 	}
@@ -106,13 +113,13 @@ public class Game{
 				char yPosInput = locationInput.charAt(0);
 				
 				int xPos = locationInput.charAt(1) - '1';
-				int yPos = yPosInput - (Character.isUpperCase(yPosInput) ? 'A' : 'a');
+				int yPos = (board.getSize() - 1) - (yPosInput - (Character.isUpperCase(yPosInput) ? 'A' : 'a'));
 				
 				Point location = new Point(xPos, yPos);
 				
 				if(board.canPlay(location)){
 					return location;
-				}			
+				}
 			}
 			
 			System.out.println("invalid input");
@@ -162,6 +169,8 @@ public class Game{
 	}
 
 	private void displayBoard(Board board){
+		Cell[][] winnerGroups = board.getWinnerCellGroups();
+		
 		for(int yPos = 0; yPos < board.getSize(); yPos++){
 			
 			if(yPos > 0){
@@ -176,19 +185,26 @@ public class Game{
 			}
 			
 			char yPosDisplayCharacter = (char)((board.getSize() - 1 - yPos) + 'a');
-			System.out.print(yPosDisplayCharacter + " ");
+			
+			String line = yPosDisplayCharacter + " ";
 			
 			for(int xPos = 0; xPos < board.getSize(); xPos++){
-				System.out.print(" ");
+				boolean isWinnerCell = checkIfCellIsInWinnerGroup(xPos, yPos, board, winnerGroups);
+				
 				if(xPos > 0){
-					System.out.print("| ");
+					line += "|";
 				}
 				
 				Player occupyingPlayer = board.getCell(xPos, yPos).getPlayer();
-				System.out.print(occupyingPlayer != null ? occupyingPlayer.getDisplayCharacter() : " ");
+				
+				String leftCharacter = isWinnerCell ? ">" : " ";
+				String rightCharacter = isWinnerCell ? "<" : " ";
+				String cellContentCharacter = occupyingPlayer != null ? Character.toString(occupyingPlayer.getDisplayCharacter()) : " ";
+				
+				line += leftCharacter + cellContentCharacter + rightCharacter;
 			}
 			
-			System.out.println();
+			System.out.println(line);
 		}
 		
 		for(int i = 0; i < board.getSize(); i++){
@@ -196,5 +212,17 @@ public class Game{
 		}
 		
 		System.out.println();
+	}
+	
+	private boolean checkIfCellIsInWinnerGroup(int xPos, int yPos, Board board, Cell[][] winnerGroups){
+		for(Cell[] group : winnerGroups){
+			for(Cell cell : group){
+				if(board.getCell(xPos, yPos) == cell){
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }
