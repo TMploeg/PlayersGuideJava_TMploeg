@@ -121,8 +121,7 @@ public class CatacombsOfTheClass{
 					door.close();
 					break;
 				case "unlock":
-					System.out.print("Please enter the passcode: ");
-					door.unlock(scanner.nextLine());
+					door.unlock();
 					break;
 				case "lock":
 					door.lock();
