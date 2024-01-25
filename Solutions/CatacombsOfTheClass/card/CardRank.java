@@ -1,3 +1,5 @@
+package card;
+
 public enum CardRank{
 	ONE(1),
 	TWO(2),

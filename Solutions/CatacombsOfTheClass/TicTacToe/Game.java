@@ -1,3 +1,5 @@
+package tictactoe;
+
 import java.util.Scanner;
 import java.awt.Point;
 

@@ -1,3 +1,5 @@
+package tictactoe;
+
 public class Player{
 	private String name;
 	private int nrOfWins;

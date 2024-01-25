@@ -1,30 +1,65 @@
 import java.util.Scanner;
 import java.util.HashMap;
+import point.Point;
+import color.Color;
+import card.*;
+import door.Door;
+import passwordvalidator.PasswordValidator;
+import tictactoe.Game;
 
 public class CatacombsOfTheClass{
 	public static void main(String[] args){
-		pointTest();
-		colorTest();
-		cardTest();
-		doorTest();
-		passwordValidatorTest();
+		int choice = getMenuOptionInput(new String[]{
+			"Point",
+			"Color",
+			"Card",
+			"Door",
+			"Password Validator",
+			"Play Tic Tac Toe"
+		});
+		
+		switch(choice){
+			case 1:
+				pointTest();
+				break;
+			case 2:
+				colorTest();
+				break;
+			case 3:
+				cardTest();
+				break;
+			case 4:
+				doorTest();
+				break;
+			case 5:
+				passwordValidatorTest();
+				break;
+			case 6:
+				int nrOfGamesChoice = getMenuOptionInput(new String[]{
+					"Best of 3",
+					"Best of 5"
+				});
+				
+				int nrOfGames = switch(nrOfGamesChoice){
+					case 1 -> 3;
+					case 2 -> 5;
+					default -> throw new RuntimeException("invalid case");
+				};
+				
+				Game game = new Game(nrOfGames);
+				break;
+		}
 	}
 	
 	public static void pointTest(){
-		System.out.println("POINT TEST START");
-		
 		Point p1 = new Point(2,3);
 		Point p2 = new Point(-4,0);
 		
 		System.out.println("Point 1: " + p1);
 		System.out.println("Point 2: " + p2);
-		
-		System.out.println("POINT TEST END\n");
 	}
 	
 	public static void colorTest(){
-		System.out.println("COLOR TEST START");
-		
 		Color[] colors = {
 			Color.WHITE,
 			Color.BLUE,
@@ -36,13 +71,9 @@ public class CatacombsOfTheClass{
 		for(Color color : colors){
 			System.out.println(color);
 		}
-		
-		System.out.println("COLOR TEST END\n");
 	}
 	
 	public static void cardTest(){
-		System.out.println("CARD TEST START");
-		
 		CardColor[] colors = CardColor.values();
 		CardRank[] ranks  = CardRank.values();
 		
@@ -59,13 +90,9 @@ public class CatacombsOfTheClass{
 		for(Card card : cards){
 			System.out.println(card);
 		}
-		
-		System.out.println("CARD TEST END\n");
 	}
 	
 	public static void doorTest(){
-		System.out.println("DOOR TEST START");
-		
 		Scanner scanner = new Scanner(System.in);
 		Door door = null;
 		do{
@@ -115,13 +142,9 @@ public class CatacombsOfTheClass{
 					System.out.println("invalid input");
 			}
 		}
-		
-		System.out.println("DOOR TEST END\n");
 	}
 
 	public static void passwordValidatorTest(){
-		System.out.println("POINT TEST START");
-		
 		PasswordValidator validator = new PasswordValidator();
 		HashMap<String,String> passwordMap = new HashMap<>();
 		passwordMap.put("too long","Hi2");
@@ -143,7 +166,102 @@ public class CatacombsOfTheClass{
 		for(String key : passwordMap.keySet()){
 			System.out.println(passwordMap.get(key) + "(" + key + ") -> " + validator.isValidPassword(passwordMap.get(key)));
 		}
+	}
+	
+	private static int getMenuOptionInput(String[] options){
+		for(int i = 0; i < options.length; i++){
+			System.out.println((i + 1) + ". " + options[i]);
+		}
 		
-		System.out.println("POINT TEST END\n");
+		int choice = getNumberInputInRange("Please enter the number of the option you want:", 1, options.length);
+		
+		return choice;
+	}
+	
+	public static int getNumberInputInRange(String message, int min, int max){
+		Scanner scanner = new Scanner(System.in);
+		
+		while(true){
+			System.out.print(message + " ");
+			String numberInput = scanner.nextLine();
+			
+			if(!isNumber(numberInput)){
+				System.out.println("error: '" + numberInput + "' is not a number.");
+				continue;
+			}
+			
+			boolean isInteger = isInteger(numberInput);
+			int number = 0;
+			
+			if(isInteger){
+				number = Integer.parseInt(numberInput);
+			}
+			
+			if(!isInteger || (number < min || number > max)){
+				System.out.println("error: '" + number + "' is out of range (min: '" + min + "', max: '" + max + "')");
+				continue;
+			}
+			
+			return number;
+		}
+	}
+	
+	private static boolean isNumber(String str){
+		if(str == null){
+			throw new NullPointerException("argument 'str' is null");
+		}
+		
+		if(str.length() == 0){
+			return false;
+		}
+		
+		char[] splitChars = str.toCharArray();
+		if(str.charAt(0) == '-'){
+			if(str.length() == 1){
+				return false;
+			}
+			
+			splitChars = str.substring(1).toCharArray();
+		}
+		
+		for(char c : splitChars){
+			if(!Character.isDigit(c)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private static boolean isInteger(String nrString){
+		if(nrString == null){
+			throw new NullPointerException("nrString cannot be null");
+		}
+		
+		if(!isNumber(nrString)){
+			return false;
+		}
+	
+		boolean isPositive = true;
+		String maxValueString = Integer.toString(Integer.MAX_VALUE);
+		String absNrString = nrString;
+		
+		if(nrString.charAt(0) == '-'){
+			isPositive = false;
+			maxValueString = Integer.toString(Integer.MIN_VALUE * -1);
+			absNrString = nrString.substring(1);
+		}
+		
+		if(absNrString.length() != maxValueString.length()){
+			return absNrString.length() < maxValueString.length();
+		}
+		
+		for(int i = absNrString.length() - 1; i >=0; i--){
+			if(absNrString.charAt(i) != maxValueString.charAt(i)){
+				return absNrString.charAt(i) < maxValueString.charAt(i);
+			}
+		}
+		
+		return true;
 	}
 }

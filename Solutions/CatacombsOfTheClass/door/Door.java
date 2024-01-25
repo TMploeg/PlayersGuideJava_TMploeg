@@ -1,3 +1,5 @@
+package door;
+
 public class Door{
 	private DoorState state;
 	private String passcode;

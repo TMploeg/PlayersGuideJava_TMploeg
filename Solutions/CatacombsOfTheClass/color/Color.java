@@ -1,3 +1,5 @@
+package color;
+
 public class Color{
 	private int red;
 	private int green;
