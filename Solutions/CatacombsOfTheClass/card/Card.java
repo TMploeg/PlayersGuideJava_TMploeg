@@ -1,3 +1,5 @@
+package card;
+
 public class Card{
 	private CardColor color;
 	private CardRank rank;

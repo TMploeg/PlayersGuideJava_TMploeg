@@ -1,3 +1,7 @@
+package door;
+
+import java.util.Scanner;
+
 public class Door{
 	private DoorState state;
 	private String passcode;
@@ -44,17 +48,23 @@ public class Door{
 		}
 	}
 	
-	public void unlock(String passcode){
-		if(!this.passcode.equals(passcode)){
-			System.out.println("Passcode is incorrect");
-		}
-		else if(state != DoorState.LOCKED){		
+	public void unlock(){
+		if(state != DoorState.LOCKED){		
 			System.out.println("You cannot unlock the door, it is already unlocked.");
+			return;
 		}
-		else{
-			state = DoorState.CLOSED;
-			System.out.println("The door was unlocked.");
+		
+		System.out.print("Please enter the passcode: ");
+		Scanner scanner = new Scanner(System.in);
+		String passcodeInput = scanner.nextLine();
+		
+		if(!this.passcode.equals(passcodeInput)){
+			System.out.println("Passcode is incorrect");
+			return;
 		}
+		
+		state = DoorState.CLOSED;
+		System.out.println("The door was unlocked.");
 	}
 	
 	public void lock(){

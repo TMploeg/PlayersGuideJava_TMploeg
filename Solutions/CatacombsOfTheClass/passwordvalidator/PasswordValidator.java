@@ -1,3 +1,5 @@
+package passwordvalidator;
+
 public class PasswordValidator{
 	private int minPasswordLength = 6;
 	private int maxPasswordLength = 13;
