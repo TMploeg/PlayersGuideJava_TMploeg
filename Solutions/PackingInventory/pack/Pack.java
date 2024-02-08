@@ -76,4 +76,17 @@ public class Pack{
 	public int getMaxItemCount(){
 		return maxItemCount;
 	}
+	
+	@Override
+	public String toString(){
+		String output = this.getClass().getSimpleName() + ", CONTENTS: { ";
+		
+		for(int i = 0; i < maxItemCount; i++){
+			output += (i < items.length ? items[i] : "_") + " ";
+		}
+		
+		output += "}";
+		
+		return output;
+	}
 }

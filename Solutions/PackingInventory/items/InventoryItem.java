@@ -16,4 +16,9 @@ public abstract class InventoryItem {
 	public double getVolume(){
 		return volume;
 	}
+	
+	@Override
+	public String toString(){
+		return this.getClass().getSimpleName();
+	}
 }
