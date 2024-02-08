@@ -21,7 +21,7 @@ public class Pack{
 		return (
 			(getTotalWeight() + item.getWeight() <= maxWeight) &&
 			(getTotalVolume() + item.getVolume() <= maxVolume) &&
-			(getMaxItemCount() + 1 <= maxItemCount)
+			(getItemCount() + 1 <= maxItemCount)
 		);
 	}
 	
@@ -69,11 +69,11 @@ public class Pack{
 		return maxVolume;
 	}
 	
-	public double getItemCount(){
+	public int getItemCount(){
 		return items.length;
 	}
 	
-	public double getMaxItemCount(){
+	public int getMaxItemCount(){
 		return maxItemCount;
 	}
 }

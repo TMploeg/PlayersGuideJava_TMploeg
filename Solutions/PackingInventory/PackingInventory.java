@@ -1,16 +1,83 @@
 import pack.*;
 import items.*;
+import menu.*;
 
 import java.util.Scanner;
-import java.util.Set;
+import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 
 public class PackingInventory{
+	private static Pack pack;
+	private static boolean running = false;
+	
+	private static final Class[] itemClasses = {
+		Arrow.class,
+		Bow.class,
+		Rope.class,
+		FoodRations.class,
+		Water.class,
+		Sword.class
+	};
+	
 	public static void main(String[] args){
-		for(Class c : InventoryItem.getAllItemTypes()){
-			System.out.println(c.getName());
+		pack = new Pack(getPackSizeInput("How large is your pack?"));
+		
+		running = true;
+		
+		while(running){
+			showPackInfo();
+			
+			System.out.println();
+			
+			showMenu();
+			
+			System.out.println();
+		}
+	}
+	
+	private static void showPackInfo(){
+		System.out.println("Nr of items: " + pack.getItemCount());
+		System.out.println("Weight: " + pack.getTotalWeight() + "/" + pack.getMaxWeight());
+		System.out.println("Volume: " + pack.getTotalVolume() + "/" + pack.getMaxVolume());
+	}
+	
+	private static void showMenu(){
+		ArrayList<MenuOption<Class>> menuOptions = new ArrayList<MenuOption<Class>>();
+		
+		for(int i = 0; i < itemClasses.length; i++){
+			String optionName = itemClasses[i].getSimpleName();
+			
+			MenuAction<Class> onSelect = cl -> {
+				InventoryItem newItem;
+				
+				try{
+					newItem = (InventoryItem)cl.getConstructor().newInstance();
+				}
+				catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
+					throw new RuntimeException("unknown error occured");
+				}
+				
+				tryAddItem(newItem);
+			};
+			
+			menuOptions.add(new MenuOption<Class>(optionName, itemClasses[i], onSelect)); 
 		}
 		
-		//Pack pack = new Pack(getPackSizeInput("How large is your pack?"));
+		menuOptions.add(new MenuOption<Class>("Exit", null, args -> running = false));
+		
+		Menu<Class> menu = new Menu<Class>(menuOptions);
+		menu.requestMenuSelection();
+	}
+	
+	private static void tryAddItem(InventoryItem item){
+		if(pack.canAdd(item)){
+			pack.add(item);
+			System.out.println("Added '" + item.getClass().getSimpleName() + "' to pack.");
+			
+			return;
+		}
+		
+		System.out.println("Could not add '" + item.getClass().getSimpleName() + "' to pack");
 	}
 	
 	private static PackSize getPackSizeInput(String message){
