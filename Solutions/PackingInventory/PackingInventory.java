@@ -36,7 +36,7 @@ public class PackingInventory{
 	}
 	
 	private static void showPackInfo(){
-		System.out.println("Nr of items: " + pack.getItemCount());
+		System.out.println(pack);
 		System.out.println("Weight: " + pack.getTotalWeight() + "/" + pack.getMaxWeight());
 		System.out.println("Volume: " + pack.getTotalVolume() + "/" + pack.getMaxVolume());
 	}
