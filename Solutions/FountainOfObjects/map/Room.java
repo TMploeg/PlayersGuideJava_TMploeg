@@ -8,10 +8,13 @@ public class Room {
 	private Map<Cardinal, Room> adjacentRooms;
 	
 	private RoomType type;
+	private RoomLocation location;
 	
-	public Room(RoomType type) {
+	public Room(RoomType type, RoomLocation location) {
 		adjacentRooms = new HashMap<>();
+		
 		this.type = type;
+		this.location = location;
 	}
 
 	public RoomType getType(){
@@ -28,8 +31,16 @@ public class Room {
 		return null;
 	}
 	
+	public boolean hasAdjacentRoom(Cardinal cardinal){
+		return adjacentRooms.containsKey(cardinal);
+	}
+	
 	public Collection<Room> getAllAdjacentRooms(){
 		return adjacentRooms.values(); 
+	}
+	
+	public RoomLocation getLocation(){
+		return location;
 	}
 	
 	protected void link(Cardinal cardinal, Room room){

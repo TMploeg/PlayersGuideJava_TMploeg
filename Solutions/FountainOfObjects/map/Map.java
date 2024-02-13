@@ -5,13 +5,20 @@ import helpers.console.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import java.awt.Point;
 
 public class Map{
 	private final Room entrance;
+	private Room currentRoom;
+	
+	private boolean fountainEnabled = false;
 	
 	protected Map(Room entrance){
 		this.entrance = entrance;
+		
+		currentRoom = this.entrance;
 	}
 	
 	public Room getRoom(Point location){
@@ -38,6 +45,28 @@ public class Map{
 		}
 		
 		return currentRoom;
+	}
+	
+	public Room getCurrentRoom(){
+		return currentRoom;
+	}
+	
+	public boolean isFountainEnabled(){
+		return fountainEnabled;
+	}
+	
+	public void enableFountain(){
+		fountainEnabled = true;
+	}
+	
+	public void move(Cardinal direction){
+		Room newRoom = currentRoom.getAdjacentRoom(direction);
+		
+		if(newRoom == null){
+			throw new NoSuchElementException("current room has no '" + direction.toString() + "' room");
+		}
+		
+		currentRoom = newRoom;
 	}
 	
 	public void display(){

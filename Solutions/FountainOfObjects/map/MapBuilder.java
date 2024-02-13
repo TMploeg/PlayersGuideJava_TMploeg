@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class MapBuilder{
-	private record RoomLocation(int x, int y) {}
-	
 	public static final int MIN_SIZE = 4;
 	public static final int MAX_SIZE = 25;
 	public static final int MIN_FOUNTAIN_DISTANCE = 2;
@@ -63,31 +61,34 @@ public class MapBuilder{
 	}
 	
 	private Room createAndLinkRooms(){
-		Room entrance = generateNewCollumnRooms(null, 0);
+		Room entrance = generateNewCollumnRooms(null);
 		Room collumnStartRoom = entrance;
 		
 		for(int xPos = 1; xPos < size; xPos++){
-			collumnStartRoom = generateNewCollumnRooms(collumnStartRoom, xPos);
+			collumnStartRoom = generateNewCollumnRooms(collumnStartRoom);
 		}
 		
 		return entrance;
 	}
 	
-	private Room generateNewCollumnRooms(Room previousCollumnRoom, int collumnPos){
-		RoomLocation startPos = new RoomLocation(collumnPos, 0);
-		Room first = new Room(getRoomTypeForLocation(startPos));
+	private Room generateNewCollumnRooms(Room previousCollumnRoom){
+		boolean hasPreviousCollumn = previousCollumnRoom != null;
+		int collumn = hasPreviousCollumn ? (previousCollumnRoom.getLocation().x() + 1) : 0;
 		
-		if(previousCollumnRoom != null){
+		RoomLocation startPos = new RoomLocation(collumn, 0);
+		Room first = new Room(getRoomTypeForLocation(startPos), startPos);
+		
+		if(hasPreviousCollumn){
 			first.link(Cardinal.WEST, previousCollumnRoom);
 		}
 		
 		Room previous = first;
 		
 		for(int yPos = 1; yPos < size; yPos++){
-			RoomLocation newPos = new RoomLocation(collumnPos, yPos);
-			Room newRoom = new Room(getRoomTypeForLocation(newPos));
+			RoomLocation newPos = new RoomLocation(collumn, yPos);
+			Room newRoom = new Room(getRoomTypeForLocation(newPos), newPos);
 		
-			if(collumnPos > 0){
+			if(hasPreviousCollumn){
 				Room westRoom = previous.getAdjacentRoom(Cardinal.WEST).getAdjacentRoom(Cardinal.SOUTH);			
 				newRoom.link(Cardinal.WEST, westRoom);
 			}
