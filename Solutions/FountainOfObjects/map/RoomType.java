@@ -1,7 +1,7 @@
 package map;
 
-public enum RoomType{
-	NORMAL,
-	ENTRANCE,
-	FOUNTAIN;
+public enum RoomType {
+  NORMAL,
+  ENTRANCE,
+  FOUNTAIN;
 }

@@ -1,9 +1,8 @@
-import map.*;
 import game.*;
-import java.awt.Point;
+import map.*;
 
-public class FountainOfObjects{
-	public static void main(String[] args){
-		Game game = new Game();
-	}
+public class FountainOfObjects {
+  public static void main(String[] args) {
+    Game game = new Game();
+  }
 }
