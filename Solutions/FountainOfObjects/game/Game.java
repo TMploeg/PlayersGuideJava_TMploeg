@@ -25,18 +25,16 @@ public class Game{
 	}
 	
 	private void runGame(){
-		ConsoleHelper.clearScreen();
-		
 		while(getGameState() == GameState.PLAYING){
+			displaySeperator();
 			displayLocation();
 			displayRoomMessage();
 			
 			Command chosenCommand = ConsoleHelper.getCommandInput("what do you want to do?");
 			executeCommand(chosenCommand);
-			
-			ConsoleHelper.clearScreen();
 		}
 		
+		displaySeperator();
 		ConsoleHelper.printlnColor("You win!", ConsoleColor.LIGHT_PURPLE);
 	}
 	
@@ -67,6 +65,16 @@ public class Game{
 		roomTypeColorMap.put(RoomType.NORMAL, ConsoleColor.WHITE);
 		roomTypeColorMap.put(RoomType.ENTRANCE, ConsoleColor.YELLOW);
 		roomTypeColorMap.put(RoomType.FOUNTAIN, ConsoleColor.BLUE);
+	}
+	
+	private void displaySeperator(){
+		int seperatorLength = 50;
+		
+		for(int i = 0; i < 50; i++){
+			System.out.print("-");
+		}
+		
+		System.out.println();
 	}
 	
 	private void displayLocation(){
@@ -100,6 +108,9 @@ public class Game{
 	private void move(Cardinal direction){
 		if(map.getCurrentRoom().hasAdjacentRoom(direction)){
 			map.move(direction);
+		}
+		else{
+			System.out.println("You hit your head against the wall");
 		}
 	}
 	
