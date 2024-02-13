@@ -33,9 +33,4 @@ public class ConsoleHelper{
 			System.out.println("command '" + input + "' does not exist (enter '" + Command.HELP.getCommandText() + "' for help");
 		}
 	}
-	
-	public static void clearScreen(){
-		System.out.print("\033[H\033[2J");  
-		System.out.flush();
-	}
 }
