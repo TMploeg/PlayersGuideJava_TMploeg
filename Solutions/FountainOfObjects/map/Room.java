@@ -9,17 +9,13 @@ public class Room {
 	
 	private RoomType type;
 	
-	public Room() {
+	public Room(RoomType type) {
 		adjacentRooms = new HashMap<>();
-		type = RoomType.NORMAL;
+		this.type = type;
 	}
 
 	public RoomType getType(){
 		return type;
-	}
-	
-	public void setType(RoomType type){
-		this.type = type;
 	}
 	
 	public Room getAdjacentRoom(Cardinal cardinal){

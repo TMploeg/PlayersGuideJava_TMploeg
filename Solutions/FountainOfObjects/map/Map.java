@@ -1,85 +1,79 @@
 package map;
 
+import helpers.console.*;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
+import java.awt.Point;
 
 public class Map{
 	private final Room entrance;
 	
-	public Map(int size){
-		if(size < 1){
-			throw new IllegalArgumentException("size must be greater than or equal to 1");
-		}
-		
-		entrance = new Room();
-		entrance.setType(RoomType.ENTRANCE);
-		
-		LinkedList<Room> currentRooms = new LinkedList<>();
-		currentRooms.add(entrance);
-		
-		boolean sizeComplete = currentRooms.size() == size;
-		
-		while(true){
-			LinkedList<Room> newRooms = getNewRooms(currentRooms, !sizeComplete);
-			
-			if(!sizeComplete && newRooms.size() == size){
-				sizeComplete = true;
-			}
-			
-			currentRooms = newRooms;
-			
-			if(sizeComplete && currentRooms.size() == 1){
-				break;
-			}
-		}
+	protected Map(Room entrance){
+		this.entrance = entrance;
 	}
 	
-	private LinkedList<Room> getNewRooms(LinkedList<Room> oldRooms, boolean addOuterRooms){
-		LinkedList<Room> newRooms = new LinkedList<>();
-		
-		Iterator<Room> iterator = oldRooms.iterator();
-		
-		if(!iterator.hasNext()){
-			throw new RuntimeException("list is empty");
+	public Room getRoom(Point location){
+		if(location.x < 0 || location.y < 0){
+			return null;
 		}
 		
-		Room previous = iterator.next();
+		Room currentRoom = entrance;
 		
-		while(iterator.hasNext()){
-			Room current = iterator.next();
+		for(int currentX = 0; currentX < location.x; currentX++){
+			currentRoom = currentRoom.getAdjacentRoom(Cardinal.EAST);
 			
-			Room newRoom = new Room();
-			newRooms.addLast(newRoom);
-
-			previous.link(Cardinal.SOUTH, newRoom);
-			current.link(Cardinal.EAST, newRoom);
+			if(currentRoom == null){
+				return null;
+			}
+		}
+		
+		for(int currentY = 0; currentY < location.y; currentY++){
+			currentRoom = currentRoom.getAdjacentRoom(Cardinal.SOUTH);
 			
-			previous = current;
+			if(currentRoom == null){
+				return null;
+			}
 		}
 		
-		if(addOuterRooms){
-			Room newEastRoom = new Room();
-			newRooms.addFirst(newEastRoom);
-			oldRooms.getFirst().link(Cardinal.EAST, newEastRoom);
-		
-			Room newSouthRoom = new Room();
-			newRooms.addLast(newSouthRoom);
-			oldRooms.getLast().link(Cardinal.SOUTH, newSouthRoom);
-		}
-		
-		return newRooms;
+		return currentRoom;
 	}
 	
 	public void display(){
 		Room start = entrance;
 		
+		int largestRoomTypeNameLength = 0;
+		for(RoomType roomType : RoomType.values()){
+			int length = roomType.toString().length();
+			if(length > largestRoomTypeNameLength){
+				largestRoomTypeNameLength = length;
+			}
+		}
+		
 		while(true){
 			Room current = start;
-			String line = "";
+			
+			int length = 0;
+			
+			int count = 0;
 			
 			while(true){
-				line += current.getType();
+				ConsoleColor color = switch(current.getType()){
+					case NORMAL -> ConsoleColor.WHITE;
+					case ENTRANCE -> ConsoleColor.YELLOW;
+					case FOUNTAIN -> ConsoleColor.BLUE;
+					default -> throw new RuntimeException();
+				};
+				
+				String roomTypeName = current.getType().toString();
+				ConsoleHelper.printColor(roomTypeName, color);
+				
+				for(int i = 0; i < (largestRoomTypeNameLength - roomTypeName.length()); i++){
+					System.out.print(" ");
+				}
+				
+				count++;
 				
 				current = current.getAdjacentRoom(Cardinal.EAST);
 				
@@ -87,10 +81,10 @@ public class Map{
 					break;
 				}
 				
-				line += " | ";
+				System.out.print(" | ");
 			}
 			
-			System.out.println(line);
+			System.out.println();
 			
 			start = start.getAdjacentRoom(Cardinal.SOUTH);
 			
@@ -100,7 +94,7 @@ public class Map{
 			
 			String seperator = "";
 			
-			for(int i = 0; i < line.length(); i++){
+			for(int i = 0; i < (count * largestRoomTypeNameLength + (count - 1) * 3); i++){
 				seperator += "-";
 			}
 			
