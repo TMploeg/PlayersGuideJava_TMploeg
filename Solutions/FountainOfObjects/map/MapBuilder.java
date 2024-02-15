@@ -88,10 +88,10 @@ public class MapBuilder {
   }
 
   private Room createAndLinkRooms() {
+	maelstroms = new Maelstrom[maelstromLocations.length];
+	
     Room entrance = generateNewCollumnRooms(null);
     Room collumnStartRoom = entrance;
-	
-	maelstroms = new Maelstrom[maelstromLocations.length];
 
     for (int xPos = 1; xPos < size.getProperties().size(); xPos++) {
       collumnStartRoom = generateNewCollumnRooms(collumnStartRoom);
