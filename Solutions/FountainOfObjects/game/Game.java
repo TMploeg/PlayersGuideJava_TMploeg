@@ -48,9 +48,9 @@ public class Game {
       executeCommand(chosenCommand);
 
       displaySeperator();
-      displayRoomMessage();
 	  
 	  handleRoomContent();
+      displayRoomMessage();
 
       GameState state = getGameState();
       if (state == GameState.PLAYING) {
