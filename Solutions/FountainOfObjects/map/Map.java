@@ -89,21 +89,24 @@ public class Map {
               case NORMAL -> ConsoleColor.WHITE;
               case ENTRANCE -> ConsoleColor.YELLOW;
               case FOUNTAIN -> {
-				  yield fountainEnabled ? ConsoleColor.BLUE : ConsoleColor.LIGHT_GRAY;
-			  }
+                yield fountainEnabled ? ConsoleColor.BLUE : ConsoleColor.LIGHT_GRAY;
+              }
               case PIT -> ConsoleColor.DARK_RED;
               default -> throw new RuntimeException();
             };
 
         String roomTypeName = current.getType().toString();
         ConsoleHelper.printColor(roomTypeName, color);
-		
-		boolean isCurrentRoom = current == getCurrentRoom();
-		int nrOfSpaces = largestRoomTypeNameLength - roomTypeName.length() + (isCurrentRoom ? 0 : (CURRENT_POS_MARKER.length() + 1));
-		
-		if(isCurrentRoom){
-			ConsoleHelper.printColor(" " + CURRENT_POS_MARKER, ConsoleColor.PINK);
-		}
+
+        boolean isCurrentRoom = current == getCurrentRoom();
+        int nrOfSpaces =
+            largestRoomTypeNameLength
+                - roomTypeName.length()
+                + (isCurrentRoom ? 0 : (CURRENT_POS_MARKER.length() + 1));
+
+        if (isCurrentRoom) {
+          ConsoleHelper.printColor(" " + CURRENT_POS_MARKER, ConsoleColor.PINK);
+        }
 
         for (int i = 0; i < nrOfSpaces; i++) {
           System.out.print(" ");
@@ -130,7 +133,12 @@ public class Map {
 
       String seperator = "";
 
-      for (int i = 0; i < (count * largestRoomTypeNameLength + (count - 1) * 3 + count * (CURRENT_POS_MARKER.length() + 1)); i++) {
+      for (int i = 0;
+          i
+              < (count * largestRoomTypeNameLength
+                  + (count - 1) * 3
+                  + count * (CURRENT_POS_MARKER.length() + 1));
+          i++) {
         seperator += "-";
       }
 

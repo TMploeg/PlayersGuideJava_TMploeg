@@ -27,11 +27,11 @@ public class ConsoleHelper {
 
       System.out.print(ANSI_RESET);
 
-	  if(input == null || input.length() == 0){
-		  System.out.println("input must have at least one character");
-		  continue;
-	  }
-	  
+      if (input == null || input.length() == 0) {
+        System.out.println("input must have at least one character");
+        continue;
+      }
+
       if (Command.exists(input)) {
         return Command.getFromCommandText(input);
       }

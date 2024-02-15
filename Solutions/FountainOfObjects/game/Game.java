@@ -99,15 +99,14 @@ public class Game {
   }
 
   private void displayLocation() {
-	if(cheatMode){
-		map.display();
-	}
-	else{
-		RoomLocation location = map.getCurrentRoom().getLocation();
-		System.out.println("You are in the room at location " + location);
-	}
-	
-	System.out.println();
+    if (cheatMode) {
+      map.display();
+    } else {
+      RoomLocation location = map.getCurrentRoom().getLocation();
+      System.out.println("You are in the room at location " + location);
+    }
+
+    System.out.println();
   }
 
   private void displayRoomMessage() {
