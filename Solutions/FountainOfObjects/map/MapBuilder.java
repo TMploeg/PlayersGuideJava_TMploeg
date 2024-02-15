@@ -1,5 +1,6 @@
 package map;
 
+import entities.*;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -13,6 +14,9 @@ public class MapBuilder {
 
   private HashMap<RoomLocation, RoomType> roomData;
 
+  private RoomLocation[] maelstromLocations;
+  private Maelstrom[] maelstroms;
+
   public MapBuilder() {
     size = DEFAULT_SIZE;
   }
@@ -25,8 +29,10 @@ public class MapBuilder {
 
   public Map build() {
     generateRoomData();
+    generateEntityData();
 
-    Map map = new Map(createAndLinkRooms());
+    Room entrance = createAndLinkRooms();
+    Map map = new Map(entrance, maelstroms);
 
     return map;
   }
@@ -39,6 +45,10 @@ public class MapBuilder {
     setPits();
   }
 
+  private void generateEntityData() {
+    setMaelstroms();
+  }
+
   private void setEntrance() {
     roomData.put(new RoomLocation(0, 0), RoomType.ENTRANCE);
   }
@@ -48,8 +58,16 @@ public class MapBuilder {
   }
 
   private void setPits() {
-    for (int i = 0; i < size.getNrOfPits(); i++) {
+    for (int i = 0; i < size.getProperties().pits(); i++) {
       roomData.put(getRandomUnoccupiedLocation(), RoomType.PIT);
+    }
+  }
+
+  private void setMaelstroms() {
+    maelstromLocations = new RoomLocation[size.getProperties().maelstroms()];
+
+    for (int i = 0; i < maelstromLocations.length; i++) {
+      maelstromLocations[i] = getRandomUnoccupiedLocation();
     }
   }
 
@@ -58,7 +76,8 @@ public class MapBuilder {
 
     while (true) {
       RoomLocation location =
-          new RoomLocation(r.nextInt(size.getValue()), r.nextInt(size.getValue()));
+          new RoomLocation(
+              r.nextInt(size.getProperties().size()), r.nextInt(size.getProperties().size()));
 
       if (roomData.containsKey(location)
           || (location.x() < ENTRANCE_SAFE_SPACE && location.y() < ENTRANCE_SAFE_SPACE)) {
@@ -70,10 +89,12 @@ public class MapBuilder {
   }
 
   private Room createAndLinkRooms() {
+    maelstroms = new Maelstrom[maelstromLocations.length];
+
     Room entrance = generateNewCollumnRooms(null);
     Room collumnStartRoom = entrance;
 
-    for (int xPos = 1; xPos < size.getValue(); xPos++) {
+    for (int xPos = 1; xPos < size.getProperties().size(); xPos++) {
       collumnStartRoom = generateNewCollumnRooms(collumnStartRoom);
     }
 
@@ -85,7 +106,7 @@ public class MapBuilder {
     int collumn = hasPreviousCollumn ? (previousCollumnRoom.getLocation().x() + 1) : 0;
 
     RoomLocation startPos = new RoomLocation(collumn, 0);
-    Room first = new Room(getRoomTypeForLocation(startPos), startPos);
+    Room first = createRoom(startPos);
 
     if (hasPreviousCollumn) {
       first.link(Cardinal.WEST, previousCollumnRoom);
@@ -93,9 +114,9 @@ public class MapBuilder {
 
     Room previous = first;
 
-    for (int yPos = 1; yPos < size.getValue(); yPos++) {
+    for (int yPos = 1; yPos < size.getProperties().size(); yPos++) {
       RoomLocation newPos = new RoomLocation(collumn, yPos);
-      Room newRoom = new Room(getRoomTypeForLocation(newPos), newPos);
+      Room newRoom = createRoom(newPos);
 
       if (hasPreviousCollumn) {
         Room westRoom = previous.getAdjacentRoom(Cardinal.WEST).getAdjacentRoom(Cardinal.SOUTH);
@@ -111,5 +132,33 @@ public class MapBuilder {
 
   private RoomType getRoomTypeForLocation(RoomLocation location) {
     return roomData.containsKey(location) ? roomData.get(location) : RoomType.NORMAL;
+  }
+
+  private Room createRoom(RoomLocation location) {
+    RoomType type = getRoomTypeForLocation(location);
+    Room room = new Room(type, location);
+
+    if (hasMaelstrom(location)) {
+      for (int i = 0; i < maelstromLocations.length; i++) {
+        if (maelstroms[i] != null) {
+          continue;
+        }
+
+        maelstroms[i] = new Maelstrom(room);
+        break;
+      }
+    }
+
+    return room;
+  }
+
+  private boolean hasMaelstrom(RoomLocation location) {
+    for (RoomLocation maelstromLocation : maelstromLocations) {
+      if (location.equals(maelstromLocation)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

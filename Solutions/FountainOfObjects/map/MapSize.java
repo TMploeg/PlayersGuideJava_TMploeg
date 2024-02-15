@@ -1,23 +1,19 @@
 package map;
 
 public enum MapSize {
-  SMALL(4, 1),
-  MEDIUM(6, 2),
-  LARGE(8, 4);
+  SMALL(new MapProperties(4, 1, 1)),
+  MEDIUM(new MapProperties(6, 2, 1)),
+  LARGE(new MapProperties(8, 4, 2));
 
-  private int value;
-  private int nrOfPits;
+  protected record MapProperties(int size, int pits, int maelstroms) {}
 
-  private MapSize(int value, int nrOfPits) {
-    this.value = value;
-    this.nrOfPits = nrOfPits;
+  private MapProperties properties;
+
+  private MapSize(MapProperties properties) {
+    this.properties = properties;
   }
 
-  public int getValue() {
-    return value;
-  }
-
-  public int getNrOfPits() {
-    return nrOfPits;
+  public MapProperties getProperties() {
+    return properties;
   }
 }

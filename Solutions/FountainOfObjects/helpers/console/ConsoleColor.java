@@ -5,6 +5,7 @@ public enum ConsoleColor {
   PINK(207, 39, 131),
   BLUE(56, 132, 232),
   CYAN(52, 227, 227),
+  TEAL(93, 245, 144),
   YELLOW(230, 223, 23),
   GREEN(27, 222, 27),
   WHITE(255, 255, 255),
