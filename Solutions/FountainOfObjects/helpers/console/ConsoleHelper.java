@@ -1,7 +1,6 @@
 package helpers.console;
 
 import helpers.console.menu.*;
-
 import java.util.Scanner;
 
 public class ConsoleHelper {
@@ -27,6 +26,11 @@ public class ConsoleHelper {
       String input = scanner.nextLine();
 
       System.out.print(ANSI_RESET);
+
+      if (input == null || input.length() == 0) {
+        System.out.println("input must have at least one character");
+        continue;
+      }
 
       if (Command.exists(input)) {
         return Command.getFromCommandText(input);
