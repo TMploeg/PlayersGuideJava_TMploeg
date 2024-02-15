@@ -5,6 +5,7 @@ import helpers.console.menu.*;
 import java.util.ArrayList;
 import java.util.List;
 import map.*;
+import entities.*;
 
 public class Game {
   private enum GameState {
@@ -48,6 +49,8 @@ public class Game {
 
       displaySeperator();
       displayRoomMessage();
+	  
+	  handleRoomContent();
 
       GameState state = getGameState();
       if (state == GameState.PLAYING) {
@@ -134,20 +137,48 @@ public class Game {
   }
 
   private void displayAdjacentRoomMessages() {
-    boolean adjacentPit = false;
+    boolean foundAdjacentPit = false;
+	boolean foundAdjacentMaelstrom = false;
 
     for (Room room : map.getCurrentRoom().getAllAdjacentRooms()) {
-      if (!adjacentPit && room.getType() == RoomType.PIT) {
-        adjacentPit = true;
+      if (!foundAdjacentPit && room.getType() == RoomType.PIT) {
+		ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
+        foundAdjacentPit = true;
       }
-    }
-
-    if (adjacentPit) {
-      ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
+	  
+	  if(!foundAdjacentMaelstrom && map.getMaelstromIfAny(room) != null){
+		ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
+		foundAdjacentMaelstrom = true;
+	  }
     }
   }
-
-  private void updateGameState() {}
+  
+  private void handleRoomContent(){
+	  Maelstrom maelstrom = map.getMaelstromIfAny(map.getCurrentRoom());
+	  if(maelstrom != null){
+		  handleMaelstrom(maelstrom);
+	  }
+  }
+  
+  private void handleMaelstrom(Maelstrom maelstrom){
+	  ConsoleHelper.printlnColor("You where blown away by a maelstrom.", ConsoleColor.TEAL);
+	  maelstrom.move();
+	  movePlayerFromMaelstrom();
+  }
+  
+  private void movePlayerFromMaelstrom(){
+	java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getPlayerMovementMap();
+	
+	for(Cardinal direction : movementMap.keySet()){
+		for(int i = 0; i < movementMap.get(direction); i++){
+			if(!map.getCurrentRoom().hasAdjacentRoom(direction)){
+				break;
+			}
+			
+			map.move(direction);
+		}
+	}
+  }
 
   private void showHelp() {
     for (Command command : Command.values()) {

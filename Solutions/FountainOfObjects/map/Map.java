@@ -1,20 +1,25 @@
 package map;
 
 import helpers.console.*;
+import entities.*;
 import java.awt.Point;
 import java.util.NoSuchElementException;
 
 public class Map {
+  private static final String POS_MARKER = "(x)";
+	
   private final Room entrance;
   private Room currentRoom;
 
   private boolean fountainEnabled = false;
-  private static final String CURRENT_POS_MARKER = "(x)";
 
-  protected Map(Room entrance) {
+  private Maelstrom[] maelstroms;
+
+  protected Map(Room entrance, Maelstrom[] maelstroms) {
     this.entrance = entrance;
-
     currentRoom = this.entrance;
+	
+	this.maelstroms = maelstroms;
   }
 
   public Room getRoom(Point location) {
@@ -99,13 +104,15 @@ public class Map {
         ConsoleHelper.printColor(roomTypeName, color);
 
         boolean isCurrentRoom = current == getCurrentRoom();
+		boolean hasMaelstrom = getMaelstromIfAny(current) != null;
+		
         int nrOfSpaces =
             largestRoomTypeNameLength
                 - roomTypeName.length()
-                + (isCurrentRoom ? 0 : (CURRENT_POS_MARKER.length() + 1));
+                + ((isCurrentRoom || hasMaelstrom) ? 0 : (POS_MARKER.length() + 1));
 
-        if (isCurrentRoom) {
-          ConsoleHelper.printColor(" " + CURRENT_POS_MARKER, ConsoleColor.PINK);
+        if (isCurrentRoom || hasMaelstrom) {
+          ConsoleHelper.printColor(" " + POS_MARKER, isCurrentRoom ? ConsoleColor.PINK : ConsoleColor.TEAL);
         }
 
         for (int i = 0; i < nrOfSpaces; i++) {
@@ -137,12 +144,22 @@ public class Map {
           i
               < (count * largestRoomTypeNameLength
                   + (count - 1) * 3
-                  + count * (CURRENT_POS_MARKER.length() + 1));
+                  + count * (POS_MARKER.length() + 1));
           i++) {
         seperator += "-";
       }
 
       System.out.println(seperator);
     }
+  }
+  
+  public Maelstrom getMaelstromIfAny(Room room){
+	  for(Maelstrom maelstrom : maelstroms){
+		  if(maelstrom.getPosition() == room){
+			  return maelstrom;
+		  }
+	  }
+	  
+	  return null;
   }
 }
