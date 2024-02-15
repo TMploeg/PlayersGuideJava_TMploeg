@@ -1,59 +1,65 @@
 package game;
 
 import helpers.console.*;
-import helpers.console.*;
 import helpers.console.menu.*;
-import map.*;
-
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import map.*;
 
 public class Game {
   private enum GameState {
     PLAYING,
-    WON
+    WON,
+    LOST
   }
-
-  private HashMap<RoomType, ConsoleColor> roomTypeColorMap;
 
   private Map map;
 
   public Game() {
     map = createMap();
-	
-	map.display();
-	
-    roomTypeColorMap = new HashMap<RoomType, ConsoleColor>();
-
-    initRoomTypeColorMap();
+    map.display();
 
     runGame();
   }
-  
-  private Map createMap(){
-	List<MenuItem<MapSize>> menuItems = new ArrayList<>();
-	menuItems.add(new MenuItem<MapSize>("small", MapSize.SMALL));
-	menuItems.add(new MenuItem<MapSize>("medium", MapSize.MEDIUM));
-	menuItems.add(new MenuItem<MapSize>("large", MapSize.LARGE));
-	
-	MapSize mapSize = ConsoleHelper.getMenuInput(new Menu<MapSize>(menuItems));
-	
+
+  private Map createMap() {
+    List<MenuItem<MapSize>> menuItems = new ArrayList<>();
+    menuItems.add(new MenuItem<MapSize>("small", MapSize.SMALL));
+    menuItems.add(new MenuItem<MapSize>("medium", MapSize.MEDIUM));
+    menuItems.add(new MenuItem<MapSize>("large", MapSize.LARGE));
+
+    MapSize mapSize = ConsoleHelper.getMenuInput(new Menu<MapSize>(menuItems));
+
     return new MapBuilder().setSize(mapSize).build();
   }
 
   private void runGame() {
-    while (getGameState() == GameState.PLAYING) {
-      displaySeperator();
+    displayRoomMessage();
+
+    while (true) {
       displayLocation();
-      displayRoomMessage();
+      displayAdjacentRoomMessages();
 
       Command chosenCommand = ConsoleHelper.getCommandInput("what do you want to do?");
       executeCommand(chosenCommand);
-    }
 
-    displaySeperator();
-    ConsoleHelper.printlnColor("You win!", ConsoleColor.LIGHT_PURPLE);
+      displaySeperator();
+      displayRoomMessage();
+
+      GameState state = getGameState();
+      if (state == GameState.PLAYING) {
+        continue;
+      }
+
+      boolean won = state == GameState.WON;
+
+      String message = won ? "You Win!" : "You Lose!";
+      ConsoleColor color = won ? ConsoleColor.GREEN : ConsoleColor.RED;
+
+      ConsoleHelper.printlnColor(message, color);
+
+      break;
+    }
   }
 
   private void executeCommand(Command command) {
@@ -79,12 +85,6 @@ public class Game {
     }
   }
 
-  private void initRoomTypeColorMap() {
-    roomTypeColorMap.put(RoomType.NORMAL, ConsoleColor.WHITE);
-    roomTypeColorMap.put(RoomType.ENTRANCE, ConsoleColor.YELLOW);
-    roomTypeColorMap.put(RoomType.FOUNTAIN, ConsoleColor.BLUE);
-  }
-
   private void displaySeperator() {
     int seperatorLength = 50;
 
@@ -101,28 +101,50 @@ public class Game {
   }
 
   private void displayRoomMessage() {
-    String roomMessage =
-        switch (map.getCurrentRoom().getType()) {
-          case RoomType.ENTRANCE ->
-              "You see light in this room coming from outside the cavern. This is the entrance.";
-          case RoomType.FOUNTAIN -> {
-            yield (map.isFountainEnabled()
-                ? "You hear the rushing waters from the Fountain of Objects. It has been"
-                      + " reactivated!"
-                : "You hear water dripping in this room. The Fountain of Objects is here!");
-          }
-          default -> null;
-        };
+    switch (map.getCurrentRoom().getType()) {
+      case RoomType.ENTRANCE:
+        ConsoleHelper.printlnColor(
+            "You see light in this room coming from outside the cavern. This is the entrance.",
+            ConsoleColor.YELLOW);
+        break;
 
-    if (roomMessage != null) {
-      ConsoleHelper.printlnColor(roomMessage, roomTypeColorMap.get(map.getCurrentRoom().getType()));
+      case RoomType.FOUNTAIN:
+        String message =
+            (map.isFountainEnabled()
+                ? "You hear the rushing waters from the Fountain of Objects. It has been"
+                    + " reactivated!"
+                : "You hear water dripping in this room. The Fountain of Objects is here!");
+
+        ConsoleHelper.printlnColor(message, ConsoleColor.BLUE);
+        break;
+      case RoomType.PIT:
+        ConsoleHelper.printlnColor("You fell into a pit.", ConsoleColor.DARK_RED);
+      default:
+        break;
     }
   }
+
+  private void displayAdjacentRoomMessages() {
+    boolean adjacentPit = false;
+
+    for (Room room : map.getCurrentRoom().getAllAdjacentRooms()) {
+      if (!adjacentPit && room.getType() == RoomType.PIT) {
+        adjacentPit = true;
+      }
+    }
+
+    if (adjacentPit) {
+      ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
+    }
+  }
+
+  private void updateGameState() {}
 
   private void showHelp() {
     for (Command command : Command.values()) {
       ConsoleHelper.printlnColor(
-          "'" + command.getCommandText() + "': " + command.getDescription(), ConsoleColor.GREEN);
+          "'" + command.getCommandText() + "': " + command.getDescription(),
+          ConsoleColor.LIGHT_GRAY);
     }
   }
 
@@ -135,10 +157,12 @@ public class Game {
   }
 
   private GameState getGameState() {
-    if (map.isFountainEnabled() && map.getCurrentRoom().getType() == RoomType.ENTRANCE) {
-      return GameState.WON;
-    }
-
-    return GameState.PLAYING;
+    return switch (map.getCurrentRoom().getType()) {
+      case RoomType.ENTRANCE -> {
+        yield (map.isFountainEnabled() ? GameState.WON : GameState.PLAYING);
+      }
+      case RoomType.PIT -> GameState.LOST;
+      default -> GameState.PLAYING;
+    };
   }
 }
