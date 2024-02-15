@@ -15,9 +15,12 @@ public class Game {
 
   private Map map;
 
-  public Game() {
+  private boolean cheatMode;
+
+  public Game(boolean cheatMode) {
+    this.cheatMode = cheatMode;
+
     map = createMap();
-    map.display();
 
     runGame();
   }
@@ -37,6 +40,10 @@ public class Game {
     displayRoomMessage();
 
     while (true) {
+      if (cheatMode) {
+        map.display();
+      }
+
       displayLocation();
       displayAdjacentRoomMessages();
 
