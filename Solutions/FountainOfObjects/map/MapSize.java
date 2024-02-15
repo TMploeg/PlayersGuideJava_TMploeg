@@ -6,7 +6,7 @@ public enum MapSize {
   LARGE(new MapProperties(8, 4, 2));
 
   protected record MapProperties(int size, int pits, int maelstroms) {}
-  
+
   private MapProperties properties;
 
   private MapSize(MapProperties properties) {

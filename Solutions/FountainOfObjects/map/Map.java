@@ -1,13 +1,13 @@
 package map;
 
-import helpers.console.*;
 import entities.*;
+import helpers.console.*;
 import java.awt.Point;
 import java.util.NoSuchElementException;
 
 public class Map {
   private static final String POS_MARKER = "(x)";
-	
+
   private final Room entrance;
   private Room currentRoom;
 
@@ -18,8 +18,8 @@ public class Map {
   protected Map(Room entrance, Maelstrom[] maelstroms) {
     this.entrance = entrance;
     currentRoom = this.entrance;
-	
-	this.maelstroms = maelstroms;
+
+    this.maelstroms = maelstroms;
   }
 
   public Room getRoom(Point location) {
@@ -104,15 +104,16 @@ public class Map {
         ConsoleHelper.printColor(roomTypeName, color);
 
         boolean isCurrentRoom = current == getCurrentRoom();
-		boolean hasMaelstrom = getMaelstromIfAny(current) != null;
-		
+        boolean hasMaelstrom = getMaelstromIfAny(current) != null;
+
         int nrOfSpaces =
             largestRoomTypeNameLength
                 - roomTypeName.length()
                 + ((isCurrentRoom || hasMaelstrom) ? 0 : (POS_MARKER.length() + 1));
 
         if (isCurrentRoom || hasMaelstrom) {
-          ConsoleHelper.printColor(" " + POS_MARKER, isCurrentRoom ? ConsoleColor.PINK : ConsoleColor.TEAL);
+          ConsoleHelper.printColor(
+              " " + POS_MARKER, isCurrentRoom ? ConsoleColor.PINK : ConsoleColor.TEAL);
         }
 
         for (int i = 0; i < nrOfSpaces; i++) {
@@ -152,14 +153,14 @@ public class Map {
       System.out.println(seperator);
     }
   }
-  
-  public Maelstrom getMaelstromIfAny(Room room){
-	  for(Maelstrom maelstrom : maelstroms){
-		  if(maelstrom.getPosition() == room){
-			  return maelstrom;
-		  }
-	  }
-	  
-	  return null;
+
+  public Maelstrom getMaelstromIfAny(Room room) {
+    for (Maelstrom maelstrom : maelstroms) {
+      if (maelstrom.getPosition() == room) {
+        return maelstrom;
+      }
+    }
+
+    return null;
   }
 }

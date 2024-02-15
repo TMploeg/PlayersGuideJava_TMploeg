@@ -1,11 +1,11 @@
 package game;
 
+import entities.*;
 import helpers.console.*;
 import helpers.console.menu.*;
 import java.util.ArrayList;
 import java.util.List;
 import map.*;
-import entities.*;
 
 public class Game {
   private enum GameState {
@@ -48,8 +48,8 @@ public class Game {
       executeCommand(chosenCommand);
 
       displaySeperator();
-	  
-	  handleRoomContent();
+
+      handleRoomContent();
       displayRoomMessage();
 
       GameState state = getGameState();
@@ -138,46 +138,46 @@ public class Game {
 
   private void displayAdjacentRoomMessages() {
     boolean foundAdjacentPit = false;
-	boolean foundAdjacentMaelstrom = false;
+    boolean foundAdjacentMaelstrom = false;
 
     for (Room room : map.getCurrentRoom().getAllAdjacentRooms()) {
       if (!foundAdjacentPit && room.getType() == RoomType.PIT) {
-		ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
+        ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
         foundAdjacentPit = true;
       }
-	  
-	  if(!foundAdjacentMaelstrom && map.getMaelstromIfAny(room) != null){
-		ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
-		foundAdjacentMaelstrom = true;
-	  }
+
+      if (!foundAdjacentMaelstrom && map.getMaelstromIfAny(room) != null) {
+        ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
+        foundAdjacentMaelstrom = true;
+      }
     }
   }
-  
-  private void handleRoomContent(){
-	  Maelstrom maelstrom = map.getMaelstromIfAny(map.getCurrentRoom());
-	  if(maelstrom != null){
-		  handleMaelstrom(maelstrom);
-	  }
+
+  private void handleRoomContent() {
+    Maelstrom maelstrom = map.getMaelstromIfAny(map.getCurrentRoom());
+    if (maelstrom != null) {
+      handleMaelstrom(maelstrom);
+    }
   }
-  
-  private void handleMaelstrom(Maelstrom maelstrom){
-	  ConsoleHelper.printlnColor("You where blown away by a maelstrom.", ConsoleColor.TEAL);
-	  maelstrom.move();
-	  movePlayerFromMaelstrom();
+
+  private void handleMaelstrom(Maelstrom maelstrom) {
+    ConsoleHelper.printlnColor("You where blown away by a maelstrom.", ConsoleColor.TEAL);
+    maelstrom.move();
+    movePlayerFromMaelstrom();
   }
-  
-  private void movePlayerFromMaelstrom(){
-	java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getPlayerMovementMap();
-	
-	for(Cardinal direction : movementMap.keySet()){
-		for(int i = 0; i < movementMap.get(direction); i++){
-			if(!map.getCurrentRoom().hasAdjacentRoom(direction)){
-				break;
-			}
-			
-			map.move(direction);
-		}
-	}
+
+  private void movePlayerFromMaelstrom() {
+    java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getPlayerMovementMap();
+
+    for (Cardinal direction : movementMap.keySet()) {
+      for (int i = 0; i < movementMap.get(direction); i++) {
+        if (!map.getCurrentRoom().hasAdjacentRoom(direction)) {
+          break;
+        }
+
+        map.move(direction);
+      }
+    }
   }
 
   private void showHelp() {
