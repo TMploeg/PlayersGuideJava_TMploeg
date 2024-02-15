@@ -33,7 +33,7 @@ public class MenuItem<TValue> {
     }
 
     if (obj instanceof MenuItem) {
-      return this.getName().equals(((MenuItem)obj).getName());
+      return this.getName().equals(((MenuItem) obj).getName());
     }
 
     return false;

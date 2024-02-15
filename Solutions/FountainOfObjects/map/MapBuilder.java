@@ -19,8 +19,8 @@ public class MapBuilder {
 
   public MapBuilder setSize(MapSize size) {
     this.size = size;
-	
-	return this;
+
+    return this;
   }
 
   public Map build() {
@@ -34,37 +34,39 @@ public class MapBuilder {
   private void generateRoomData() {
     roomData = new HashMap<RoomLocation, RoomType>();
 
-	setEntrance();
-	setFountain();
-	setPits();
+    setEntrance();
+    setFountain();
+    setPits();
   }
-  
-  private void setEntrance(){
-	roomData.put(new RoomLocation(0, 0), RoomType.ENTRANCE);
+
+  private void setEntrance() {
+    roomData.put(new RoomLocation(0, 0), RoomType.ENTRANCE);
   }
-  
-  private void setFountain(){
-	roomData.put(getRandomUnoccupiedLocation(), RoomType.FOUNTAIN);
+
+  private void setFountain() {
+    roomData.put(getRandomUnoccupiedLocation(), RoomType.FOUNTAIN);
   }
-  
-  private void setPits(){
-	for(int i = 0; i < size.getNrOfPits(); i++){
+
+  private void setPits() {
+    for (int i = 0; i < size.getNrOfPits(); i++) {
       roomData.put(getRandomUnoccupiedLocation(), RoomType.PIT);
-	}
+    }
   }
-  
-  private RoomLocation getRandomUnoccupiedLocation(){
-	Random r = new Random();
-	
-	while(true){
-	  RoomLocation location = new RoomLocation(r.nextInt(size.getValue()), r.nextInt(size.getValue()));
-	  
-	  if(roomData.containsKey(location) || (location.x() < ENTRANCE_SAFE_SPACE && location.y() < ENTRANCE_SAFE_SPACE)){
-		continue;
-	  }
-	  
-	  return location;
-	}
+
+  private RoomLocation getRandomUnoccupiedLocation() {
+    Random r = new Random();
+
+    while (true) {
+      RoomLocation location =
+          new RoomLocation(r.nextInt(size.getValue()), r.nextInt(size.getValue()));
+
+      if (roomData.containsKey(location)
+          || (location.x() < ENTRANCE_SAFE_SPACE && location.y() < ENTRANCE_SAFE_SPACE)) {
+        continue;
+      }
+
+      return location;
+    }
   }
 
   private Room createAndLinkRooms() {

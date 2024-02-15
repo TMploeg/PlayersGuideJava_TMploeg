@@ -1,7 +1,6 @@
 package helpers.console;
 
 import helpers.console.menu.*;
-
 import java.util.Scanner;
 
 public class ConsoleHelper {
