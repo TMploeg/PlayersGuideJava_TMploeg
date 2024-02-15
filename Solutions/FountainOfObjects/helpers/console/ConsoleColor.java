@@ -2,6 +2,7 @@ package helpers.console;
 
 public enum ConsoleColor {
   LIGHT_PURPLE(163, 118, 176),
+  PINK(207, 39, 131),
   BLUE(56, 132, 232),
   CYAN(52, 227, 227),
   YELLOW(230, 223, 23),
