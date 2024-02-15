@@ -9,6 +9,7 @@ public class Map {
   private Room currentRoom;
 
   private boolean fountainEnabled = false;
+  private static final String CURRENT_POS_MARKER = "(x)";
 
   protected Map(Room entrance) {
     this.entrance = entrance;
@@ -87,15 +88,24 @@ public class Map {
             switch (current.getType()) {
               case NORMAL -> ConsoleColor.WHITE;
               case ENTRANCE -> ConsoleColor.YELLOW;
-              case FOUNTAIN -> ConsoleColor.BLUE;
+              case FOUNTAIN -> {
+				  yield fountainEnabled ? ConsoleColor.BLUE : ConsoleColor.LIGHT_GRAY;
+			  }
               case PIT -> ConsoleColor.DARK_RED;
               default -> throw new RuntimeException();
             };
 
         String roomTypeName = current.getType().toString();
         ConsoleHelper.printColor(roomTypeName, color);
+		
+		boolean isCurrentRoom = current == getCurrentRoom();
+		int nrOfSpaces = largestRoomTypeNameLength - roomTypeName.length() + (isCurrentRoom ? 0 : (CURRENT_POS_MARKER.length() + 1));
+		
+		if(isCurrentRoom){
+			ConsoleHelper.printColor(" " + CURRENT_POS_MARKER, ConsoleColor.PINK);
+		}
 
-        for (int i = 0; i < (largestRoomTypeNameLength - roomTypeName.length()); i++) {
+        for (int i = 0; i < nrOfSpaces; i++) {
           System.out.print(" ");
         }
 
@@ -120,7 +130,7 @@ public class Map {
 
       String seperator = "";
 
-      for (int i = 0; i < (count * largestRoomTypeNameLength + (count - 1) * 3); i++) {
+      for (int i = 0; i < (count * largestRoomTypeNameLength + (count - 1) * 3 + count * (CURRENT_POS_MARKER.length() + 1)); i++) {
         seperator += "-";
       }
 

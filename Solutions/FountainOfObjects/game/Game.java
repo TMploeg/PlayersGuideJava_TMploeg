@@ -40,10 +40,6 @@ public class Game {
     displayRoomMessage();
 
     while (true) {
-      if (cheatMode) {
-        map.display();
-      }
-
       displayLocation();
       displayAdjacentRoomMessages();
 
@@ -93,7 +89,7 @@ public class Game {
   }
 
   private void displaySeperator() {
-    int seperatorLength = 50;
+    int seperatorLength = 100;
 
     for (int i = 0; i < seperatorLength; i++) {
       System.out.print("=");
@@ -103,8 +99,15 @@ public class Game {
   }
 
   private void displayLocation() {
-    RoomLocation location = map.getCurrentRoom().getLocation();
-    System.out.println("You are in the room at location " + location);
+	if(cheatMode){
+		map.display();
+	}
+	else{
+		RoomLocation location = map.getCurrentRoom().getLocation();
+		System.out.println("You are in the room at location " + location);
+	}
+	
+	System.out.println();
   }
 
   private void displayRoomMessage() {
