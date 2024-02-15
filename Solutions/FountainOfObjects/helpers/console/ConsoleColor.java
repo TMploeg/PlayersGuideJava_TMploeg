@@ -7,7 +7,9 @@ public enum ConsoleColor {
   YELLOW(230, 223, 23),
   GREEN(27, 222, 27),
   WHITE(255, 255, 255),
-  DARK_RED(140, 10, 0);
+  LIGHT_GRAY(120, 120, 120),
+  DARK_RED(140, 10, 0),
+  RED(217, 0, 0);
 
   private int red;
   private int green;
