@@ -7,27 +7,20 @@ public class MapBuilder {
   public static final int MIN_SIZE = 4;
   public static final int MAX_SIZE = 25;
   public static final int MIN_FOUNTAIN_DISTANCE = 2;
+  private static final MapSize DEFAULT_SIZE = MapSize.SMALL;
 
-  private int size;
+  private MapSize size;
 
   private HashMap<RoomLocation, RoomType> roomData;
 
   public MapBuilder() {
-    size = MIN_SIZE;
+    size = DEFAULT_SIZE;
   }
 
-  public MapBuilder setSize(int size) {
-    if (size < MIN_SIZE) {
-      throw new IllegalArgumentException("size must be greater than or equal to " + MIN_SIZE);
-    }
-
-    if (size > MAX_SIZE) {
-      throw new IllegalArgumentException("size must be smaller than or equal to " + MAX_SIZE);
-    }
-
+  public MapBuilder setSize(MapSize size) {
     this.size = size;
-
-    return this;
+	
+	return this;
   }
 
   public Map build() {
@@ -48,8 +41,8 @@ public class MapBuilder {
     RoomLocation fountainLocation = null;
 
     while (fountainLocation == null) {
-      int fountainX = r.nextInt(size);
-      int fountainY = r.nextInt(size);
+      int fountainX = r.nextInt(size.getValue());
+      int fountainY = r.nextInt(size.getValue());
 
       if (fountainX >= MIN_FOUNTAIN_DISTANCE || fountainY >= MIN_FOUNTAIN_DISTANCE) {
         fountainLocation = new RoomLocation(fountainX, fountainY);
@@ -64,7 +57,7 @@ public class MapBuilder {
     Room entrance = generateNewCollumnRooms(null);
     Room collumnStartRoom = entrance;
 
-    for (int xPos = 1; xPos < size; xPos++) {
+    for (int xPos = 1; xPos < size.getValue(); xPos++) {
       collumnStartRoom = generateNewCollumnRooms(collumnStartRoom);
     }
 
@@ -84,7 +77,7 @@ public class MapBuilder {
 
     Room previous = first;
 
-    for (int yPos = 1; yPos < size; yPos++) {
+    for (int yPos = 1; yPos < size.getValue(); yPos++) {
       RoomLocation newPos = new RoomLocation(collumn, yPos);
       Room newRoom = new Room(getRoomTypeForLocation(newPos), newPos);
 

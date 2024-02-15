@@ -1,8 +1,13 @@
 package game;
 
 import helpers.console.*;
-import java.util.HashMap;
+import helpers.console.*;
+import helpers.console.menu.*;
 import map.*;
+
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
   private enum GameState {
@@ -10,19 +15,29 @@ public class Game {
     WON
   }
 
-  private static final int MAP_SIZE = 4;
-
   private HashMap<RoomType, ConsoleColor> roomTypeColorMap;
 
   private Map map;
 
   public Game() {
-    map = new MapBuilder().setSize(MAP_SIZE).build();
+    map = createMap();
+	
     roomTypeColorMap = new HashMap<RoomType, ConsoleColor>();
 
     initRoomTypeColorMap();
 
     runGame();
+  }
+  
+  private Map createMap(){
+	List<MenuItem<MapSize>> menuItems = new ArrayList<>();
+	menuItems.add(new MenuItem<MapSize>("small", MapSize.SMALL));
+	menuItems.add(new MenuItem<MapSize>("medium", MapSize.MEDIUM));
+	menuItems.add(new MenuItem<MapSize>("large", MapSize.LARGE));
+	
+	MapSize mapSize = ConsoleHelper.getMenuInput(new Menu<MapSize>(menuItems));
+	
+    return new MapBuilder().setSize(mapSize).build();
   }
 
   private void runGame() {
