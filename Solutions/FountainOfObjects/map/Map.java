@@ -88,6 +88,7 @@ public class Map {
               case NORMAL -> ConsoleColor.WHITE;
               case ENTRANCE -> ConsoleColor.YELLOW;
               case FOUNTAIN -> ConsoleColor.BLUE;
+			  case PIT -> ConsoleColor.DARK_RED;
               default -> throw new RuntimeException();
             };
 

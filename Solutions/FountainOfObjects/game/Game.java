@@ -22,6 +22,8 @@ public class Game {
   public Game() {
     map = createMap();
 	
+	map.display();
+	
     roomTypeColorMap = new HashMap<RoomType, ConsoleColor>();
 
     initRoomTypeColorMap();
