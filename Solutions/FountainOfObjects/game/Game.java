@@ -95,8 +95,8 @@ public class Game {
   private void displaySeperator() {
     int seperatorLength = 50;
 
-    for (int i = 0; i < 50; i++) {
-      System.out.print("-");
+    for (int i = 0; i < seperatorLength; i++) {
+      System.out.print("=");
     }
 
     System.out.println();
