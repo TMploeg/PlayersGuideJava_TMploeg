@@ -1,0 +1,8 @@
+package map;
+
+public record RoomLocation(int x, int y) {
+  @Override
+  public String toString() {
+    return "(" + x + ", " + y + ")";
+  }
+}
