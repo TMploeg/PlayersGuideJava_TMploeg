@@ -15,7 +15,6 @@ public class MapBuilder {
   private HashMap<RoomLocation, RoomType> roomData;
 
   private RoomLocation[] maelstromLocations;
-  private Maelstrom[] maelstroms;
 
   public MapBuilder() {
     size = DEFAULT_SIZE;
@@ -32,7 +31,7 @@ public class MapBuilder {
     generateEntityData();
 
     Room entrance = createAndLinkRooms();
-    Map map = new Map(entrance, maelstroms);
+    Map map = new Map(entrance);
 
     return map;
   }
@@ -89,8 +88,6 @@ public class MapBuilder {
   }
 
   private Room createAndLinkRooms() {
-    maelstroms = new Maelstrom[maelstromLocations.length];
-
     Room entrance = generateNewCollumnRooms(null);
     Room collumnStartRoom = entrance;
 
@@ -139,14 +136,7 @@ public class MapBuilder {
     Room room = new Room(type, location);
 
     if (hasMaelstrom(location)) {
-      for (int i = 0; i < maelstromLocations.length; i++) {
-        if (maelstroms[i] != null) {
-          continue;
-        }
-
-        maelstroms[i] = new Maelstrom(room);
-        break;
-      }
+	  Maelstrom.createInRoom(room);
     }
 
     return room;

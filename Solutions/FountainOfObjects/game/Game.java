@@ -146,7 +146,7 @@ public class Game {
         foundAdjacentPit = true;
       }
 
-      if (!foundAdjacentMaelstrom && map.getMaelstromIfAny(room) != null) {
+      if (!foundAdjacentMaelstrom && room.getEntityIfAny(Maelstrom.class) != null) {
         ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
         foundAdjacentMaelstrom = true;
       }
@@ -154,7 +154,7 @@ public class Game {
   }
 
   private void handleRoomContent() {
-    Maelstrom maelstrom = map.getMaelstromIfAny(map.getCurrentRoom());
+    Maelstrom maelstrom = map.getCurrentRoom().getEntityIfAny(Maelstrom.class);
     if (maelstrom != null) {
       handleMaelstrom(maelstrom);
     }

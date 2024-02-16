@@ -12,14 +12,10 @@ public class Map {
   private Room currentRoom;
 
   private boolean fountainEnabled = false;
-
-  private Maelstrom[] maelstroms;
-
-  protected Map(Room entrance, Maelstrom[] maelstroms) {
+	
+  protected Map(Room entrance) {
     this.entrance = entrance;
     currentRoom = this.entrance;
-
-    this.maelstroms = maelstroms;
   }
 
   public Room getRoom(Point location) {
@@ -104,7 +100,7 @@ public class Map {
         ConsoleHelper.printColor(roomTypeName, color);
 
         boolean isCurrentRoom = current == getCurrentRoom();
-        boolean hasMaelstrom = getMaelstromIfAny(current) != null;
+        boolean hasMaelstrom = current.getEntityIfAny(Maelstrom.class) != null;
 
         int nrOfSpaces =
             largestRoomTypeNameLength
@@ -152,15 +148,5 @@ public class Map {
 
       System.out.println(seperator);
     }
-  }
-
-  public Maelstrom getMaelstromIfAny(Room room) {
-    for (Maelstrom maelstrom : maelstroms) {
-      if (maelstrom.getPosition() == room) {
-        return maelstrom;
-      }
-    }
-
-    return null;
   }
 }
