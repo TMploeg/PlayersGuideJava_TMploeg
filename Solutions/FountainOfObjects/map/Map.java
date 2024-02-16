@@ -12,7 +12,7 @@ public class Map {
   private Room currentRoom;
 
   private boolean fountainEnabled = false;
-	
+
   protected Map(Room entrance) {
     this.entrance = entrance;
     currentRoom = this.entrance;

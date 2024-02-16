@@ -16,14 +16,14 @@ public class Maelstrom extends Entity {
   private Maelstrom(Room location) {
     super(location);
   }
-  
-  public static void createInRoom(Room room){
-	new Maelstrom(room);
+
+  public static void createInRoom(Room room) {
+    new Maelstrom(room);
   }
-  
+
   public void move() {
-	Room newLocation = getLocation();
-	
+    Room newLocation = getLocation();
+
     for (Cardinal direction : movementMap.keySet()) {
       for (int i = 0; i < movementMap.get(direction); i++) {
         Room nextRoom = newLocation.getAdjacentRoom(direction);
@@ -35,20 +35,20 @@ public class Maelstrom extends Entity {
         newLocation = nextRoom;
       }
     }
-	
-	newLocation.addEntity(this);
-	getLocation().removeEntity(this);
-	
-	setLocation(newLocation);
+
+    newLocation.addEntity(this);
+    getLocation().removeEntity(this);
+
+    setLocation(newLocation);
   }
 
   public static Map<Cardinal, Integer> getPlayerMovementMap() {
-	HashMap<Cardinal, Integer> playerMovementMap = new HashMap<>();
-	
-	for(Cardinal direction : movementMap.keySet()){
-	  playerMovementMap.put(direction.opposite(), movementMap.get(direction));
-	}
-	
-	return playerMovementMap;
+    HashMap<Cardinal, Integer> playerMovementMap = new HashMap<>();
+
+    for (Cardinal direction : movementMap.keySet()) {
+      playerMovementMap.put(direction.opposite(), movementMap.get(direction));
+    }
+
+    return playerMovementMap;
   }
 }

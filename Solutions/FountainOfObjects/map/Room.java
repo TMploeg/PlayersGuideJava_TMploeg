@@ -1,12 +1,12 @@
 package map;
 
+import entities.Entity;
+import exceptions.*;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import exceptions.*;
-import entities.Entity;
 
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
@@ -17,7 +17,7 @@ public class Room {
 
   public Room(RoomType type, RoomLocation location) {
     adjacentRooms = new HashMap<>();
-	entities = new LinkedList<>();
+    entities = new LinkedList<>();
 
     this.type = type;
     this.location = location;
@@ -53,30 +53,30 @@ public class Room {
     adjacentRooms.put(cardinal, room);
     room.adjacentRooms.put(cardinal.opposite(), this);
   }
-  
-  public void addEntity(Entity entity){
-	if(entities.contains(entity)){
-	  throw new DuplicateElementException("room does not have entity");
-	}
-	
-	entities.add(entity);
+
+  public void addEntity(Entity entity) {
+    if (entities.contains(entity)) {
+      throw new DuplicateElementException("room does not have entity");
+    }
+
+    entities.add(entity);
   }
-  
-  public void removeEntity(Entity entity){
-	if(!entities.contains(entity)){
-	  throw new NoSuchElementException("room does not have entity");
-	}
-	
-	entities.remove(entity);
+
+  public void removeEntity(Entity entity) {
+    if (!entities.contains(entity)) {
+      throw new NoSuchElementException("room does not have entity");
+    }
+
+    entities.remove(entity);
   }
-  
-  public <TEntity extends Entity> TEntity getEntityIfAny(Class<TEntity> entityClass){
-	for(Entity entity : entities){
-	  if(entity.getClass() == entityClass){
-		return (TEntity)entity;
-	  }
-	}
-	
-	return null;
+
+  public <TEntity extends Entity> TEntity getEntityIfAny(Class<TEntity> entityClass) {
+    for (Entity entity : entities) {
+      if (entity.getClass() == entityClass) {
+        return (TEntity) entity;
+      }
+    }
+
+    return null;
   }
 }

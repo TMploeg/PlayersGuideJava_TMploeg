@@ -136,7 +136,7 @@ public class MapBuilder {
     Room room = new Room(type, location);
 
     if (hasMaelstrom(location)) {
-	  Maelstrom.createInRoom(room);
+      Maelstrom.createInRoom(room);
     }
 
     return room;
