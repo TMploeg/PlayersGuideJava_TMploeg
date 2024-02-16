@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import map.*;
 
-public class Maelstrom {
-  private Room position;
-
+public class Maelstrom extends Entity {
   private static final Map<Cardinal, Integer> movementMap =
       new HashMap<>() {
         {
@@ -15,35 +13,42 @@ public class Maelstrom {
         }
       };
 
-  public Maelstrom(Room position) {
-    this.position = position;
+  private Maelstrom(Room location) {
+    super(location);
   }
 
-  public Room getPosition() {
-    return position;
+  public static void createInRoom(Room room) {
+    new Maelstrom(room);
   }
 
   public void move() {
+    Room newLocation = getLocation();
+
     for (Cardinal direction : movementMap.keySet()) {
       for (int i = 0; i < movementMap.get(direction); i++) {
-        Room nextRoom = position.getAdjacentRoom(direction);
+        Room nextRoom = newLocation.getAdjacentRoom(direction);
 
         if (nextRoom == null) {
           break;
         }
 
-        position = nextRoom;
+        newLocation = nextRoom;
       }
     }
+
+    newLocation.addEntity(this);
+    getLocation().removeEntity(this);
+
+    setLocation(newLocation);
   }
 
   public static Map<Cardinal, Integer> getPlayerMovementMap() {
-    Map<Cardinal, Integer> result = new HashMap<>();
+    HashMap<Cardinal, Integer> playerMovementMap = new HashMap<>();
 
     for (Cardinal direction : movementMap.keySet()) {
-      result.put(direction.opposite(), movementMap.get(direction));
+      playerMovementMap.put(direction.opposite(), movementMap.get(direction));
     }
 
-    return result;
+    return playerMovementMap;
   }
 }
