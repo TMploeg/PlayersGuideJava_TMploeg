@@ -7,6 +7,7 @@ public enum ConsoleColor {
   CYAN(52, 227, 227),
   TEAL(93, 245, 144),
   YELLOW(230, 223, 23),
+  KUMERA(143, 125, 34),
   GREEN(27, 222, 27),
   WHITE(255, 255, 255),
   LIGHT_GRAY(120, 120, 120),
