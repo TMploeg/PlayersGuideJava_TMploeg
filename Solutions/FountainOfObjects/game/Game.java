@@ -15,6 +15,7 @@ public class Game {
   }
 
   private Map map;
+  private MapDisplay mapDisplay;
 
   private boolean cheatMode;
 
@@ -22,6 +23,7 @@ public class Game {
     this.cheatMode = cheatMode;
 
     map = createMap();
+	mapDisplay = new MapDisplay(map);
 
     runGame();
   }
@@ -103,7 +105,7 @@ public class Game {
 
   private void displayLocation() {
     if (cheatMode) {
-      map.display();
+      mapDisplay.display();
     } else {
       RoomLocation location = map.getCurrentRoom().getLocation();
       System.out.println("You are in the room at location " + location);
