@@ -15,6 +15,7 @@ public class MapBuilder {
   private HashMap<RoomLocation, RoomType> roomData;
 
   private RoomLocation[] maelstromLocations;
+  private RoomLocation[] amarokLocations;
 
   public MapBuilder() {
     size = DEFAULT_SIZE;
@@ -46,6 +47,7 @@ public class MapBuilder {
 
   private void generateEntityData() {
     setMaelstroms();
+	setAmaroks();
   }
 
   private void setEntrance() {
@@ -63,11 +65,21 @@ public class MapBuilder {
   }
 
   private void setMaelstroms() {
-    maelstromLocations = new RoomLocation[size.getProperties().maelstroms()];
-
-    for (int i = 0; i < maelstromLocations.length; i++) {
-      maelstromLocations[i] = getRandomUnoccupiedLocation();
+    maelstromLocations = generateEntityLocations(size.getProperties().maelstroms());
+  }
+  
+  private void setAmaroks(){
+	amarokLocations = generateEntityLocations(size.getProperties().amaroks());
+  }
+  
+  private RoomLocation[] generateEntityLocations(int count){
+	RoomLocation[] locations = new RoomLocation[count];
+	
+	for (int i = 0; i < locations.length; i++) {
+      locations[i] = getRandomUnoccupiedLocation();
     }
+	
+	return locations;
   }
 
   private RoomLocation getRandomUnoccupiedLocation() {
@@ -135,20 +147,24 @@ public class MapBuilder {
     RoomType type = getRoomTypeForLocation(location);
     Room room = new Room(type, location);
 
-    if (hasMaelstrom(location)) {
+    if (arrayContains(maelstromLocations, location)) {
       Maelstrom.createInRoom(room);
     }
+	
+	if(arrayContains(amarokLocations, location)){
+	  Amarok.createInRoom(room);
+	}
 
     return room;
   }
-
-  private boolean hasMaelstrom(RoomLocation location) {
-    for (RoomLocation maelstromLocation : maelstromLocations) {
-      if (location.equals(maelstromLocation)) {
-        return true;
-      }
-    }
-
-    return false;
+  
+  private static <TElement> boolean arrayContains(TElement[] collection, TElement element){
+	for(TElement collectionElement : collection){
+	  if(element.equals(collectionElement)){
+		return true;
+	  }
+	}
+	
+	return false;
   }
 }

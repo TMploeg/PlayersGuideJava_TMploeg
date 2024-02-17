@@ -15,6 +15,7 @@ public class Game {
   }
 
   private Map map;
+  private MapDisplay mapDisplay;
 
   private boolean cheatMode;
 
@@ -22,6 +23,7 @@ public class Game {
     this.cheatMode = cheatMode;
 
     map = createMap();
+	mapDisplay = new MapDisplay(map);
 
     runGame();
   }
@@ -103,7 +105,7 @@ public class Game {
 
   private void displayLocation() {
     if (cheatMode) {
-      map.display();
+      mapDisplay.display();
     } else {
       RoomLocation location = map.getCurrentRoom().getLocation();
       System.out.println("You are in the room at location " + location);
@@ -139,6 +141,7 @@ public class Game {
   private void displayAdjacentRoomMessages() {
     boolean foundAdjacentPit = false;
     boolean foundAdjacentMaelstrom = false;
+	boolean foundAdjacentAmarok = false;
 
     for (Room room : map.getCurrentRoom().getAllAdjacentRooms()) {
       if (!foundAdjacentPit && room.getType() == RoomType.PIT) {
@@ -150,6 +153,11 @@ public class Game {
         ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
         foundAdjacentMaelstrom = true;
       }
+	  
+	  if(!foundAdjacentAmarok && room.getEntityIfAny(Amarok.class) != null){
+		ConsoleHelper.printlnColor("You smell a rotten stench", ConsoleColor.KUMERA);
+		foundAdjacentAmarok = true;
+	  }
     }
   }
 
@@ -158,12 +166,21 @@ public class Game {
     if (maelstrom != null) {
       handleMaelstrom(maelstrom);
     }
+	
+	Amarok amarok = map.getCurrentRoom().getEntityIfAny(Amarok.class);
+	if(amarok != null){
+		handleAmarok(amarok);
+	}
   }
 
   private void handleMaelstrom(Maelstrom maelstrom) {
     ConsoleHelper.printlnColor("You where blown away by a maelstrom.", ConsoleColor.TEAL);
     maelstrom.move();
     movePlayerFromMaelstrom();
+  }
+  
+  private void handleAmarok(Amarok amarok){
+	ConsoleHelper.printlnColor("You where mauled by an amarok", ConsoleColor.KUMERA);
   }
 
   private void movePlayerFromMaelstrom() {
@@ -197,12 +214,20 @@ public class Game {
   }
 
   private GameState getGameState() {
-    return switch (map.getCurrentRoom().getType()) {
-      case RoomType.ENTRANCE -> {
-        yield (map.isFountainEnabled() ? GameState.WON : GameState.PLAYING);
-      }
-      case RoomType.PIT -> GameState.LOST;
-      default -> GameState.PLAYING;
-    };
+	RoomType currentRoomType = map.getCurrentRoom().getType();
+	
+	if(currentRoomType == RoomType.ENTRANCE && map.isFountainEnabled()){
+	  return GameState.WON;
+	}
+	
+	if(currentRoomType == RoomType.PIT){
+		return GameState.LOST;
+	}
+	
+	if(map.getCurrentRoom().getEntityIfAny(Amarok.class) != null){
+		return GameState.LOST;
+	}
+	
+	return GameState.PLAYING;
   }
 }
