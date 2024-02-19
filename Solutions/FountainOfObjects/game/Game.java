@@ -6,6 +6,7 @@ import helpers.console.menu.*;
 import java.util.ArrayList;
 import java.util.List;
 import map.*;
+import commands.*;
 
 public class Game {
   private enum GameState {
@@ -16,27 +17,62 @@ public class Game {
 
   private Map map;
   private MapDisplay mapDisplay;
+  private Quiver quiver;
+  private CommandExecutor commandExecutor;
 
   private boolean cheatMode;
 
   public Game(boolean cheatMode) {
     this.cheatMode = cheatMode;
 
-    map = createMap();
+	MapSize mapSize = getMapSize();	
+    map = createMap(mapSize);
 	mapDisplay = new MapDisplay(map);
+	
+	quiver = new Quiver(getNrOfArrowsFromMapSize(mapSize));
+	
+	commandExecutor = initCommandExecutor();
 
     runGame();
   }
-
-  private Map createMap() {
-    List<MenuItem<MapSize>> menuItems = new ArrayList<>();
+  
+  private MapSize getMapSize(){
+	List<MenuItem<MapSize>> menuItems = new ArrayList<>();
     menuItems.add(new MenuItem<MapSize>("small", MapSize.SMALL));
     menuItems.add(new MenuItem<MapSize>("medium", MapSize.MEDIUM));
     menuItems.add(new MenuItem<MapSize>("large", MapSize.LARGE));
 
-    MapSize mapSize = ConsoleHelper.getMenuInput(new Menu<MapSize>(menuItems));
+    return ConsoleHelper.getMenuInput(new Menu<MapSize>(menuItems));
+  }
 
+  private Map createMap(MapSize mapSize) {
     return new MapBuilder().setSize(mapSize).build();
+  }
+  
+  private int getNrOfArrowsFromMapSize(MapSize mapSize){
+	return switch(mapSize){
+	  case MapSize.SMALL -> 5;
+	  case MapSize.MEDIUM -> 8;
+	  case MapSize.LARGE -> 12;
+	  default -> throw new IllegalArgumentException("unknown enum value detected");
+	};
+  }
+  
+  private CommandExecutor initCommandExecutor(){
+	CommandExecutor commandExecutor = new CommandExecutor();
+	
+	commandExecutor.mapCommandAction(Command.MOVE_NORTH, () -> move(Cardinal.NORTH));
+	commandExecutor.mapCommandAction(Command.MOVE_EAST, () -> move(Cardinal.EAST));
+	commandExecutor.mapCommandAction(Command.MOVE_SOUTH, () -> move(Cardinal.SOUTH));
+	commandExecutor.mapCommandAction(Command.MOVE_WEST, () -> move(Cardinal.WEST));
+	commandExecutor.mapCommandAction(Command.SHOOT_NORTH, () -> shoot(Cardinal.NORTH));
+	commandExecutor.mapCommandAction(Command.SHOOT_EAST, () -> shoot(Cardinal.EAST));
+	commandExecutor.mapCommandAction(Command.SHOOT_SOUTH, () -> shoot(Cardinal.SOUTH));
+	commandExecutor.mapCommandAction(Command.SHOOT_WEST, () -> shoot(Cardinal.WEST));
+	commandExecutor.mapCommandAction(Command.ENABLE_FOUNTAIN, () -> map.enableFountain());
+	commandExecutor.mapCommandAction(Command.HELP, () -> showHelp());
+	
+	return commandExecutor;
   }
 
   private void runGame() {
@@ -47,7 +83,7 @@ public class Game {
       displayAdjacentRoomMessages();
 
       Command chosenCommand = ConsoleHelper.getCommandInput("what do you want to do?");
-      executeCommand(chosenCommand);
+      commandExecutor.execute(chosenCommand);
 
       displaySeperator();
 
@@ -67,29 +103,6 @@ public class Game {
       ConsoleHelper.printlnColor(message, color);
 
       break;
-    }
-  }
-
-  private void executeCommand(Command command) {
-    switch (command) {
-      case MOVE_NORTH:
-        move(Cardinal.NORTH);
-        break;
-      case MOVE_EAST:
-        move(Cardinal.EAST);
-        break;
-      case MOVE_SOUTH:
-        move(Cardinal.SOUTH);
-        break;
-      case MOVE_WEST:
-        move(Cardinal.WEST);
-        break;
-      case ENABLE_FOUNTAIN:
-        map.enableFountain();
-        break;
-      case HELP:
-        showHelp();
-        break;
     }
   }
 
@@ -131,8 +144,11 @@ public class Game {
 
         ConsoleHelper.printlnColor(message, ConsoleColor.BLUE);
         break;
+		
       case RoomType.PIT:
         ConsoleHelper.printlnColor("You fell into a pit.", ConsoleColor.DARK_RED);
+		break;
+		
       default:
         break;
     }
@@ -149,12 +165,12 @@ public class Game {
         foundAdjacentPit = true;
       }
 
-      if (!foundAdjacentMaelstrom && room.getEntityIfAny(Maelstrom.class) != null) {
+      if (!foundAdjacentMaelstrom && room.getFirstEntityIfAny(Maelstrom.class) != null) {
         ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
         foundAdjacentMaelstrom = true;
       }
 	  
-	  if(!foundAdjacentAmarok && room.getEntityIfAny(Amarok.class) != null){
+	  if(!foundAdjacentAmarok && room.getFirstEntityIfAny(Amarok.class) != null){
 		ConsoleHelper.printlnColor("You smell a rotten stench", ConsoleColor.KUMERA);
 		foundAdjacentAmarok = true;
 	  }
@@ -162,12 +178,12 @@ public class Game {
   }
 
   private void handleRoomContent() {
-    Maelstrom maelstrom = map.getCurrentRoom().getEntityIfAny(Maelstrom.class);
+    Maelstrom maelstrom = map.getCurrentRoom().getFirstEntityIfAny(Maelstrom.class);
     if (maelstrom != null) {
       handleMaelstrom(maelstrom);
     }
 	
-	Amarok amarok = map.getCurrentRoom().getEntityIfAny(Amarok.class);
+	Amarok amarok = map.getCurrentRoom().getFirstEntityIfAny(Amarok.class);
 	if(amarok != null){
 		handleAmarok(amarok);
 	}
@@ -212,7 +228,32 @@ public class Game {
       System.out.println("You hit your head against the wall");
     }
   }
-
+  
+  private void shoot(Cardinal direction){
+	if(!quiver.hasArrows()){
+	  System.out.println("You cannot shoot, your quiver is empty");
+	}
+	
+	quiver.takeArrow();
+	
+	Room adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
+	
+	if(adjacentRoom == null){
+		System.out.println("Your arrow shot into a wall");
+		return;
+	}
+	
+	Entity target = adjacentRoom.getFirstEntityIfAny();
+	
+	if(target == null){
+		System.out.println("Your arrow didn't hit anything");
+		return;
+	}
+	
+	ConsoleHelper.printlnColor(target.getDeathMessage(), target.getColor());
+	adjacentRoom.removeEntity(target);
+  }
+  
   private GameState getGameState() {
 	RoomType currentRoomType = map.getCurrentRoom().getType();
 	
@@ -224,7 +265,7 @@ public class Game {
 		return GameState.LOST;
 	}
 	
-	if(map.getCurrentRoom().getEntityIfAny(Amarok.class) != null){
+	if(map.getCurrentRoom().getFirstEntityIfAny(Amarok.class) != null){
 		return GameState.LOST;
 	}
 	
