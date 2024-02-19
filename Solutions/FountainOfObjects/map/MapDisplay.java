@@ -84,8 +84,8 @@ public class MapDisplay {
 	System.out.print(" ");
 	
 	boolean isCurrentRoom = room == map.getCurrentRoom();
-	boolean hasMaelstrom = room.getEntityIfAny(Maelstrom.class) != null;
-	boolean hasAmarok = room.getEntityIfAny(Amarok.class) != null;
+	boolean hasMaelstrom = room.getFirstEntityIfAny(Maelstrom.class) != null;
+	boolean hasAmarok = room.getFirstEntityIfAny(Amarok.class) != null;
 
 	int markerLength = POS_MARKER.length();
 	
