@@ -3,8 +3,11 @@ package entities;
 import java.util.HashMap;
 import java.util.Map;
 import map.*;
+import helpers.console.ConsoleColor;
 
 public class Maelstrom extends Entity {
+  private static final ConsoleColor ENTITY_COLOR = ConsoleColor.TEAL;
+  
   private static final Map<Cardinal, Integer> movementMap =
       new HashMap<>() {
         {
@@ -14,7 +17,7 @@ public class Maelstrom extends Entity {
       };
 
   private Maelstrom(Room location) {
-    super(location);
+    super(location, ENTITY_COLOR);
   }
 
   public static void createInRoom(Room room) {
@@ -50,5 +53,9 @@ public class Maelstrom extends Entity {
     }
 
     return playerMovementMap;
+  }
+  
+  public String getDeathMessage(){
+	return "a harrowing scream echoes through the cavern";  
   }
 }

@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
   private LinkedList<Entity> entities;
+  private Entity entity;
 
   private RoomType type;
   private RoomLocation location;
@@ -69,8 +70,21 @@ public class Room {
 
     entities.remove(entity);
   }
+  
+  public boolean hasAnyEntity(){
+	return entities.size() > 0;
+  }
+  
+  public Entity getFirstEntityIfAny(){
+	if(!hasAnyEntity()){
+		return null;
+	}
+	
+	return entities.getFirst();
+  }
 
-  public <TEntity extends Entity> TEntity getEntityIfAny(Class<TEntity> entityClass) {
+  @SuppressWarnings("unchecked")
+  public <TEntity extends Entity> TEntity getFirstEntityIfAny(Class<TEntity> entityClass) {
     for (Entity entity : entities) {
       if (entity.getClass() == entityClass) {
         return (TEntity) entity;
