@@ -165,42 +165,72 @@ public class Game {
         foundAdjacentPit = true;
       }
 
-      if (!foundAdjacentMaelstrom && room.getFirstEntityIfAny(Maelstrom.class) != null) {
-        ConsoleHelper.printlnColor("You hear growling and groaning nearby.", ConsoleColor.TEAL);
-        foundAdjacentMaelstrom = true;
-      }
+	  Entity entity = room.getEntity();
 	  
-	  if(!foundAdjacentAmarok && room.getFirstEntityIfAny(Amarok.class) != null){
-		ConsoleHelper.printlnColor("You smell a rotten stench", ConsoleColor.KUMERA);
-		foundAdjacentAmarok = true;
+	  if(entity != null){
+		  if(entity instanceof Maelstrom){
+			foundAdjacentMaelstrom = true;
+		  }
+		  else if(entity instanceof Amarok){
+			foundAdjacentAmarok = true;
+		  }
+		  else{
+			throw new RuntimeException("unknown entity type");
+		  }
+		  
+		  entity.showMessage(MessageType.AMBIANCE);
 	  }
     }
   }
 
   private void handleRoomContent() {
-    Maelstrom maelstrom = map.getCurrentRoom().getFirstEntityIfAny(Maelstrom.class);
-    if (maelstrom != null) {
-      handleMaelstrom(maelstrom);
-    }
-	
-	Amarok amarok = map.getCurrentRoom().getFirstEntityIfAny(Amarok.class);
-	if(amarok != null){
-		handleAmarok(amarok);
+	if(map.getCurrentRoom().hasEntity()){
+		Entity entity = map.getCurrentRoom().getEntity();
+		
+		entity.showMessage(MessageType.INTERACT);
+		
+		if(entity instanceof Maelstrom maelstrom){
+			handleMaelstrom(maelstrom);
+		}
 	}
   }
-
+  
   private void handleMaelstrom(Maelstrom maelstrom) {
-    ConsoleHelper.printlnColor("You where blown away by a maelstrom.", ConsoleColor.TEAL);
-    maelstrom.move();
+    moveMaelstrom(maelstrom);
     movePlayerFromMaelstrom();
   }
   
-  private void handleAmarok(Amarok amarok){
-	ConsoleHelper.printlnColor("You where mauled by an amarok", ConsoleColor.KUMERA);
+  private void moveMaelstrom(Maelstrom maelstrom){
+	if(maelstrom == null){
+		throw new NullPointerException("maelstrom is null");
+	}
+	
+	Room newLocation = map.getCurrentRoom();
+	
+	java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getMovementMap();
+	
+	for (Cardinal direction : movementMap.keySet()) {
+      for (int i = 0; i < movementMap.get(direction); i++) {
+        Room nextRoom = newLocation.getAdjacentRoom(direction);
+
+        if (nextRoom == null) {
+          break;
+        }
+
+        newLocation = nextRoom;
+      }
+    }
+	
+	if(newLocation.hasEntity()){
+		newLocation = newLocation.getNearestEmptyRoom();
+	}
+	
+	newLocation.setEntity(maelstrom);
+	map.getCurrentRoom().removeEntity();
   }
 
   private void movePlayerFromMaelstrom() {
-    java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getPlayerMovementMap();
+    java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getInvertedMovementMap();
 
     for (Cardinal direction : movementMap.keySet()) {
       for (int i = 0; i < movementMap.get(direction); i++) {
@@ -243,15 +273,15 @@ public class Game {
 		return;
 	}
 	
-	Entity target = adjacentRoom.getFirstEntityIfAny();
+	Entity target = adjacentRoom.getEntity();
 	
 	if(target == null){
 		System.out.println("Your arrow didn't hit anything");
 		return;
 	}
 	
-	ConsoleHelper.printlnColor(target.getDeathMessage(), target.getColor());
-	adjacentRoom.removeEntity(target);
+	target.showMessage(MessageType.DEATH);
+	adjacentRoom.removeEntity();
   }
   
   private GameState getGameState() {
@@ -265,7 +295,7 @@ public class Game {
 		return GameState.LOST;
 	}
 	
-	if(map.getCurrentRoom().getFirstEntityIfAny(Amarok.class) != null){
+	if(map.getCurrentRoom().hasEntity() && map.getCurrentRoom().getEntity() instanceof Amarok){
 		return GameState.LOST;
 	}
 	

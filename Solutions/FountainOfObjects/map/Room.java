@@ -5,12 +5,13 @@ import exceptions.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
-  private LinkedList<Entity> entities;
+ 
   private Entity entity;
 
   private RoomType type;
@@ -18,7 +19,7 @@ public class Room {
 
   public Room(RoomType type, RoomLocation location) {
     adjacentRooms = new HashMap<>();
-    entities = new LinkedList<>();
+    entity = null;
 
     this.type = type;
     this.location = location;
@@ -55,42 +56,74 @@ public class Room {
     room.adjacentRooms.put(cardinal.opposite(), this);
   }
 
-  public void addEntity(Entity entity) {
-    if (entities.contains(entity)) {
-      throw new DuplicateElementException("room does not have entity");
-    }
-
-    entities.add(entity);
+  public Entity getEntity(){
+	return entity;
   }
 
-  public void removeEntity(Entity entity) {
-    if (!entities.contains(entity)) {
-      throw new NoSuchElementException("room does not have entity");
-    }
-
-    entities.remove(entity);
-  }
-  
-  public boolean hasAnyEntity(){
-	return entities.size() > 0;
-  }
-  
-  public Entity getFirstEntityIfAny(){
-	if(!hasAnyEntity()){
-		return null;
+  public void setEntity(Entity entity) {
+	if(this.entity != null){
+		throw new AlreadyOccupiedException("room is already occupied");
 	}
 	
-	return entities.getFirst();
+	this.entity = entity;
   }
 
-  @SuppressWarnings("unchecked")
-  public <TEntity extends Entity> TEntity getFirstEntityIfAny(Class<TEntity> entityClass) {
-    for (Entity entity : entities) {
-      if (entity.getClass() == entityClass) {
-        return (TEntity) entity;
-      }
+  public void removeEntity() {
+    if (entity == null) {
+      throw new NullPointerException("room does not have entity");
     }
 
-    return null;
+    entity = null;
+  }
+  
+  public boolean hasEntity(){
+	return entity != null;
+  }
+  
+  public Room getNearestEmptyRoom(){
+	List<Room> checkedRooms = new ArrayList<>();
+	
+	List<Room> currentRooms = new LinkedList<>();
+	currentRooms.add(this);
+	
+	while(true){
+		List<Room> newCurrentRooms = new LinkedList<>();
+		
+		checkedRooms.addAll(currentRooms);
+		
+		for(Room adjacentRoom : getAllAdjacentRoomsForCollection(currentRooms)){
+			if(checkedRooms.contains(adjacentRoom)){
+				continue;
+			}
+			
+			if(!adjacentRoom.hasEntity()){
+				return adjacentRoom;
+			}
+			
+			newCurrentRooms.add(adjacentRoom);
+		}
+		
+		if(newCurrentRooms.size() == 0){
+			break;
+		}
+	}
+	
+	return null;
+  }
+  
+  private static Collection<Room> getAllAdjacentRoomsForCollection(Collection<Room> rooms){
+	LinkedList<Room> adjacentRooms = new LinkedList<Room>();
+	
+	for(Room room : rooms){
+		for(Room adjacentRoom : room.getAllAdjacentRooms()){
+			if(adjacentRooms.contains(adjacentRoom)){
+				continue;
+			}
+			
+			adjacentRooms.add(adjacentRoom);
+		}
+	}
+	
+	return adjacentRooms;
   }
 }

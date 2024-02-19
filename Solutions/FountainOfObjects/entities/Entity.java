@@ -1,24 +1,27 @@
 package entities;
 
 import map.Room;
-import helpers.console.ConsoleColor;
-import helpers.console.ColoredItem;
+import helpers.console.*;
 
-public abstract class Entity extends ColoredItem implements Killable {
-  private Room location;
-
-  public Entity(Room location, ConsoleColor entityColor) {
+public abstract class Entity extends ColoredItem implements Interactable {
+  public Entity(ConsoleColor entityColor) {
 	super(entityColor);
+  }
+  
+  public void showMessage(MessageType type){
+	String message = switch(type){
+		case DEATH 		-> getDeathMessage();
+		case AMBIANCE 	-> getAmbianceMessage();
+		case INTERACT	-> getInteractMessage();
+		default			-> throw new RuntimeException("unknown enum value");
+	};
 	
-    this.location = location;
-    location.addEntity(this);
+	ConsoleHelper.printlnColor(message, this.getColor());
   }
-
-  public Room getLocation() {
-    return location;
-  }
-
-  protected void setLocation(Room location) {
-    this.location = location;
-  }
+  
+  protected abstract String getDeathMessage();
+  
+  protected abstract String getAmbianceMessage();
+  
+  protected abstract String getInteractMessage();
 }
