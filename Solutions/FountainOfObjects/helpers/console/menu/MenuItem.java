@@ -1,5 +1,7 @@
 package helpers.console.menu;
 
+import java.util.Objects;
+
 public class MenuItem<TValue> {
   private String name;
   private TValue value;
@@ -37,5 +39,10 @@ public class MenuItem<TValue> {
     }
 
     return false;
+  }
+  
+  @Override
+  public int hashCode(){
+	return Objects.hash(name, value);
   }
 }

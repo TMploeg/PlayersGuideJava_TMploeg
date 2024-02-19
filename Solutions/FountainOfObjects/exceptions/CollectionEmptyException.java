@@ -1,6 +1,8 @@
 package exceptions;
 
 public class CollectionEmptyException extends RuntimeException {
+  private static final long serialVersionUID = 1L;
+  
   public CollectionEmptyException() {
     super();
   }

@@ -83,6 +83,8 @@ public class Room {
 	return entities.getFirst();
   }
 
+  @SuppressWarnings("unchecked")
+  public <TEntity extends Entity> TEntity getFirstEntityIfAny(Class<TEntity> entityClass) {
     for (Entity entity : entities) {
       if (entity.getClass() == entityClass) {
         return (TEntity) entity;
