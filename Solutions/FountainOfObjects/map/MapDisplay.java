@@ -84,8 +84,8 @@ public class MapDisplay {
 	System.out.print(" ");
 	
 	boolean isCurrentRoom = room == map.getCurrentRoom();
-	boolean hasMaelstrom = room.getFirstEntityIfAny(Maelstrom.class) != null;
-	boolean hasAmarok = room.getFirstEntityIfAny(Amarok.class) != null;
+	
+	Entity roomEntity = room.getEntity();
 
 	int markerLength = POS_MARKER.length();
 	
@@ -97,13 +97,8 @@ public class MapDisplay {
 	  nrOfMarkers++;
 	}
 	
-	if(hasMaelstrom){
-	  ConsoleHelper.printColor(POS_MARKER, ConsoleColor.TEAL);
-	  nrOfMarkers++;
-	}
-	
-	if(hasAmarok){
-	  ConsoleHelper.printColor(POS_MARKER, ConsoleColor.KUMERA);
+	if(roomEntity != null){
+	  ConsoleHelper.printColor(POS_MARKER, roomEntity.getColor());
 	  nrOfMarkers++;
 	}
 	

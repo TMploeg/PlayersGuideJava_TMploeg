@@ -6,15 +6,22 @@ import helpers.console.ConsoleColor;
 public class Amarok extends Entity {
   private static final ConsoleColor ENTITY_COLOR = ConsoleColor.KUMERA;
 	
-  private Amarok(Room location) {
-    super(location, ENTITY_COLOR);
-  }
-
-  public static void createInRoom(Room room) {
-    new Amarok(room);
+  public Amarok() {
+    super(ENTITY_COLOR);
   }
   
-  public String getDeathMessage(){
+  @Override
+  protected String getDeathMessage(){
 	return "You hear a distored yelp from an adjacent room";  
+  }
+  
+  @Override
+  protected String getAmbianceMessage(){
+	return "You smell a rotten stench";  
+  }
+  
+  @Override
+  protected String getInteractMessage(){
+	return "You where mauled by an " + this.getClass().getSimpleName().toLowerCase();  
   }
 }

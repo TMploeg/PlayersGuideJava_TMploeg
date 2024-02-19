@@ -3,7 +3,7 @@ package entities;
 import java.util.HashMap;
 import java.util.Map;
 import map.*;
-import helpers.console.ConsoleColor;
+import helpers.console.*;
 
 public class Maelstrom extends Entity {
   private static final ConsoleColor ENTITY_COLOR = ConsoleColor.TEAL;
@@ -16,36 +16,15 @@ public class Maelstrom extends Entity {
         }
       };
 
-  private Maelstrom(Room location) {
-    super(location, ENTITY_COLOR);
+  public Maelstrom() {
+    super(ENTITY_COLOR);
   }
 
-  public static void createInRoom(Room room) {
-    new Maelstrom(room);
+  public static Map<Cardinal, Integer> getMovementMap() {
+	return movementMap;
   }
 
-  public void move() {
-    Room newLocation = getLocation();
-
-    for (Cardinal direction : movementMap.keySet()) {
-      for (int i = 0; i < movementMap.get(direction); i++) {
-        Room nextRoom = newLocation.getAdjacentRoom(direction);
-
-        if (nextRoom == null) {
-          break;
-        }
-
-        newLocation = nextRoom;
-      }
-    }
-
-    newLocation.addEntity(this);
-    getLocation().removeEntity(this);
-
-    setLocation(newLocation);
-  }
-
-  public static Map<Cardinal, Integer> getPlayerMovementMap() {
+  public static Map<Cardinal, Integer> getInvertedMovementMap() {
     HashMap<Cardinal, Integer> playerMovementMap = new HashMap<>();
 
     for (Cardinal direction : movementMap.keySet()) {
@@ -55,7 +34,18 @@ public class Maelstrom extends Entity {
     return playerMovementMap;
   }
   
-  public String getDeathMessage(){
-	return "a harrowing scream echoes through the cavern";  
+  @Override
+  protected String getDeathMessage(){
+	return "A harrowing scream echoes through the cavern";  
+  }
+  
+  @Override
+  protected String getAmbianceMessage(){
+	return "You hear growling and groaning nearby";  
+  }
+  
+  @Override
+  protected String getInteractMessage(){
+	return "You where blown away by a " + this.getClass().getSimpleName().toLowerCase();  
   }
 }

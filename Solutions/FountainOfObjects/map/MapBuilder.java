@@ -3,6 +3,7 @@ package map;
 import entities.*;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.LinkedList;
 
 public class MapBuilder {
   public static final int MIN_SIZE = 4;
@@ -14,8 +15,8 @@ public class MapBuilder {
 
   private HashMap<RoomLocation, RoomType> roomData;
 
-  private RoomLocation[] maelstromLocations;
-  private RoomLocation[] amarokLocations;
+  private LinkedList<RoomLocation> maelstromLocations;
+  private LinkedList<RoomLocation> amarokLocations;
 
   public MapBuilder() {
     size = DEFAULT_SIZE;
@@ -28,6 +29,10 @@ public class MapBuilder {
   }
 
   public Map build() {
+	roomData = new HashMap<>();
+	maelstromLocations = new LinkedList<>();
+	amarokLocations = new LinkedList<>();
+	
     generateRoomData();
     generateEntityData();
 
@@ -38,8 +43,6 @@ public class MapBuilder {
   }
 
   private void generateRoomData() {
-    roomData = new HashMap<RoomLocation, RoomType>();
-
     setEntrance();
     setFountain();
     setPits();
@@ -65,23 +68,17 @@ public class MapBuilder {
   }
 
   private void setMaelstroms() {
-    maelstromLocations = generateEntityLocations(size.getProperties().maelstroms());
+	for(int i = 0; i < size.getProperties().maelstroms(); i++){
+		maelstromLocations.add(getRandomUnoccupiedLocation());
+	}
   }
   
   private void setAmaroks(){
-	amarokLocations = generateEntityLocations(size.getProperties().amaroks());
+	for(int i = 0; i < size.getProperties().amaroks(); i++){
+		amarokLocations.add(getRandomUnoccupiedLocation());
+	}
   }
   
-  private RoomLocation[] generateEntityLocations(int count){
-	RoomLocation[] locations = new RoomLocation[count];
-	
-	for (int i = 0; i < locations.length; i++) {
-      locations[i] = getRandomUnoccupiedLocation();
-    }
-	
-	return locations;
-  }
-
   private RoomLocation getRandomUnoccupiedLocation() {
     Random r = new Random();
 
@@ -90,8 +87,12 @@ public class MapBuilder {
           new RoomLocation(
               r.nextInt(size.getProperties().size()), r.nextInt(size.getProperties().size()));
 
-      if (roomData.containsKey(location)
-          || (location.x() < ENTRANCE_SAFE_SPACE && location.y() < ENTRANCE_SAFE_SPACE)) {
+	  boolean hasData = roomData.containsKey(location);
+	  boolean isInSafeSpace = location.x() < ENTRANCE_SAFE_SPACE && location.y() < ENTRANCE_SAFE_SPACE;
+	  boolean hasMaelstrom = maelstromLocations.contains(location);
+	  boolean hasAmarok = amarokLocations.contains(location);
+	  
+      if (hasData || isInSafeSpace || hasMaelstrom || hasAmarok) {
         continue;
       }
 
@@ -146,25 +147,22 @@ public class MapBuilder {
   private Room createRoom(RoomLocation location) {
     RoomType type = getRoomTypeForLocation(location);
     Room room = new Room(type, location);
-
-    if (arrayContains(maelstromLocations, location)) {
-      Maelstrom.createInRoom(room);
+	
+	boolean hasMaelstrom = maelstromLocations.contains(location);
+	boolean hasAmarok = amarokLocations.contains(location);
+	
+    if (hasMaelstrom) {
+      room.setEntity(new Maelstrom());
     }
 	
-	if(arrayContains(amarokLocations, location)){
-	  Amarok.createInRoom(room);
+	if(hasAmarok){
+	  if(hasMaelstrom){
+		  throw new RuntimeException("room has multiple entities");
+	  }
+	  
+	  room.setEntity(new Amarok());
 	}
 
     return room;
-  }
-  
-  private static <TElement> boolean arrayContains(TElement[] collection, TElement element){
-	for(TElement collectionElement : collection){
-	  if(element.equals(collectionElement)){
-		return true;
-	  }
-	}
-	
-	return false;
   }
 }
