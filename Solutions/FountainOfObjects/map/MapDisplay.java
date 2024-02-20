@@ -2,6 +2,7 @@ package map;
 
 import helpers.console.*;
 import entities.*;
+import java.util.Optional;
 
 public class MapDisplay {
 	private static final String POS_MARKER = "x";
@@ -13,18 +14,12 @@ public class MapDisplay {
 	}
 	
 	public void display() {
-		Room rowStart = map.getEntrance();
+		Optional<Room> rowStart = Optional.of(map.getEntrance());
 
-		while (true) {
-			displayRow(rowStart);
+		while (rowStart.isPresent()) {
+			displayRow(rowStart.get());
 
 			System.out.println();
-
-			rowStart = rowStart.getAdjacentRoom(Cardinal.SOUTH);
-
-			if (rowStart == null) {
-				break;
-			}
 
 			int nameLength = 1;
 			int space = 1;
@@ -34,7 +29,7 @@ public class MapDisplay {
 			  
 			int roomDisplayLength = leftRightMargin + nameLength + space + markerLength + leftRightMargin;
 			  
-			int rowLength = getRowLength(rowStart);
+			int rowLength = getRowLength(rowStart.get());
 			  
 			int horizontalSeperatorLength = roomDisplayLength * rowLength + verticalSeperatorWidth * (rowLength - 1);
 			  
@@ -45,6 +40,8 @@ public class MapDisplay {
 			}
 			  
 			System.out.println(seperatorBuilder.toString());
+			
+			rowStart = rowStart.get().getAdjacentRoom(Cardinal.SOUTH);
 		}
 	}
   
@@ -54,11 +51,13 @@ public class MapDisplay {
 	while (true) {
 	  displayRoom(current);
 	  
-	  current = current.getAdjacentRoom(Cardinal.EAST);
+	  Optional<Room> eastRoom = current.getAdjacentRoom(Cardinal.EAST);
 	  
-	  if (current == null) {
+	  if (!eastRoom.isPresent()) {
 		break;
 	  }
+	  
+	  current = eastRoom.get();
 
 	  ConsoleHelper.printColor("|", ConsoleColor.WHITE);
 	}
@@ -143,13 +142,13 @@ public class MapDisplay {
   private static int getRowLength(Room rowStart){
 	int length = 0;
 	
-	Room current = rowStart;
+	Optional<Room> current = Optional.of(rowStart);
 	
-	do{
+	while(current.isPresent()){
 	  length++;
-	  current = current.getAdjacentRoom(Cardinal.EAST);
+	  
+	  current = current.get().getAdjacentRoom(Cardinal.EAST);
 	}
-	while(current != null);
 	
 	return length;
   }

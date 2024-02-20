@@ -4,6 +4,7 @@ import entities.*;
 import helpers.console.*;
 import java.awt.Point;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Map {
   private final Room entrance;
@@ -33,12 +34,12 @@ public class Map {
   }
 
   public void move(Cardinal direction) {
-    Room newRoom = currentRoom.getAdjacentRoom(direction);
+    Optional<Room> newRoom = currentRoom.getAdjacentRoom(direction);
 
-    if (newRoom == null) {
+    if (!newRoom.isPresent()) {
       throw new NoSuchElementException("current room has no '" + direction.toString() + "' room");
     }
 
-    currentRoom = newRoom;
+    currentRoom = newRoom.get();
   }
 }

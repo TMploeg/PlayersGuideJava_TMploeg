@@ -5,6 +5,7 @@ import helpers.console.*;
 import helpers.console.menu.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import map.*;
 import commands.*;
 
@@ -215,13 +216,13 @@ public class Game {
 	
 	for (Cardinal direction : movementMap.keySet()) {
       for (int i = 0; i < movementMap.get(direction); i++) {
-        Room nextRoom = newLocation.getAdjacentRoom(direction);
+        Optional<Room> nextRoom = newLocation.getAdjacentRoom(direction);
 
-        if (nextRoom == null) {
+        if (!nextRoom.isPresent()) {
           break;
         }
 
-        newLocation = nextRoom;
+        newLocation = nextRoom.get();
       }
     }
 	
@@ -272,14 +273,14 @@ public class Game {
 	
 	quiver.takeArrow();
 	
-	Room adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
+	Optional<Room> adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
 	
-	if(adjacentRoom == null){
+	if(!adjacentRoom.isPresent()){
 		displayInfo("Your arrow shot into a wall");
 		return;
 	}
 	
-	Entity target = adjacentRoom.getEntity();
+	Entity target = adjacentRoom.get().getEntity();
 	
 	if(target == null){
 		displayInfo("Your arrow didn't hit anything");
@@ -287,7 +288,7 @@ public class Game {
 	}
 	
 	target.showMessage(MessageType.DEATH);
-	adjacentRoom.removeEntity();
+	adjacentRoom.get().removeEntity();
   }
   
   private GameState getGameState() {

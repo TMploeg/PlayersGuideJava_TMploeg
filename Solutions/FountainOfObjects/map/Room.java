@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
@@ -29,14 +30,14 @@ public class Room {
     return type;
   }
 
-  public Room getAdjacentRoom(Cardinal cardinal) {
+  public Optional<Room> getAdjacentRoom(Cardinal cardinal) {
     for (Cardinal key : adjacentRooms.keySet()) {
       if (key == cardinal) {
-        return adjacentRooms.get(key);
+        return Optional.of(adjacentRooms.get(key));
       }
     }
 
-    return null;
+    return Optional.empty();
   }
 
   public boolean hasAdjacentRoom(Cardinal cardinal) {

@@ -127,9 +127,12 @@ public class MapBuilder {
     for (int yPos = 1; yPos < size.getProperties().size(); yPos++) {
       RoomLocation newPos = new RoomLocation(collumn, yPos);
       Room newRoom = createRoom(newPos);
-
+	  
       if (hasPreviousCollumn) {
-        Room westRoom = previous.getAdjacentRoom(Cardinal.WEST).getAdjacentRoom(Cardinal.SOUTH);
+        Room westRoom = previous
+		  .getAdjacentRoom(Cardinal.WEST).orElseThrow(() -> new RuntimeException("room should exist"))
+		  .getAdjacentRoom(Cardinal.SOUTH).orElseThrow(() ->  new RuntimeException("room should exist"));
+		  
         newRoom.link(Cardinal.WEST, westRoom);
       }
 
