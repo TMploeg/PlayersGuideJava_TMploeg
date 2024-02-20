@@ -7,3 +7,4 @@ TODO:
 - Map::getRoom: seperate code to find room at different position to Room
 - remove Map::getRoom if unused
 - MapDisplay::display: refactor seperator display (lines 32 - 50)
+- Room::removeEntity: change NullPointerException to custom RuntimeException
