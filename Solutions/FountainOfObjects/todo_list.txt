@@ -1,0 +1,7 @@
+TODO:
+- CommandAction interface -> switch to java.util.Consumer
+- Game.getNrOfArrowsFromMapSize -> add to MapSize properties
+- create GameDisplay (move MapDisplay methods into GameDisplay)
+- DuplicateElementException not being compiled? (maybe not used?)
+- menu: move from helpers.console.menu to helpers.menu
+- Map::getRoom: seperate code to find room at different position to Room
