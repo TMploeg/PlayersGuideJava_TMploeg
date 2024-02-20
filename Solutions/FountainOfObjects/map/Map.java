@@ -16,32 +16,6 @@ public class Map {
     currentRoom = this.entrance;
   }
 
-  public Room getRoom(Point location) {
-    if (location.x < 0 || location.y < 0) {
-      return null;
-    }
-
-    Room currentRoom = entrance;
-
-    for (int currentX = 0; currentX < location.x; currentX++) {
-      currentRoom = currentRoom.getAdjacentRoom(Cardinal.EAST);
-
-      if (currentRoom == null) {
-        return null;
-      }
-    }
-
-    for (int currentY = 0; currentY < location.y; currentY++) {
-      currentRoom = currentRoom.getAdjacentRoom(Cardinal.SOUTH);
-
-      if (currentRoom == null) {
-        return null;
-      }
-    }
-
-    return currentRoom;
-  }
-
   public Room getCurrentRoom() {
     return currentRoom;
   }
