@@ -96,7 +96,7 @@ public class Room {
 				continue;
 			}
 			
-			if(!adjacentRoom.hasEntity()){
+			if(adjacentRoom.isValidEmptyRoom()){
 				return adjacentRoom;
 			}
 			
@@ -106,9 +106,15 @@ public class Room {
 		if(newCurrentRooms.size() == 0){
 			break;
 		}
+		
+		currentRooms = newCurrentRooms;
 	}
 	
 	return null;
+  }
+  
+  private boolean isValidEmptyRoom(){
+	return type != RoomType.ENTRANCE && !hasEntity();
   }
   
   private static Collection<Room> getAllAdjacentRoomsForCollection(Collection<Room> rooms){
