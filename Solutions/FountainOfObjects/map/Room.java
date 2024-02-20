@@ -106,6 +106,8 @@ public class Room {
 		if(newCurrentRooms.size() == 0){
 			break;
 		}
+		
+		currentRooms = newCurrentRooms;
 	}
 	
 	return null;
