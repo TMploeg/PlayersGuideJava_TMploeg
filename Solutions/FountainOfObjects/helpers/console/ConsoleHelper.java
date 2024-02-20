@@ -3,6 +3,7 @@ package helpers.console;
 import helpers.console.menu.*;
 import commands.Command;
 import java.util.Scanner;
+import java.util.Optional;
 
 public class ConsoleHelper {
   private static final String ANSI_RESET = "\033[0m";
@@ -33,8 +34,10 @@ public class ConsoleHelper {
         continue;
       }
 
-      if (Command.exists(input)) {
-        return Command.getFromCommandText(input);
+	  Optional<Command> command = Command.getFromName(input);
+	  
+      if (command.isPresent()) {
+        return command.get();
       }
 
       System.out.println(
