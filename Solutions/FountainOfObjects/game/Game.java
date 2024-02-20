@@ -105,6 +105,10 @@ public class Game {
       break;
     }
   }
+  
+  private void displayInfo(String info){
+	ConsoleHelper.printlnColor(info, ConsoleColor.LIGHT_GRAY);
+  }
 
   private void displaySeperator() {
     int seperatorLength = 100;
@@ -121,7 +125,7 @@ public class Game {
       mapDisplay.display();
     } else {
       RoomLocation location = map.getCurrentRoom().getLocation();
-      System.out.println("You are in the room at location " + location);
+      displayInfo("You are in the room at location " + location);
     }
 
     System.out.println();
@@ -252,16 +256,17 @@ public class Game {
   }
 
   private void move(Cardinal direction) {
-    if (map.getCurrentRoom().hasAdjacentRoom(direction)) {
-      map.move(direction);
-    } else {
-      System.out.println("You hit your head against the wall");
-    }
+    if (!map.getCurrentRoom().hasAdjacentRoom(direction)) {
+	  displayInfo("You hit your head against the wall");
+	  return;
+	}
+	
+    map.move(direction);
   }
   
   private void shoot(Cardinal direction){
 	if(!quiver.hasArrows()){
-	  System.out.println("You cannot shoot, your quiver is empty");
+	  displayInfo("You cannot shoot, your quiver is empty");
 	}
 	
 	quiver.takeArrow();
@@ -269,14 +274,14 @@ public class Game {
 	Room adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
 	
 	if(adjacentRoom == null){
-		System.out.println("Your arrow shot into a wall");
+		displayInfo("Your arrow shot into a wall");
 		return;
 	}
 	
 	Entity target = adjacentRoom.getEntity();
 	
 	if(target == null){
-		System.out.println("Your arrow didn't hit anything");
+		displayInfo("Your arrow didn't hit anything");
 		return;
 	}
 	
