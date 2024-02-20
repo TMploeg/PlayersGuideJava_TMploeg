@@ -5,3 +5,5 @@ TODO:
 - DuplicateElementException not being compiled? (maybe not used?)
 - menu: move from helpers.console.menu to helpers.menu
 - Map::getRoom: seperate code to find room at different position to Room
+- remove Map::getRoom if unused
+- MapDisplay::display: refactor seperator display (lines 32 - 50)
