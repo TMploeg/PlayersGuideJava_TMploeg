@@ -267,6 +267,7 @@ public class Game {
   private void shoot(Cardinal direction){
 	if(!quiver.hasArrows()){
 	  displayInfo("You cannot shoot, your quiver is empty");
+	  return;
 	}
 	
 	quiver.takeArrow();
