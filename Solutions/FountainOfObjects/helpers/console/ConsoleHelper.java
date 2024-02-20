@@ -1,6 +1,7 @@
 package helpers.console;
 
 import helpers.console.menu.*;
+import helpers.parsers.IntegerParser;
 import commands.Command;
 import java.util.Scanner;
 import java.util.Optional;
@@ -58,19 +59,19 @@ public class ConsoleHelper {
 
       String menuItemInput = scanner.nextLine();
 
-      Integer menuNumber = tryParsePositiveNumber(menuItemInput);
+	  Optional<Integer> menuNumber = IntegerParser.tryParse(menuItemInput);
 
-      if (menuNumber == null) {
+      if (!menuNumber.isPresent()) {
         System.out.println("'" + menuItemInput + "' is not a valid integer");
         continue;
       }
 
-      if (menuNumber < 1 || menuNumber > menu.getMenuItems().size()) {
+      if (menuNumber.get() < 1 || menuNumber.get() > menu.getMenuItems().size()) {
         System.out.println("menu item '" + menuNumber + "' does not exist");
         continue;
       }
 
-      return menu.getMenuItem(menuNumber - 1).getValue();
+      return menu.getMenuItem(menuNumber.get() - 1).getValue();
     }
   }
 
@@ -82,40 +83,5 @@ public class ConsoleHelper {
 
       itemNr++;
     }
-  }
-
-  private static Integer tryParsePositiveNumber(String str) {
-    if (str == null || str.length() == 0) {
-      return null;
-    }
-
-    String maxValueString = Integer.toString(Integer.MAX_VALUE);
-
-    if (str.length() > maxValueString.length()) {
-      return null;
-    }
-
-    boolean possiblyOutOfRange = str.length() == maxValueString.length();
-
-    for (int i = 0; i < str.length(); i++) {
-      char current = str.charAt(i);
-
-      if (!Character.isDigit(current)) {
-        return null;
-      }
-
-      if (possiblyOutOfRange) {
-        int compareValue = Character.compare(current, maxValueString.charAt(i));
-        if (compareValue > 0) {
-          return null;
-        }
-
-        if (compareValue < 0) {
-          possiblyOutOfRange = false;
-        }
-      }
-    }
-
-    return Integer.parseInt(str);
   }
 }
