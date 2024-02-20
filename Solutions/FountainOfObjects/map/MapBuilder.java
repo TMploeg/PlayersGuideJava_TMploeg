@@ -68,15 +68,24 @@ public class MapBuilder {
   }
 
   private void setMaelstroms() {
+	maelstromLocations.add(new RoomLocation(0,3));
+	maelstromLocations.add(new RoomLocation(2,2));
+	/*
 	for(int i = 0; i < size.getProperties().maelstroms(); i++){
 		maelstromLocations.add(getRandomUnoccupiedLocation());
 	}
+	*/
   }
   
   private void setAmaroks(){
+	amarokLocations.add(new RoomLocation(0,2));
+	amarokLocations.add(new RoomLocation(1,3));
+	amarokLocations.add(new RoomLocation(0,4));
+	/*
 	for(int i = 0; i < size.getProperties().amaroks(); i++){
 		amarokLocations.add(getRandomUnoccupiedLocation());
 	}
+	*/
   }
   
   private RoomLocation getRandomUnoccupiedLocation() {
