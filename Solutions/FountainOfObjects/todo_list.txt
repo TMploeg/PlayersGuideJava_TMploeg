@@ -8,3 +8,4 @@ TODO:
 - remove Map::getRoom if unused
 - MapDisplay::display: refactor seperator display (lines 32 - 50)
 - Room::removeEntity: change NullPointerException to custom RuntimeException
+- Room: add hasAdjacentEntity(Predicate<Entity> predicate) (for Game::displayAdjacentRoomMessages)
