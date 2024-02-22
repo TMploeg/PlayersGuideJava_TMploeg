@@ -111,7 +111,7 @@ public class Room {
 		currentRooms = newCurrentRooms;
 	}
 	
-	return null;
+	throw new RuntimeException("no empty room found");
   }
   
   private boolean isValidEmptyRoom(){
