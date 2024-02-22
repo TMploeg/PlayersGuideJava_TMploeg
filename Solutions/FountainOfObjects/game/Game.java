@@ -2,7 +2,7 @@ package game;
 
 import entities.*;
 import helpers.console.*;
-import helpers.console.menu.*;
+import menu.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,6 @@ import commands.*;
 
 public class Game {
   private enum GameState { PLAYING, WON, LOST }
-  private enum ShootResult { NO_ARROWS, NO_ROOM, MISSED, HIT }
   
   private Map map;
   private GameDisplay gameDisplay;
@@ -170,6 +169,7 @@ public class Game {
   
   private void shoot(Cardinal direction){
 	ShootResult result = getShootResult(direction);
+	
 	gameDisplay.displayInfo(result.getMessage());
 	
 	if(result != ShootResult.NO_ARROWS){
@@ -197,7 +197,7 @@ public class Game {
 		return ShootResult.NO_ROOM;
 	}
 	
-	if(!map.getCurrentRoom().getAdjacentRoom(direction).hasEntity()){
+	if(!map.getCurrentRoom().getAdjacentRoom(direction).get().hasEntity()){
 		return ShootResult.MISSED;
 	}
 	

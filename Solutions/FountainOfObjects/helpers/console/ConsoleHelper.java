@@ -1,6 +1,5 @@
 package helpers.console;
 
-import helpers.console.menu.*;
 import helpers.parsers.IntegerParser;
 import commands.Command;
 import java.util.Scanner;

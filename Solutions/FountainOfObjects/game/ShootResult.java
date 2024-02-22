@@ -1,3 +1,5 @@
+package game;
+
 public enum ShootResult{
 	NO_ARROWS("You cannot shoot, your quiver is empty"),
 	NO_ROOM("Your arrow shot into a wall"),
