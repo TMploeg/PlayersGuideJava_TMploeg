@@ -85,6 +85,10 @@ public class GameDisplay {
 	entity.showMessage(MessageType.INTERACT);  
   }
   
+  public void displayEntityDeath(Entity entity){
+	entity.showMessage(MessageType.DEATH);
+  }
+  
   public void displayCommands() {
     for (Command command : Command.values()) {
 	  String text = "'" + command.getCommandText() + "': " + command.getDescription();

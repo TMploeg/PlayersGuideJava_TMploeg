@@ -11,6 +11,7 @@ import commands.*;
 
 public class Game {
   private enum GameState { PLAYING, WON, LOST }
+  private enum ShootResult { NO_ARROWS, NO_ROOM, MISSED, HIT }
   
   private Map map;
   private GameDisplay gameDisplay;
@@ -168,29 +169,39 @@ public class Game {
   }
   
   private void shoot(Cardinal direction){
-	if(!quiver.hasArrows()){
-	  gameDisplay.displayInfo("You cannot shoot, your quiver is empty");
-	  return;
+	ShootResult result = getShootResult(direction);
+	gameDisplay.displayInfo(result.getMessage());
+	
+	if(result != ShootResult.NO_ARROWS){
+		quiver.takeArrow();
 	}
-	
-	quiver.takeArrow();
-	
+
+	if(result == ShootResult.HIT){
+		Room adjacentRoom = map.getCurrentRoom()
+			.getAdjacentRoom(direction).orElseThrow(() -> new NullPointerException("room should exists"));
+		
+		Entity target = adjacentRoom.getEntity().orElseThrow(() -> new NullPointerException("entity should exist"));
+		
+		adjacentRoom.removeEntity();
+		gameDisplay.displayEntityDeath(target);
+	}
 	Optional<Room> adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
-	
-	if(!adjacentRoom.isPresent()){
-		gameDisplay.displayInfo("Your arrow shot into a wall");
-		return;
+  }
+  
+  private ShootResult getShootResult(Cardinal direction){
+	if(!quiver.hasArrows()){
+		return ShootResult.NO_ARROWS;
 	}
 	
-	Optional<Entity> target = adjacentRoom.get().getEntity();
-	
-	if(!target.isPresent()){
-		gameDisplay.displayInfo("Your arrow didn't hit anything");
-		return;
+	if(!map.getCurrentRoom().hasAdjacentRoom(direction)){
+		return ShootResult.NO_ROOM;
 	}
 	
-	target.get().showMessage(MessageType.DEATH);
-	adjacentRoom.get().removeEntity();
+	if(!map.getCurrentRoom().getAdjacentRoom(direction).hasEntity()){
+		return ShootResult.MISSED;
+	}
+	
+	return ShootResult.HIT;
   }
   
   private GameState getGameState() {
