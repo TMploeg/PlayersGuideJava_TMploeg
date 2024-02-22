@@ -10,12 +10,8 @@ import map.*;
 import commands.*;
 
 public class Game {
-  private enum GameState {
-    PLAYING,
-    WON,
-    LOST
-  }
-
+  private enum GameState { PLAYING, WON, LOST }
+  
   private Map map;
   private MapDisplay mapDisplay;
   private Quiver quiver;
@@ -169,35 +165,28 @@ public class Game {
         ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
         foundAdjacentPit = true;
       }
-
-	  Entity entity = room.getEntity();
 	  
-	  if(entity != null){
-		  if(entity instanceof Maelstrom){
-			foundAdjacentMaelstrom = true;
-		  }
-		  else if(entity instanceof Amarok){
-			foundAdjacentAmarok = true;
-		  }
-		  else{
-			throw new RuntimeException("unknown entity type");
-		  }
-		  
-		  entity.showMessage(MessageType.AMBIANCE);
+	  Optional<Entity> entity = room.getEntity();
+	  
+	  if(!entity.isPresent()){
+		  continue;
 	  }
+	  
+	  foundAdjacentMaelstrom = foundAdjacentMaelstrom || entity.get() instanceof Maelstrom;
+	  foundAdjacentAmarok = foundAdjacentAmarok || entity.get() instanceof Amarok;
+	  
+	  entity.get().showMessage(MessageType.AMBIANCE);
     }
   }
 
   private void handleRoomContent() {
-	if(map.getCurrentRoom().hasEntity()){
-		Entity entity = map.getCurrentRoom().getEntity();
-		
+	map.getCurrentRoom().getEntity().ifPresent(entity -> {
 		entity.showMessage(MessageType.INTERACT);
 		
 		if(entity instanceof Maelstrom maelstrom){
 			handleMaelstrom(maelstrom);
 		}
-	}
+	});
   }
   
   private void handleMaelstrom(Maelstrom maelstrom) {
@@ -280,14 +269,14 @@ public class Game {
 		return;
 	}
 	
-	Entity target = adjacentRoom.get().getEntity();
+	Optional<Entity> target = adjacentRoom.get().getEntity();
 	
-	if(target == null){
+	if(!target.isPresent()){
 		displayInfo("Your arrow didn't hit anything");
 		return;
 	}
 	
-	target.showMessage(MessageType.DEATH);
+	target.get().showMessage(MessageType.DEATH);
 	adjacentRoom.get().removeEntity();
   }
   
@@ -302,7 +291,7 @@ public class Game {
 		return GameState.LOST;
 	}
 	
-	if(map.getCurrentRoom().hasEntity() && map.getCurrentRoom().getEntity() instanceof Amarok){
+	if(map.getCurrentRoom().hasEntity() && map.getCurrentRoom().getEntity().get() instanceof Amarok){
 		return GameState.LOST;
 	}
 	

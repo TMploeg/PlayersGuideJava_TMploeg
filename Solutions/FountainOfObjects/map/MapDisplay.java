@@ -1,6 +1,7 @@
 package map;
 
 import helpers.console.*;
+import helpers.Counter;
 import entities.*;
 import java.util.Optional;
 
@@ -84,24 +85,22 @@ public class MapDisplay {
 	
 	boolean isCurrentRoom = room == map.getCurrentRoom();
 	
-	Entity roomEntity = room.getEntity();
-
 	int markerLength = POS_MARKER.length();
 	
 	final int maxNrOfMarkers = 3;
-	int nrOfMarkers = 0;
+	final Counter markerCounter = new Counter();
 	
 	if(isCurrentRoom){
 	  ConsoleHelper.printColor(POS_MARKER, ConsoleColor.PINK);
-	  nrOfMarkers++;
+	  markerCounter.increment();
 	}
 	
-	if(roomEntity != null){
-	  ConsoleHelper.printColor(POS_MARKER, roomEntity.getColor());
-	  nrOfMarkers++;
-	}
+	room.getEntity().ifPresent(entity -> {
+		ConsoleHelper.printColor(POS_MARKER, entity.getColor());
+		markerCounter.increment();
+	});
 	
-	int nrOfSpaces = (maxNrOfMarkers - nrOfMarkers) * markerLength;
+	int nrOfSpaces = (maxNrOfMarkers - markerCounter.getCount()) * markerLength;
 
 	for (int i = 0; i < nrOfSpaces; i++) {
 	  System.out.print(" ");

@@ -13,14 +13,14 @@ import java.util.Optional;
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
  
-  private Entity entity;
+  private Optional<Entity> entity;
 
   private RoomType type;
   private RoomLocation location;
 
   public Room(RoomType type, RoomLocation location) {
     adjacentRooms = new HashMap<>();
-    entity = null;
+    entity = Optional.empty();
 
     this.type = type;
     this.location = location;
@@ -57,28 +57,28 @@ public class Room {
     room.adjacentRooms.put(cardinal.opposite(), this);
   }
 
-  public Entity getEntity(){
+  public Optional<Entity> getEntity(){
 	return entity;
   }
 
   public void setEntity(Entity entity) {
-	if(this.entity != null){
+	if(hasEntity()){
 		throw new AlreadyOccupiedException("room is already occupied");
 	}
 	
-	this.entity = entity;
+	this.entity = Optional.of(entity);
   }
 
   public void removeEntity() {
-    if (entity == null) {
+    if (!hasEntity()) {
       throw new NullPointerException("room does not have entity");
     }
 
-    entity = null;
+    entity = Optional.empty();
   }
   
   public boolean hasEntity(){
-	return entity != null;
+	return entity.isPresent();
   }
   
   public Room getNearestEmptyRoom(){
