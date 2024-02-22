@@ -4,18 +4,18 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class CommandExecutor {
-	private Map<Command, CommandAction> commandActionMap;
+	private Map<Command, Runnable> commandActionMap;
 	
 	public CommandExecutor() {
 		commandActionMap = new HashMap<>();
 	}
 	
-	public void mapCommandAction(Command command, CommandAction commandAction){
-		if(commandAction == null){
+	public void mapCommandAction(Command command, Runnable runnable){
+		if(runnable == null){
 			throw new NullPointerException("command action is null");
 		}
 		
-		commandActionMap.put(command, commandAction);
+		commandActionMap.put(command, runnable);
 	}
 	
 	public void execute(Command command){
