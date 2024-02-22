@@ -13,7 +13,7 @@ public class Game {
   private enum GameState { PLAYING, WON, LOST }
   
   private Map map;
-  private MapDisplay mapDisplay;
+  private GameDisplay gameDisplay;
   private Quiver quiver;
   private CommandExecutor commandExecutor;
 
@@ -24,7 +24,7 @@ public class Game {
 
 	MapSize mapSize = getMapSize();	
     map = createMap(mapSize);
-	mapDisplay = new MapDisplay(map);
+	gameDisplay = new GameDisplay(map);
 	
 	quiver = new Quiver(mapSize.getProperties().arrows());
 	
@@ -39,7 +39,7 @@ public class Game {
     menuItems.add(new MenuItem<MapSize>("medium", MapSize.MEDIUM));
     menuItems.add(new MenuItem<MapSize>("large", MapSize.LARGE));
 
-    return ConsoleHelper.getMenuInput(new Menu<MapSize>(menuItems));
+    return InputHelper.getMenuInput(new Menu<MapSize>(menuItems));
   }
 
   private Map createMap(MapSize mapSize) {
@@ -58,121 +58,51 @@ public class Game {
 	commandExecutor.mapCommandAction(Command.SHOOT_SOUTH, () -> shoot(Cardinal.SOUTH));
 	commandExecutor.mapCommandAction(Command.SHOOT_WEST, () -> shoot(Cardinal.WEST));
 	commandExecutor.mapCommandAction(Command.ENABLE_FOUNTAIN, () -> map.enableFountain());
-	commandExecutor.mapCommandAction(Command.HELP, () -> showHelp());
+	commandExecutor.mapCommandAction(Command.HELP, () -> gameDisplay.displayCommands());
 	
 	return commandExecutor;
   }
 
   private void runGame() {
-    displayRoomMessage();
+    gameDisplay.displayRoom();
 
     while (true) {
-      displayLocation();
-      displayAdjacentRoomMessages();
+      gameDisplay.displayLocation(cheatMode);
+      gameDisplay.displayAdjacentRooms();
 
-      Command chosenCommand = ConsoleHelper.getCommandInput("what do you want to do?");
+      Command chosenCommand = InputHelper.getCommandInput("what do you want to do?");
       commandExecutor.execute(chosenCommand);
 
-      displaySeperator();
+      gameDisplay.displaySeperator();
 
       handleRoomContent();
-      displayRoomMessage();
+      
+	  gameDisplay.displayRoom();
 
       GameState state = getGameState();
       if (state == GameState.PLAYING) {
         continue;
       }
 
-      boolean won = state == GameState.WON;
-
-      String message = won ? "You Win!" : "You Lose!";
-      ConsoleColor color = won ? ConsoleColor.GREEN : ConsoleColor.RED;
-
-      ConsoleHelper.printlnColor(message, color);
-
+	  switch(state){
+		  case GameState.WON:
+			gameDisplay.displayVictory();
+			break;
+			
+		  case GameState.LOST:
+			gameDisplay.displayDefeat();
+			break;
+			
+		  default: throw new IllegalArgumentException("should not reach");
+	  }
+	  
       break;
     }
   }
   
-  private void displayInfo(String info){
-	ConsoleHelper.printlnColor(info, ConsoleColor.LIGHT_GRAY);
-  }
-
-  private void displaySeperator() {
-    int seperatorLength = 100;
-
-    for (int i = 0; i < seperatorLength; i++) {
-      System.out.print("=");
-    }
-
-    System.out.println();
-  }
-
-  private void displayLocation() {
-    if (cheatMode) {
-      mapDisplay.display();
-    } else {
-      RoomLocation location = map.getCurrentRoom().getLocation();
-      displayInfo("You are in the room at location " + location);
-    }
-
-    System.out.println();
-  }
-
-  private void displayRoomMessage() {
-    switch (map.getCurrentRoom().getType()) {
-      case RoomType.ENTRANCE:
-        ConsoleHelper.printlnColor(
-            "You see light in this room coming from outside the cavern. This is the entrance.",
-            ConsoleColor.YELLOW);
-        break;
-
-      case RoomType.FOUNTAIN:
-        String message =
-            (map.isFountainEnabled()
-                ? "You hear the rushing waters from the Fountain of Objects. It has been"
-                    + " reactivated!"
-                : "You hear water dripping in this room. The Fountain of Objects is here!");
-
-        ConsoleHelper.printlnColor(message, ConsoleColor.BLUE);
-        break;
-		
-      case RoomType.PIT:
-        ConsoleHelper.printlnColor("You fell into a pit.", ConsoleColor.DARK_RED);
-		break;
-		
-      default:
-        break;
-    }
-  }
-
-  private void displayAdjacentRoomMessages() {
-    boolean foundAdjacentPit = false;
-    boolean foundAdjacentMaelstrom = false;
-	boolean foundAdjacentAmarok = false;
-
-    for (Room room : map.getCurrentRoom().getAllAdjacentRooms()) {
-      if (!foundAdjacentPit && room.getType() == RoomType.PIT) {
-        ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
-        foundAdjacentPit = true;
-      }
-	  
-	  Optional<Entity> entity = room.getEntity();
-	  
-	  if(!entity.isPresent()){
-		  continue;
-	  }
-	  
-	  foundAdjacentMaelstrom = foundAdjacentMaelstrom || entity.get() instanceof Maelstrom;
-	  foundAdjacentAmarok = foundAdjacentAmarok || entity.get() instanceof Amarok;
-	  
-	  entity.get().showMessage(MessageType.AMBIANCE);
-    }
-  }
-
   private void handleRoomContent() {
 	map.getCurrentRoom().getEntity().ifPresent(entity -> {
-		entity.showMessage(MessageType.INTERACT);
+		gameDisplay.displayEntityInteraction(entity);
 		
 		if(entity instanceof Maelstrom maelstrom){
 			handleMaelstrom(maelstrom);
@@ -228,17 +158,9 @@ public class Game {
     }
   }
 
-  private void showHelp() {
-    for (Command command : Command.values()) {
-      ConsoleHelper.printlnColor(
-          "'" + command.getCommandText() + "': " + command.getDescription(),
-          ConsoleColor.LIGHT_GRAY);
-    }
-  }
-
   private void move(Cardinal direction) {
     if (!map.getCurrentRoom().hasAdjacentRoom(direction)) {
-	  displayInfo("You hit your head against the wall");
+	  gameDisplay.displayInfo("You hit your head against the wall");
 	  return;
 	}
 	
@@ -247,7 +169,7 @@ public class Game {
   
   private void shoot(Cardinal direction){
 	if(!quiver.hasArrows()){
-	  displayInfo("You cannot shoot, your quiver is empty");
+	  gameDisplay.displayInfo("You cannot shoot, your quiver is empty");
 	  return;
 	}
 	
@@ -256,14 +178,14 @@ public class Game {
 	Optional<Room> adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
 	
 	if(!adjacentRoom.isPresent()){
-		displayInfo("Your arrow shot into a wall");
+		gameDisplay.displayInfo("Your arrow shot into a wall");
 		return;
 	}
 	
 	Optional<Entity> target = adjacentRoom.get().getEntity();
 	
 	if(!target.isPresent()){
-		displayInfo("Your arrow didn't hit anything");
+		gameDisplay.displayInfo("Your arrow didn't hit anything");
 		return;
 	}
 	

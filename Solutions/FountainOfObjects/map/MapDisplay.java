@@ -12,9 +12,9 @@ public class MapDisplay {
 	
 	public MapDisplay(Map map){
 	  this.map = map;
-	}
+	}	
 	
-	public void display() {
+	public void displayMap() {
 		Optional<Room> rowStart = Optional.of(map.getEntrance());
 
 		while (rowStart.isPresent()) {
