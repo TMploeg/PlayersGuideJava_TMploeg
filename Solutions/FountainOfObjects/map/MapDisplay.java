@@ -22,25 +22,7 @@ public class MapDisplay {
 
 			System.out.println();
 
-			int nameLength = 1;
-			int space = 1;
-			int markerLength = 3;
-			int leftRightMargin = 1;
-			int verticalSeperatorWidth = 1;
-			  
-			int roomDisplayLength = leftRightMargin + nameLength + space + markerLength + leftRightMargin;
-			  
-			int rowLength = getRowLength(rowStart.get());
-			  
-			int horizontalSeperatorLength = roomDisplayLength * rowLength + verticalSeperatorWidth * (rowLength - 1);
-			  
-			StringBuilder seperatorBuilder = new StringBuilder();
-			  
-			for(int i = 0; i < horizontalSeperatorLength; i++){
-				seperatorBuilder.append("-");
-			}
-			  
-			System.out.println(seperatorBuilder.toString());
+			displayRowSeperator(getRowLength(rowStart.get()));
 			
 			rowStart = rowStart.get().getAdjacentRoom(Cardinal.SOUTH);
 		}
@@ -62,6 +44,26 @@ public class MapDisplay {
 
 	  ConsoleHelper.printColor("|", ConsoleColor.WHITE);
 	}
+  }
+  
+  private void displayRowSeperator(int rowLength){
+	int nameLength = 1;
+	int space = 1;
+	int markerLength = 3;
+	int leftRightMargin = 1;
+	int verticalSeperatorWidth = 1;
+	  
+	int roomDisplayLength = leftRightMargin + nameLength + space + markerLength + leftRightMargin;
+	  
+	int horizontalSeperatorLength = roomDisplayLength * rowLength + verticalSeperatorWidth * (rowLength - 1);
+	  
+	StringBuilder seperatorBuilder = new StringBuilder();
+	  
+	for(int i = 0; i < horizontalSeperatorLength; i++){
+		seperatorBuilder.append("-");
+	}
+	  
+	System.out.println(seperatorBuilder.toString());
   }
   
   private void displayRoom(Room room){
