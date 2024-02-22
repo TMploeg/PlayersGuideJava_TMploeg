@@ -1,8 +1,5 @@
 TODO:
-- menu: move from helpers.console.menu to helpers.menu
 - Map::getRoom: seperate code to find room at different position to Room
-- MapDisplay::display: refactor seperator display (lines 32 - 50)
-- Room::removeEntity: change NullPointerException to custom RuntimeException
 - Room: add hasAdjacentEntity(Predicate<Entity> predicate) (for GameDisplay::displayAdjacentRooms)
 - ColoredStringBuilder maybe?
 - RoomType ambiance messages

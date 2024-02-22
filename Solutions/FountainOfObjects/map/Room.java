@@ -71,7 +71,7 @@ public class Room {
 
   public void removeEntity() {
     if (!hasEntity()) {
-      throw new NullPointerException("room does not have entity");
+      throw new RoomEmptyException("room does not have entity");
     }
 
     entity = Optional.empty();
