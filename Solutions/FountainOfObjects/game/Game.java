@@ -26,7 +26,7 @@ public class Game {
     map = createMap(mapSize);
 	mapDisplay = new MapDisplay(map);
 	
-	quiver = new Quiver(getNrOfArrowsFromMapSize(mapSize));
+	quiver = new Quiver(mapSize.getProperties().arrows());
 	
 	commandExecutor = initCommandExecutor();
 
@@ -44,15 +44,6 @@ public class Game {
 
   private Map createMap(MapSize mapSize) {
     return new MapBuilder().setSize(mapSize).build();
-  }
-  
-  private int getNrOfArrowsFromMapSize(MapSize mapSize){
-	return switch(mapSize){
-	  case MapSize.SMALL -> 5;
-	  case MapSize.MEDIUM -> 8;
-	  case MapSize.LARGE -> 12;
-	  default -> throw new IllegalArgumentException("unknown enum value detected");
-	};
   }
   
   private CommandExecutor initCommandExecutor(){
