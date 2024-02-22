@@ -1,0 +1,11 @@
+TODO:
+- CommandAction interface -> switch to java.util.Consumer
+- Game.getNrOfArrowsFromMapSize -> add to MapSize properties
+- create GameDisplay (move MapDisplay methods into GameDisplay)
+- DuplicateElementException not being compiled? (maybe not used?)
+- menu: move from helpers.console.menu to helpers.menu
+- Map::getRoom: seperate code to find room at different position to Room
+- remove Map::getRoom if unused
+- MapDisplay::display: refactor seperator display (lines 32 - 50)
+- Room::removeEntity: change NullPointerException to custom RuntimeException
+- Room: add hasAdjacentEntity(Predicate<Entity> predicate) (for Game::displayAdjacentRoomMessages)

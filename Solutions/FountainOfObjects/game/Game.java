@@ -5,16 +5,13 @@ import helpers.console.*;
 import helpers.console.menu.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import map.*;
 import commands.*;
 
 public class Game {
-  private enum GameState {
-    PLAYING,
-    WON,
-    LOST
-  }
-
+  private enum GameState { PLAYING, WON, LOST }
+  
   private Map map;
   private MapDisplay mapDisplay;
   private Quiver quiver;
@@ -168,35 +165,28 @@ public class Game {
         ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
         foundAdjacentPit = true;
       }
-
-	  Entity entity = room.getEntity();
 	  
-	  if(entity != null){
-		  if(entity instanceof Maelstrom){
-			foundAdjacentMaelstrom = true;
-		  }
-		  else if(entity instanceof Amarok){
-			foundAdjacentAmarok = true;
-		  }
-		  else{
-			throw new RuntimeException("unknown entity type");
-		  }
-		  
-		  entity.showMessage(MessageType.AMBIANCE);
+	  Optional<Entity> entity = room.getEntity();
+	  
+	  if(!entity.isPresent()){
+		  continue;
 	  }
+	  
+	  foundAdjacentMaelstrom = foundAdjacentMaelstrom || entity.get() instanceof Maelstrom;
+	  foundAdjacentAmarok = foundAdjacentAmarok || entity.get() instanceof Amarok;
+	  
+	  entity.get().showMessage(MessageType.AMBIANCE);
     }
   }
 
   private void handleRoomContent() {
-	if(map.getCurrentRoom().hasEntity()){
-		Entity entity = map.getCurrentRoom().getEntity();
-		
+	map.getCurrentRoom().getEntity().ifPresent(entity -> {
 		entity.showMessage(MessageType.INTERACT);
 		
 		if(entity instanceof Maelstrom maelstrom){
 			handleMaelstrom(maelstrom);
 		}
-	}
+	});
   }
   
   private void handleMaelstrom(Maelstrom maelstrom) {
@@ -215,13 +205,13 @@ public class Game {
 	
 	for (Cardinal direction : movementMap.keySet()) {
       for (int i = 0; i < movementMap.get(direction); i++) {
-        Room nextRoom = newLocation.getAdjacentRoom(direction);
+        Optional<Room> nextRoom = newLocation.getAdjacentRoom(direction);
 
-        if (nextRoom == null) {
+        if (!nextRoom.isPresent()) {
           break;
         }
 
-        newLocation = nextRoom;
+        newLocation = nextRoom.get();
       }
     }
 	
@@ -272,22 +262,22 @@ public class Game {
 	
 	quiver.takeArrow();
 	
-	Room adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
+	Optional<Room> adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
 	
-	if(adjacentRoom == null){
+	if(!adjacentRoom.isPresent()){
 		displayInfo("Your arrow shot into a wall");
 		return;
 	}
 	
-	Entity target = adjacentRoom.getEntity();
+	Optional<Entity> target = adjacentRoom.get().getEntity();
 	
-	if(target == null){
+	if(!target.isPresent()){
 		displayInfo("Your arrow didn't hit anything");
 		return;
 	}
 	
-	target.showMessage(MessageType.DEATH);
-	adjacentRoom.removeEntity();
+	target.get().showMessage(MessageType.DEATH);
+	adjacentRoom.get().removeEntity();
   }
   
   private GameState getGameState() {
@@ -301,7 +291,7 @@ public class Game {
 		return GameState.LOST;
 	}
 	
-	if(map.getCurrentRoom().hasEntity() && map.getCurrentRoom().getEntity() instanceof Amarok){
+	if(map.getCurrentRoom().hasEntity() && map.getCurrentRoom().getEntity().get() instanceof Amarok){
 		return GameState.LOST;
 	}
 	

@@ -1,5 +1,7 @@
 package commands;
 
+import java.util.Optional;
+
 public enum Command {
   MOVE_NORTH("move to the room to the north"),
   MOVE_EAST("move to the room to the east"),
@@ -36,35 +38,17 @@ public enum Command {
     return description;
   }
 
-  public static boolean exists(String commandText) {
-    if (commandText == null) {
-      throw new NullPointerException();
-    }
-
-    if (commandText.length() == 0) {
-      throw new IllegalArgumentException("command text must have at least 1 character");
-    }
-
-    for (Command command : Command.values()) {
-      if (command.getCommandText().equals(commandText)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  public static Command getFromCommandText(String commandText) {
-    if (commandText == null) {
+  public static Optional<Command> getFromName(String name) {
+    if (name == null) {
       throw new NullPointerException();
     }
 	
 	for(Command command : Command.values()){
-		if(command.getCommandText().equals(commandText)){
-			return command;
+		if(command.getCommandText().equals(name)){
+			return Optional.of(command);
 		}
 	}
 	
-	throw new EnumConstantNotPresentException(Command.class, commandText);
+	return Optional.empty();
   }
 }
