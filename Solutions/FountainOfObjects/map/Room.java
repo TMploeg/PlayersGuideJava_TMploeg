@@ -59,20 +59,61 @@ public class Room {
 		throw new NullPointerException("relativeLocation is null");
 	}
 	
-	Direction xDirection = relativeLocation.x < 0 ? Direction.WEST : Direction.EAST;
-	Direction yDirection = relativeLocation.y < 0 ? Direction.NORTH : Direction.SOUTH;
+	int diagonalOffset = Math.min(Math.abs(relativeLocation.x), Math.abs(relativeLocation.y));
+	int remainingHorizontalOffset = Math.abs(relativeLocation.x) - diagonalOffset;
+	int remainingVerticalOffset = Math.abs(relativeLocation.y) - diagonalOffset;
+	
+	Optional<Direction> horizontal = getDirectionFromHorizontalOffset(relativeLocation.x);
+	Optional<Direction> vertical = getDirectionFromVerticalOffset(relativeLocation.y);
 	
 	Room current = this;
 	
-	for(int x = 0; x < Math.abs(relativeLocation.x) && current.hasAdjacentRoom(xDirection); x++){
-	  current = current.getAdjacentRoom(xDirection).get();
+	for(int i = diagonalOffset; i > 0; i--){
+		Optional<Room> newRoom = current.getAdjacentRoom(Direction.compose(horizontal.get(), vertical.get()));
+		
+		if(!newRoom.isPresent()){
+			remainingHorizontalOffset = current.hasAdjacentRoom(horizontal.get()) ? remainingHorizontalOffset + i : 0;
+			remainingVerticalOffset = current.hasAdjacentRoom(vertical.get()) ? remainingVerticalOffset + i : 0;
+			
+			break;
+		}
+		
+		current = newRoom.get();
 	}
 	
-	for(int y = 0; y < Math.abs(relativeLocation.y) && current.hasAdjacentRoom(yDirection); y++){
-	  current = current.getAdjacentRoom(yDirection).get();
+	for(int x = 0; x < remainingHorizontalOffset && current.hasAdjacentRoom(horizontal.get()); x++){
+	  current = current.getAdjacentRoom(horizontal.get()).get();
+	}
+	
+	for(int y = 0; y < remainingVerticalOffset && current.hasAdjacentRoom(vertical.get()); y++){
+	  current = current.getAdjacentRoom(vertical.get()).get();
 	}
 	
 	return current;
+  }
+  
+  private Optional<Direction> getDirectionFromHorizontalOffset(int offset){
+	if(offset > 0){
+		return Optional.of(Direction.EAST);
+	}
+	else if(offset < 0){
+		return Optional.of(Direction.WEST);
+	}
+	else {
+		return Optional.empty();
+	}
+  }
+  
+  private Optional<Direction> getDirectionFromVerticalOffset(int offset){
+	if(offset > 0){
+		return Optional.of(Direction.SOUTH);
+	}
+	else if(offset < 0){
+		return Optional.of(Direction.NORTH);
+	}
+	else {
+		return Optional.empty();
+	}
   }
 
   protected void link(Direction cardinal, Room room) {
