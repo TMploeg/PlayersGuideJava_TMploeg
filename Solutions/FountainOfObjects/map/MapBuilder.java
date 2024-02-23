@@ -4,6 +4,8 @@ import entities.*;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.LinkedList;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class MapBuilder {
   public static final int MIN_SIZE = 4;
@@ -111,36 +113,35 @@ public class MapBuilder {
     return entrance;
   }
 
-  private Room generateNewCollumnRooms(Room previousCollumnRoom) {
-    boolean hasPreviousCollumn = previousCollumnRoom != null;
-    int collumn = hasPreviousCollumn ? (previousCollumnRoom.getLocation().x() + 1) : 0;
+  private Room generateNewCollumnRooms(Room previousCollumnStartRoom) {
+	Optional<Room> westRoom = Optional.ofNullable(previousCollumnStartRoom);
+    
+	int collumn = westRoom.map(r -> r.getLocation().x() + 1).orElse(0);
+    final Room collumnStartRoom = createRoom(new RoomLocation(collumn, 0));
+	
+	westRoom.ifPresent(r -> {
+	  collumnStartRoom.link(Direction.WEST, r);
+	  linkWestDiagonalRooms(collumnStartRoom);
+	});
 
-    RoomLocation startPos = new RoomLocation(collumn, 0);
-    Room first = createRoom(startPos);
-
-    if (hasPreviousCollumn) {
-      first.link(Direction.WEST, previousCollumnRoom);
-    }
-
-    Room previous = first;
+    Room previous = collumnStartRoom;
 
     for (int yPos = 1; yPos < size.getProperties().size(); yPos++) {
       RoomLocation newPos = new RoomLocation(collumn, yPos);
-      Room newRoom = createRoom(newPos);
+      final Room newRoom = createRoom(newPos);
 	  
-      if (hasPreviousCollumn) {
-        Room westRoom = previous
-		  .getAdjacentRoom(Direction.WEST).orElseThrow(() -> new RuntimeException("room should exist"))
-		  .getAdjacentRoom(Direction.SOUTH).orElseThrow(() ->  new RuntimeException("room should exist"));
-		  
-        newRoom.link(Direction.WEST, westRoom);
-      }
-
-      newRoom.link(Direction.NORTH, previous);
+	  newRoom.link(Direction.NORTH, previous);
+	  
+	  westRoom = westRoom.map(r -> r.getAdjacentRoom(Direction.SOUTH).orElseThrow(() -> new NullPointerException("room not found")));
+	  westRoom.ifPresent(r -> {
+		newRoom.link(Direction.WEST, r);
+		linkWestDiagonalRooms(newRoom);
+	  });
+	  
       previous = newRoom;
     }
 
-    return first;
+    return collumnStartRoom;
   }
 
   private RoomType getRoomTypeForLocation(RoomLocation location) {
@@ -167,5 +168,14 @@ public class MapBuilder {
 	}
 
     return room;
+  }
+  
+  private void linkWestDiagonalRooms(final Room room){
+	Supplier<RuntimeException> missingRoomExceptionSupplier = () -> new NullPointerException("room not found");
+	
+	Room westRoom = room.getAdjacentRoom(Direction.WEST).orElseThrow(missingRoomExceptionSupplier);
+	
+	westRoom.getAdjacentRoom(Direction.NORTH).ifPresent(r -> room.link(Direction.NORTH_WEST, r));
+	westRoom.getAdjacentRoom(Direction.SOUTH).ifPresent(r -> room.link(Direction.SOUTH_WEST, r));
   }
 }
