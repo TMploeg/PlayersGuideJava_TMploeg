@@ -1,3 +1,5 @@
+package exceptions;
+
 public class RoomEmptyException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
