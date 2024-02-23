@@ -4,7 +4,11 @@ public enum Direction {
   NORTH,
   EAST,
   SOUTH,
-  WEST;
+  WEST,
+  NORTH_EAST,
+  SOUTH_EAST,
+  SOUTH_WEST,
+  NORTH_WEST;
   
   public Direction opposite() {
     return switch (this) {
