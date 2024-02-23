@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.awt.Point;
 
 public class Room {
@@ -101,6 +102,20 @@ public class Room {
   
   public boolean hasEntity(){
 	return entity.isPresent();
+  }
+  
+  public List<Entity> getAdjacentEntities(Predicate<Entity> predicate){
+	if(predicate == null){
+		throw new NullPointerException("predicate is null");
+	}
+	
+	final List<Entity> result = new LinkedList<>();
+	
+	for(Room room : getAllAdjacentRooms()){
+		room.getEntity().filter(predicate).ifPresent(entity -> result.add(entity));
+	}
+	
+	return result;
   }
   
   public Room getNearestEmptyRoom(){

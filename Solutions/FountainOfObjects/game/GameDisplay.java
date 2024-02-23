@@ -5,6 +5,7 @@ import helpers.console.*;
 import commands.*;
 import entities.*;
 import java.util.Optional;
+import java.util.List;
 
 public class GameDisplay {
 	private static final int TURN_SEPERATOR_LENGTH = 100;
@@ -58,27 +59,23 @@ public class GameDisplay {
   }
   
   public void displayAdjacentRooms() {
-    boolean foundAdjacentPit = false;
-    boolean foundAdjacentMaelstrom = false;
-	boolean foundAdjacentAmarok = false;
-
     for (Room room : map.getCurrentRoom().getAllAdjacentRooms()) {
-      if (!foundAdjacentPit && room.getType() == RoomType.PIT) {
+      if (room.getType() == RoomType.PIT) {
         ConsoleHelper.printlnColor("You feel a draft of air.", ConsoleColor.DARK_RED);
-        foundAdjacentPit = true;
+		break;
       }
-	  
-	  Optional<Entity> entity = room.getEntity();
-	  
-	  if(!entity.isPresent()){
-		  continue;
-	  }
-	  
-	  foundAdjacentMaelstrom = foundAdjacentMaelstrom || entity.get() instanceof Maelstrom;
-	  foundAdjacentAmarok = foundAdjacentAmarok || entity.get() instanceof Amarok;
-	  
-	  entity.get().showMessage(MessageType.AMBIANCE);
     }
+	
+	displayAdjacentEntityIfExists(Maelstrom.class);
+	displayAdjacentEntityIfExists(Amarok.class);
+  }
+  
+  private <T extends Entity> void displayAdjacentEntityIfExists(Class<T> entityClass){
+	List<Entity> adjacentSameTypeEntities = map.getCurrentRoom().getAdjacentEntities(entity -> entity.getClass() == entityClass);
+	
+	if(adjacentSameTypeEntities.size() > 0){
+		adjacentSameTypeEntities.get(0).showMessage(MessageType.AMBIANCE);
+	}
   }
   
   public void displayEntityInteraction(Entity entity){
