@@ -24,7 +24,7 @@ public class MapDisplay {
 
 			displayRowSeperator(getRowLength(rowStart.get()));
 			
-			rowStart = rowStart.get().getAdjacentRoom(Cardinal.SOUTH);
+			rowStart = rowStart.get().getAdjacentRoom(Direction.SOUTH);
 		}
 	}
   
@@ -34,7 +34,7 @@ public class MapDisplay {
 	while (true) {
 	  displayRoom(current);
 	  
-	  Optional<Room> eastRoom = current.getAdjacentRoom(Cardinal.EAST);
+	  Optional<Room> eastRoom = current.getAdjacentRoom(Direction.EAST);
 	  
 	  if (!eastRoom.isPresent()) {
 		break;
@@ -148,7 +148,7 @@ public class MapDisplay {
 	while(current.isPresent()){
 	  length++;
 	  
-	  current = current.get().getAdjacentRoom(Cardinal.EAST);
+	  current = current.get().getAdjacentRoom(Direction.EAST);
 	}
 	
 	return length;

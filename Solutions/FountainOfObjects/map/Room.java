@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import java.awt.Point;
 
 public class Room {
-  private Map<Cardinal, Room> adjacentRooms;
+  private Map<Direction, Room> adjacentRooms;
  
   private Optional<Entity> entity;
 
@@ -32,8 +32,8 @@ public class Room {
     return type;
   }
 
-  public Optional<Room> getAdjacentRoom(Cardinal cardinal) {
-    for (Cardinal key : adjacentRooms.keySet()) {
+  public Optional<Room> getAdjacentRoom(Direction cardinal) {
+    for (Direction key : adjacentRooms.keySet()) {
       if (key == cardinal) {
         return Optional.of(adjacentRooms.get(key));
       }
@@ -42,7 +42,7 @@ public class Room {
     return Optional.empty();
   }
 
-  public boolean hasAdjacentRoom(Cardinal cardinal) {
+  public boolean hasAdjacentRoom(Direction cardinal) {
     return adjacentRooms.containsKey(cardinal);
   }
 
@@ -59,23 +59,64 @@ public class Room {
 		throw new NullPointerException("relativeLocation is null");
 	}
 	
-	Cardinal xDirection = relativeLocation.x < 0 ? Cardinal.WEST : Cardinal.EAST;
-	Cardinal yDirection = relativeLocation.y < 0 ? Cardinal.NORTH : Cardinal.SOUTH;
+	int diagonalOffset = Math.min(Math.abs(relativeLocation.x), Math.abs(relativeLocation.y));
+	int remainingHorizontalOffset = Math.abs(relativeLocation.x) - diagonalOffset;
+	int remainingVerticalOffset = Math.abs(relativeLocation.y) - diagonalOffset;
+	
+	Optional<Direction> horizontal = getDirectionFromHorizontalOffset(relativeLocation.x);
+	Optional<Direction> vertical = getDirectionFromVerticalOffset(relativeLocation.y);
 	
 	Room current = this;
 	
-	for(int x = 0; x < Math.abs(relativeLocation.x) && current.hasAdjacentRoom(xDirection); x++){
-	  current = current.getAdjacentRoom(xDirection).get();
+	for(int i = diagonalOffset; i > 0; i--){
+		Optional<Room> newRoom = current.getAdjacentRoom(Direction.compose(horizontal.get(), vertical.get()));
+		
+		if(!newRoom.isPresent()){
+			remainingHorizontalOffset = current.hasAdjacentRoom(horizontal.get()) ? remainingHorizontalOffset + i : 0;
+			remainingVerticalOffset = current.hasAdjacentRoom(vertical.get()) ? remainingVerticalOffset + i : 0;
+			
+			break;
+		}
+		
+		current = newRoom.get();
 	}
 	
-	for(int y = 0; y < Math.abs(relativeLocation.y) && current.hasAdjacentRoom(yDirection); y++){
-	  current = current.getAdjacentRoom(yDirection).get();
+	for(int x = 0; x < remainingHorizontalOffset && current.hasAdjacentRoom(horizontal.get()); x++){
+	  current = current.getAdjacentRoom(horizontal.get()).get();
+	}
+	
+	for(int y = 0; y < remainingVerticalOffset && current.hasAdjacentRoom(vertical.get()); y++){
+	  current = current.getAdjacentRoom(vertical.get()).get();
 	}
 	
 	return current;
   }
+  
+  private Optional<Direction> getDirectionFromHorizontalOffset(int offset){
+	if(offset > 0){
+		return Optional.of(Direction.EAST);
+	}
+	else if(offset < 0){
+		return Optional.of(Direction.WEST);
+	}
+	else {
+		return Optional.empty();
+	}
+  }
+  
+  private Optional<Direction> getDirectionFromVerticalOffset(int offset){
+	if(offset > 0){
+		return Optional.of(Direction.SOUTH);
+	}
+	else if(offset < 0){
+		return Optional.of(Direction.NORTH);
+	}
+	else {
+		return Optional.empty();
+	}
+  }
 
-  protected void link(Cardinal cardinal, Room room) {
+  protected void link(Direction cardinal, Room room) {
     adjacentRooms.put(cardinal, room);
     room.adjacentRooms.put(cardinal.opposite(), this);
   }
