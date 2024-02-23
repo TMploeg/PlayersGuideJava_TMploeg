@@ -119,7 +119,7 @@ public class MapBuilder {
     Room first = createRoom(startPos);
 
     if (hasPreviousCollumn) {
-      first.link(Cardinal.WEST, previousCollumnRoom);
+      first.link(Direction.WEST, previousCollumnRoom);
     }
 
     Room previous = first;
@@ -130,13 +130,13 @@ public class MapBuilder {
 	  
       if (hasPreviousCollumn) {
         Room westRoom = previous
-		  .getAdjacentRoom(Cardinal.WEST).orElseThrow(() -> new RuntimeException("room should exist"))
-		  .getAdjacentRoom(Cardinal.SOUTH).orElseThrow(() ->  new RuntimeException("room should exist"));
+		  .getAdjacentRoom(Direction.WEST).orElseThrow(() -> new RuntimeException("room should exist"))
+		  .getAdjacentRoom(Direction.SOUTH).orElseThrow(() ->  new RuntimeException("room should exist"));
 		  
-        newRoom.link(Cardinal.WEST, westRoom);
+        newRoom.link(Direction.WEST, westRoom);
       }
 
-      newRoom.link(Cardinal.NORTH, previous);
+      newRoom.link(Direction.NORTH, previous);
       previous = newRoom;
     }
 

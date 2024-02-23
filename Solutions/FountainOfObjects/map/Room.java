@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import java.awt.Point;
 
 public class Room {
-  private Map<Cardinal, Room> adjacentRooms;
+  private Map<Direction, Room> adjacentRooms;
  
   private Optional<Entity> entity;
 
@@ -32,8 +32,8 @@ public class Room {
     return type;
   }
 
-  public Optional<Room> getAdjacentRoom(Cardinal cardinal) {
-    for (Cardinal key : adjacentRooms.keySet()) {
+  public Optional<Room> getAdjacentRoom(Direction cardinal) {
+    for (Direction key : adjacentRooms.keySet()) {
       if (key == cardinal) {
         return Optional.of(adjacentRooms.get(key));
       }
@@ -42,7 +42,7 @@ public class Room {
     return Optional.empty();
   }
 
-  public boolean hasAdjacentRoom(Cardinal cardinal) {
+  public boolean hasAdjacentRoom(Direction cardinal) {
     return adjacentRooms.containsKey(cardinal);
   }
 
@@ -59,8 +59,8 @@ public class Room {
 		throw new NullPointerException("relativeLocation is null");
 	}
 	
-	Cardinal xDirection = relativeLocation.x < 0 ? Cardinal.WEST : Cardinal.EAST;
-	Cardinal yDirection = relativeLocation.y < 0 ? Cardinal.NORTH : Cardinal.SOUTH;
+	Direction xDirection = relativeLocation.x < 0 ? Direction.WEST : Direction.EAST;
+	Direction yDirection = relativeLocation.y < 0 ? Direction.NORTH : Direction.SOUTH;
 	
 	Room current = this;
 	
@@ -75,7 +75,7 @@ public class Room {
 	return current;
   }
 
-  protected void link(Cardinal cardinal, Room room) {
+  protected void link(Direction cardinal, Room room) {
     adjacentRooms.put(cardinal, room);
     room.adjacentRooms.put(cardinal.opposite(), this);
   }

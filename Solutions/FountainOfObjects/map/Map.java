@@ -33,7 +33,7 @@ public class Map {
     fountainEnabled = true;
   }
 
-  public void move(Cardinal direction) {
+  public void move(Direction direction) {
     Optional<Room> newRoom = currentRoom.getAdjacentRoom(direction);
 
     if (!newRoom.isPresent()) {

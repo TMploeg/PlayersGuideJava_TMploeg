@@ -8,11 +8,11 @@ import helpers.console.*;
 public class Maelstrom extends Entity {
   private static final ConsoleColor ENTITY_COLOR = ConsoleColor.TEAL;
   
-  private static final Map<Cardinal, Integer> movementMap =
+  private static final Map<Direction, Integer> movementMap =
       new HashMap<>() {
         {
-          put(Cardinal.SOUTH, 1);
-          put(Cardinal.WEST, 2);
+          put(Direction.SOUTH, 1);
+          put(Direction.WEST, 2);
         }
       };
 
@@ -20,14 +20,14 @@ public class Maelstrom extends Entity {
     super(ENTITY_COLOR);
   }
 
-  public static Map<Cardinal, Integer> getMovementMap() {
+  public static Map<Direction, Integer> getMovementMap() {
 	return movementMap;
   }
 
-  public static Map<Cardinal, Integer> getInvertedMovementMap() {
-    HashMap<Cardinal, Integer> playerMovementMap = new HashMap<>();
+  public static Map<Direction, Integer> getInvertedMovementMap() {
+    HashMap<Direction, Integer> playerMovementMap = new HashMap<>();
 
-    for (Cardinal direction : movementMap.keySet()) {
+    for (Direction direction : movementMap.keySet()) {
       playerMovementMap.put(direction.opposite(), movementMap.get(direction));
     }
 
