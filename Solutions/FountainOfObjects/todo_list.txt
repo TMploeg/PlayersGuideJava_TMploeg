@@ -1,5 +1,3 @@
 TODO:
-- Room: add hasAdjacentEntity(Predicate<Entity> predicate) (for GameDisplay::displayAdjacentRooms)
-- ColoredStringBuilder maybe?
 - RoomType ambiance messages
 - diagonal adjacent rooms
