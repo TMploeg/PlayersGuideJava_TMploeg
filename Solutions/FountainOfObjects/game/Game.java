@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import map.*;
 import commands.*;
+import java.awt.Point;
 
 public class Game {
   private enum GameState { PLAYING, WON, LOST }
@@ -120,21 +121,8 @@ public class Game {
 		throw new NullPointerException("maelstrom is null");
 	}
 	
-	Room newLocation = map.getCurrentRoom();
-	
-	java.util.Map<Cardinal, Integer> movementMap = Maelstrom.getMovementMap();
-	
-	for (Cardinal direction : movementMap.keySet()) {
-      for (int i = 0; i < movementMap.get(direction); i++) {
-        Optional<Room> nextRoom = newLocation.getAdjacentRoom(direction);
-
-        if (!nextRoom.isPresent()) {
-          break;
-        }
-
-        newLocation = nextRoom.get();
-      }
-    }
+	Point relativeLocation = getRelativeLocationFromMovementMap(Maelstrom.getMovementMap());
+	Room newLocation = map.getCurrentRoom().getRoomAtRelativeLocation(relativeLocation);
 	
 	if(newLocation.hasEntity()){
 		newLocation = newLocation.getNearestEmptyRoom();
@@ -142,6 +130,30 @@ public class Game {
 	
 	newLocation.setEntity(maelstrom);
 	map.getCurrentRoom().removeEntity();
+  }
+  
+  private Point getRelativeLocationFromMovementMap(java.util.Map<Cardinal, Integer> movementMap){
+	int xOffset = 0;
+	
+	if(movementMap.containsKey(Cardinal.WEST)){
+	  xOffset -= movementMap.get(Cardinal.WEST);
+	}
+	
+	if(movementMap.containsKey(Cardinal.EAST)){
+	  xOffset += movementMap.get(Cardinal.EAST);
+	}
+	
+	int yOffset = 0;
+	
+	if(movementMap.containsKey(Cardinal.NORTH)){
+	  yOffset -= movementMap.get(Cardinal.NORTH);
+	}
+	
+	if(movementMap.containsKey(Cardinal.SOUTH)){
+	  yOffset += movementMap.get(Cardinal.SOUTH);
+	}
+	
+	return new Point(xOffset, yOffset);
   }
 
   private void movePlayerFromMaelstrom() {

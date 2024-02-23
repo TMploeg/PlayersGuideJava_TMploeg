@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.awt.Point;
 
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
@@ -50,6 +51,27 @@ public class Room {
 
   public RoomLocation getLocation() {
     return location;
+  }
+  
+  public Room getRoomAtRelativeLocation(Point relativeLocation){
+	if(relativeLocation == null){
+		throw new NullPointerException("relativeLocation is null");
+	}
+	
+	Cardinal xDirection = relativeLocation.x < 0 ? Cardinal.WEST : Cardinal.EAST;
+	Cardinal yDirection = relativeLocation.y < 0 ? Cardinal.NORTH : Cardinal.SOUTH;
+	
+	Room current = this;
+	
+	for(int x = 0; x < Math.abs(relativeLocation.x) && current.hasAdjacentRoom(xDirection); x++){
+	  current = current.getAdjacentRoom(xDirection).get();
+	}
+	
+	for(int y = 0; y < Math.abs(relativeLocation.y) && current.hasAdjacentRoom(yDirection); y++){
+	  current = current.getAdjacentRoom(yDirection).get();
+	}
+	
+	return current;
   }
 
   protected void link(Cardinal cardinal, Room room) {
