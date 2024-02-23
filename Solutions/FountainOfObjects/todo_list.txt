@@ -1,5 +1,5 @@
 TODO:
-- Map::getRoom: seperate code to find room at different position to Room
 - Room: add hasAdjacentEntity(Predicate<Entity> predicate) (for GameDisplay::displayAdjacentRooms)
 - ColoredStringBuilder maybe?
 - RoomType ambiance messages
+- diagonal adjacent rooms
