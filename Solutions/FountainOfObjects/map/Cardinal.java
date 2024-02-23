@@ -5,6 +5,10 @@ public enum Cardinal {
   EAST,
   SOUTH,
   WEST;
+  
+  private Cardinal(){
+  
+  }
 
   public Cardinal opposite() {
     return switch (this) {

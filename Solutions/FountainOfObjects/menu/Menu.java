@@ -1,4 +1,4 @@
-package helpers.console.menu;
+package menu;
 
 import java.util.List;
 

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.awt.Point;
 
 public class Room {
   private Map<Cardinal, Room> adjacentRooms;
@@ -51,6 +53,27 @@ public class Room {
   public RoomLocation getLocation() {
     return location;
   }
+  
+  public Room getRoomAtRelativeLocation(Point relativeLocation){
+	if(relativeLocation == null){
+		throw new NullPointerException("relativeLocation is null");
+	}
+	
+	Cardinal xDirection = relativeLocation.x < 0 ? Cardinal.WEST : Cardinal.EAST;
+	Cardinal yDirection = relativeLocation.y < 0 ? Cardinal.NORTH : Cardinal.SOUTH;
+	
+	Room current = this;
+	
+	for(int x = 0; x < Math.abs(relativeLocation.x) && current.hasAdjacentRoom(xDirection); x++){
+	  current = current.getAdjacentRoom(xDirection).get();
+	}
+	
+	for(int y = 0; y < Math.abs(relativeLocation.y) && current.hasAdjacentRoom(yDirection); y++){
+	  current = current.getAdjacentRoom(yDirection).get();
+	}
+	
+	return current;
+  }
 
   protected void link(Cardinal cardinal, Room room) {
     adjacentRooms.put(cardinal, room);
@@ -71,7 +94,7 @@ public class Room {
 
   public void removeEntity() {
     if (!hasEntity()) {
-      throw new NullPointerException("room does not have entity");
+      throw new RoomEmptyException("room does not have entity");
     }
 
     entity = Optional.empty();
@@ -79,6 +102,20 @@ public class Room {
   
   public boolean hasEntity(){
 	return entity.isPresent();
+  }
+  
+  public List<Entity> getAdjacentEntities(Predicate<Entity> predicate){
+	if(predicate == null){
+		throw new NullPointerException("predicate is null");
+	}
+	
+	final List<Entity> result = new LinkedList<>();
+	
+	for(Room room : getAllAdjacentRooms()){
+		room.getEntity().filter(predicate).ifPresent(entity -> result.add(entity));
+	}
+	
+	return result;
   }
   
   public Room getNearestEmptyRoom(){
