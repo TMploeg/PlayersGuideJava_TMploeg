@@ -4,7 +4,7 @@ import map.Room;
 import helpers.console.ConsoleColor;
 
 public class Amarok extends Entity {
-  private static final ConsoleColor ENTITY_COLOR = ConsoleColor.KUMERA;
+  public static final ConsoleColor ENTITY_COLOR = ConsoleColor.KUMERA;
 	
   public Amarok() {
     super(ENTITY_COLOR);

@@ -6,7 +6,7 @@ import map.*;
 import helpers.console.*;
 
 public class Maelstrom extends Entity {
-  private static final ConsoleColor ENTITY_COLOR = ConsoleColor.TEAL;
+  public static final ConsoleColor ENTITY_COLOR = ConsoleColor.TEAL;
   
   private static final Map<Direction, Integer> movementMap =
       new HashMap<>() {
