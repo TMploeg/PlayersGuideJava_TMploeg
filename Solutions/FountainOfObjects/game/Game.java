@@ -31,6 +31,8 @@ public class Game {
 	
 	commandExecutor = initCommandExecutor();
 
+	gameDisplay.displayIntro();
+
     runGame();
   }
   
