@@ -1,10 +1,10 @@
 package helpers.console;
 
-import menu.*;
-import helpers.parsers.IntegerParser;
-import java.util.Scanner;
 import commands.Command;
+import helpers.parsers.IntegerParser;
 import java.util.Optional;
+import java.util.Scanner;
+import menu.*;
 
 public class InputHelper {
   public static Command getCommandInput(String message) {
@@ -12,10 +12,10 @@ public class InputHelper {
 
     while (true) {
       System.out.print(message + " ");
-	  
-	  ConsoleHelper.setConsoleColor(ConsoleColor.CYAN);
-      
-	  String input = scanner.nextLine();
+
+      ConsoleHelper.setConsoleColor(ConsoleColor.CYAN);
+
+      String input = scanner.nextLine();
 
       ConsoleHelper.resetConsoleColor();
 
@@ -24,8 +24,8 @@ public class InputHelper {
         continue;
       }
 
-	  Optional<Command> command = Command.getFromName(input);
-	  
+      Optional<Command> command = Command.getFromName(input);
+
       if (command.isPresent()) {
         return command.get();
       }
@@ -48,7 +48,7 @@ public class InputHelper {
 
       String menuItemInput = scanner.nextLine();
 
-	  Optional<Integer> menuNumber = IntegerParser.tryParse(menuItemInput);
+      Optional<Integer> menuNumber = IntegerParser.tryParse(menuItemInput);
 
       if (!menuNumber.isPresent()) {
         System.out.println("'" + menuItemInput + "' is not a valid integer");

@@ -2,7 +2,6 @@ package map;
 
 import entities.*;
 import helpers.console.*;
-import java.awt.Point;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -20,9 +19,9 @@ public class Map {
   public Room getCurrentRoom() {
     return currentRoom;
   }
-  
+
   protected Room getEntrance() {
-	return entrance;
+    return entrance;
   }
 
   public boolean isFountainEnabled() {

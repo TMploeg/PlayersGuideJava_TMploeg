@@ -1,7 +1,7 @@
 package entities;
 
-public enum EntityType{
-	PLAYER,
-	MAELSTROM,
-	AMAROK;
+public enum EntityType {
+  PLAYER,
+  MAELSTROM,
+  AMAROK;
 }

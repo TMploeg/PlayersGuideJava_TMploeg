@@ -40,9 +40,9 @@ public class MenuItem<TValue> {
 
     return false;
   }
-  
+
   @Override
-  public int hashCode(){
-	return Objects.hash(name, value);
+  public int hashCode() {
+    return Objects.hash(name, value);
   }
 }

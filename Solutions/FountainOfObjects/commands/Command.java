@@ -19,19 +19,19 @@ public enum Command {
   private Command(String description) {
     this.description = description;
   }
-  
+
   public String getCommandText() {
-	String result = "";
-	
-    for(String splitPart : this.toString().split("_")){
-		if(result.length() > 0){
-			result += " ";
-		}
-		
-		result += splitPart.toLowerCase();
-	}
-	
-	return result;
+    String result = "";
+
+    for (String splitPart : this.toString().split("_")) {
+      if (result.length() > 0) {
+        result += " ";
+      }
+
+      result += splitPart.toLowerCase();
+    }
+
+    return result;
   }
 
   public String getDescription() {
@@ -42,13 +42,13 @@ public enum Command {
     if (name == null) {
       throw new NullPointerException();
     }
-	
-	for(Command command : Command.values()){
-		if(command.getCommandText().equals(name)){
-			return Optional.of(command);
-		}
-	}
-	
-	return Optional.empty();
+
+    for (Command command : Command.values()) {
+      if (command.getCommandText().equals(name)) {
+        return Optional.of(command);
+      }
+    }
+
+    return Optional.empty();
   }
 }
