@@ -1,4 +1,4 @@
-package entities;
+package entities.archive;
 
 import map.Room;
 import helpers.console.ConsoleColor;
