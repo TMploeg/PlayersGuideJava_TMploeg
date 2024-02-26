@@ -1,3 +1,0 @@
-- Display Classes -> ColoredStringBuilder to add multiple different-colored strings together in the same line
-- display nr of arrows remaining
-- replace 'protected' modifiers with 'default' modifiers where needed
