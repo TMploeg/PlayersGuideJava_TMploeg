@@ -156,7 +156,7 @@ public class MapBuilder {
 	boolean hasAmarok = amarokLocations.contains(location);
 	
     if (hasMaelstrom) {
-      room.setEntity(new Maelstrom());
+      room.setEntity(EntityType.MAELSTROM);
     }
 	
 	if(hasAmarok){
@@ -164,7 +164,7 @@ public class MapBuilder {
 		  throw new RuntimeException("room has multiple entities");
 	  }
 	  
-	  room.setEntity(new Amarok());
+	  room.setEntity(EntityType.AMAROK);
 	}
 
     return room;

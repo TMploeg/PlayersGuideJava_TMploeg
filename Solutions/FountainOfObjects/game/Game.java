@@ -13,10 +13,10 @@ import java.awt.Point;
 public class Game {
   private enum GameState { PLAYING, WON, LOST }
   
-  private Map map;
-  private GameDisplay gameDisplay;
-  private Quiver quiver;
-  private CommandExecutor commandExecutor;
+  private final Map map;
+  private final GameDisplay gameDisplay;
+  private final Quiver quiver;
+  private final CommandExecutor commandExecutor;
 
   private boolean cheatMode;
 
@@ -104,72 +104,49 @@ public class Game {
   }
   
   private void handleRoomContent() {
-	map.getCurrentRoom().getEntity().ifPresent(entity -> {
-		gameDisplay.displayEntityInteraction(entity);
+	map.getCurrentRoom().getEntity().ifPresent(entityType -> {
+		gameDisplay.displayEntityMessage(entityType, MessageType.INTERACT);
 		
-		if(entity instanceof Maelstrom maelstrom){
-			handleMaelstrom(maelstrom);
+		if(entityType == EntityType.MAELSTROM){
+			handleMaelstrom();
 		}
 	});
   }
   
-  private void handleMaelstrom(Maelstrom maelstrom) {
-    moveMaelstrom(maelstrom);
-    movePlayerFromMaelstrom();
+  private void handleMaelstrom() {
+	MaelstromMover mover = new MaelstromMover(map.getCurrentRoom());
+	
+	mover.move();
+    
+	moveMultiple(mover.getPlayerMovementOffset());
   }
   
-  private void moveMaelstrom(Maelstrom maelstrom){
-	if(maelstrom == null){
-		throw new NullPointerException("maelstrom is null");
-	}
+  private void moveMultiple(Point movementOffset) {
+	Optional<Direction> horizontalDirection = switch(Integer.signum(movementOffset.x)){
+		case 1 -> Optional.of(Direction.EAST);
+		case -1 -> Optional.of(Direction.WEST);
+		case 0 -> Optional.empty();
+		default -> throw new RuntimeException("should not reach");
+	};
 	
-	Point relativeLocation = getRelativeLocationFromMovementMap(Maelstrom.getMovementMap());
-	Room newLocation = map.getCurrentRoom().getRoomAtRelativeLocation(relativeLocation);
+	horizontalDirection.ifPresent(dir -> {
+	  for(int x = 0; x < Math.abs(movementOffset.x); x++){
+		map.move(dir);
+	  }
+	});
 	
-	if(newLocation.hasEntity()){
-		newLocation = newLocation.getNearestEmptyRoom();
-	}
-	
-	newLocation.setEntity(maelstrom);
-	map.getCurrentRoom().removeEntity();
-  }
-  
-  private Point getRelativeLocationFromMovementMap(java.util.Map<Direction, Integer> movementMap){
-	int xOffset = 0;
-	
-	if(movementMap.containsKey(Direction.WEST)){
-	  xOffset -= movementMap.get(Direction.WEST);
-	}
-	
-	if(movementMap.containsKey(Direction.EAST)){
-	  xOffset += movementMap.get(Direction.EAST);
-	}
-	
-	int yOffset = 0;
-	
-	if(movementMap.containsKey(Direction.NORTH)){
-	  yOffset -= movementMap.get(Direction.NORTH);
-	}
-	
-	if(movementMap.containsKey(Direction.SOUTH)){
-	  yOffset += movementMap.get(Direction.SOUTH);
-	}
-	
-	return new Point(xOffset, yOffset);
-  }
+	Optional<Direction> verticalDirection = switch(Integer.signum(movementOffset.y)){
+		case 1 -> Optional.of(Direction.SOUTH);
+		case -1 -> Optional.of(Direction.NORTH);
+		case 0 -> Optional.empty();
+		default -> throw new RuntimeException("should not reach");
+	};
 
-  private void movePlayerFromMaelstrom() {
-    java.util.Map<Direction, Integer> movementMap = Maelstrom.getInvertedMovementMap();
-
-    for (Direction direction : movementMap.keySet()) {
-      for (int i = 0; i < movementMap.get(direction); i++) {
-        if (!map.getCurrentRoom().hasAdjacentRoom(direction)) {
-          break;
-        }
-
-        map.move(direction);
-      }
-    }
+	verticalDirection.ifPresent(dir -> {
+	  for(int y = 0; y < Math.abs(movementOffset.y); y++){
+		map.move(dir);
+	  }
+	});
   }
 
   private void move(Direction direction) {
@@ -194,10 +171,10 @@ public class Game {
 		Room adjacentRoom = map.getCurrentRoom()
 			.getAdjacentRoom(direction).orElseThrow(() -> new NullPointerException("room should exists"));
 		
-		Entity target = adjacentRoom.getEntity().orElseThrow(() -> new NullPointerException("entity should exist"));
+		EntityType target = adjacentRoom.getEntity().orElseThrow(() -> new NullPointerException("entity should exist"));
 		
 		adjacentRoom.removeEntity();
-		gameDisplay.displayEntityDeath(target);
+		gameDisplay.displayEntityMessage(target, MessageType.DEATH);
 	}
 	Optional<Room> adjacentRoom = map.getCurrentRoom().getAdjacentRoom(direction);
   }
@@ -229,10 +206,16 @@ public class Game {
 		return GameState.LOST;
 	}
 	
-	if(map.getCurrentRoom().hasEntity() && map.getCurrentRoom().getEntity().get() instanceof Amarok){
-		return GameState.LOST;
-	}
-	
-	return GameState.PLAYING;
+	return map.getCurrentRoom().getEntity()
+	  .map(
+	    entityType -> {
+		  if(entityType == EntityType.AMAROK){
+		    return GameState.LOST;
+		  }
+		  
+		  return null;
+	    }
+	  )
+	  .orElse(GameState.PLAYING);
   }
 }
