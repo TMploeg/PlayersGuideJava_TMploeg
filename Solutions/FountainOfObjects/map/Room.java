@@ -1,6 +1,6 @@
 package map;
 
-import entities.Entity;
+import entities.EntityType;
 import exceptions.*;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.awt.Point;
 public class Room {
   private Map<Direction, Room> adjacentRooms;
  
-  private Optional<Entity> entity;
+  private Optional<EntityType> entity;
 
   private RoomType type;
   private RoomLocation location;
@@ -121,11 +121,11 @@ public class Room {
     room.adjacentRooms.put(cardinal.opposite(), this);
   }
 
-  public Optional<Entity> getEntity(){
+  public Optional<EntityType> getEntity(){
 	return entity;
   }
 
-  public void setEntity(Entity entity) {
+  public void setEntity(EntityType entity) {
 	if(hasEntity()){
 		throw new AlreadyOccupiedException("room is already occupied");
 	}
@@ -145,18 +145,14 @@ public class Room {
 	return entity.isPresent();
   }
   
-  public List<Entity> getAdjacentEntities(Predicate<Entity> predicate){
-	if(predicate == null){
-		throw new NullPointerException("predicate is null");
-	}
-	
-	final List<Entity> result = new LinkedList<>();
-	
+  public boolean hasAdjacentEntity(EntityType entityType){
 	for(Room room : getAllAdjacentRooms()){
-		room.getEntity().filter(predicate).ifPresent(entity -> result.add(entity));
+		if(room.getEntity().filter(eT -> eT == entityType).isPresent()){
+			return true;
+		}
 	}
 	
-	return result;
+	return false;
   }
   
   public Room getNearestEmptyRoom(){

@@ -20,6 +20,7 @@ public class GameDisplay {
 	
 	private Map map;
 	private MapDisplay mapDisplay;
+	private EntityService entityService;
 	
 	public GameDisplay(Map map){
 		if(map == null){
@@ -28,6 +29,7 @@ public class GameDisplay {
 		
 		this.map = map;
 		this.mapDisplay = new MapDisplay(map);
+		this.entityService = new EntityService();
 	}
 	
 	public void displayLocation(boolean displayFullMap){
@@ -74,24 +76,21 @@ public class GameDisplay {
       }
     }
 	
-	displayAdjacentEntityIfExists(Maelstrom.class);
-	displayAdjacentEntityIfExists(Amarok.class);
+	displayAdjacentEntityIfExists(EntityType.MAELSTROM);
+	displayAdjacentEntityIfExists(EntityType.AMAROK);
   }
   
-  private <T extends Entity> void displayAdjacentEntityIfExists(Class<T> entityClass){
-	List<Entity> adjacentSameTypeEntities = map.getCurrentRoom().getAdjacentEntities(entity -> entity.getClass() == entityClass);
-	
-	if(adjacentSameTypeEntities.size() > 0){
-		adjacentSameTypeEntities.get(0).showMessage(MessageType.AMBIANCE);
+  private void displayAdjacentEntityIfExists(EntityType entityType){
+	if(map.getCurrentRoom().hasAdjacentEntity(entityType)){
+		displayEntityMessage(entityType, MessageType.VICINITY);
 	}
   }
   
-  public void displayEntityInteraction(Entity entity){
-	entity.showMessage(MessageType.INTERACT);  
-  }
-  
-  public void displayEntityDeath(Entity entity){
-	entity.showMessage(MessageType.DEATH);
+  public void displayEntityMessage(EntityType entityType, MessageType messageType){
+	ConsoleHelper.printlnColor(
+	  entityService.getEntityMessageOfType(entityType, messageType),
+	  entityService.getEntityColor(entityType)
+	);
   }
   
   public void displayCommands() {
@@ -204,7 +203,7 @@ public class GameDisplay {
   private void displayMaelstromIntro(){
 	ConsoleHelper.printColor(
 	  "Maelstroms",
-	  Maelstrom.ENTITY_COLOR
+	  entityService.getEntityColor(EntityType.MAELSTROM)
     );
 	ConsoleHelper.printlnColor(
 	  " are violent forces of sentient wind. Entering a room with one could transport you to any other location in the caverns.",
@@ -220,7 +219,7 @@ public class GameDisplay {
   private void displayAmarokIntro(){
 	ConsoleHelper.printColor(
 	  "Amaroks",
-	  Amarok.ENTITY_COLOR
+	  entityService.getEntityColor(EntityType.AMAROK)
     );
 	ConsoleHelper.printlnColor(
 	  " roam the caverns. Encountering one is certain death, but you can smell their rotten stench in nearby rooms.",

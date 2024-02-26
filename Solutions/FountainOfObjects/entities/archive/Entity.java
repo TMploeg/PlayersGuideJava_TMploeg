@@ -25,33 +25,3 @@ public abstract class Entity extends ColoredItem implements Interactable {
   
   protected abstract String getInteractMessage();
 }
-
-public class Entity{
-	
-}
-
-enum EntityType{
-	PLAYER,
-	MAELSTROM,
-	AMAROK;
-	
-	private ConsoleColor entityColor;
-	private Map<MessageType, String> messageMap;
-	
-	private EntityType(ConsoleColor entityColor, String deathMessage, String ambianceMessage, String interactMessage){
-		this.entityColor = entityColor;
-		
-		messageMap = new HashMap<>();
-		messageMap.put(MessageType.DEATH, deathMessage);
-		messageMap.put(MessageType.AMBIANCE, ambianceMessage);
-		messageMap.put(MessageType.INTERACT, interactMessage);
-	}
-	
-	public String getMessage(MessageType type){
-		if(!messageType.containsKey(type)){
-			throw new RuntimeException("message type '" + type.toString() + "' not implemented");
-		}
-		
-		return messageMap.get(type);
-	}
-}

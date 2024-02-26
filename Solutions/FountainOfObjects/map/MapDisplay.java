@@ -8,10 +8,13 @@ import java.util.Optional;
 public class MapDisplay {
 	private static final String POS_MARKER = "x";
 	
+	private final EntityService entityService;
+	
 	private Map map;
 	
 	public MapDisplay(Map map){
 	  this.map = map;
+	  this.entityService = new EntityService();
 	}	
 	
 	public void displayMap() {
@@ -97,8 +100,8 @@ public class MapDisplay {
 	  markerCounter.increment();
 	}
 	
-	room.getEntity().ifPresent(entity -> {
-		ConsoleHelper.printColor(POS_MARKER, entity.getColor());
+	room.getEntity().ifPresent(entityType -> {
+		ConsoleHelper.printColor(POS_MARKER, entityService.getEntityColor(entityType));
 		markerCounter.increment();
 	});
 	
